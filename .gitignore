@@ -1,0 +1,6 @@
+.env.*
+.nyc_output
+.idea/
+dist/
+node_modules/
+test/database.sqlite
