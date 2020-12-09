@@ -38,6 +38,20 @@ export const handleHttpError: ErrorRequestHandler =
 }
 
 /**
+ * Handle any error not previously handled.  This ensures that unhandled
+ * promise rejection problems actually get handled, and must be the last
+ * error handling middleware to be configured.
+ */
+export const handleServerError: ErrorRequestHandler =
+    (error: Error, req: Request, res: Response, next: NextFunction) => {
+        console.info("handleServerError: ", error);
+        res.status(500).send({
+            message: error.message,
+            status: 500
+        });
+}
+
+/**
  * Handle ValidationError errors by formatting and sending the
  * appropriate HTTP response.
  */
