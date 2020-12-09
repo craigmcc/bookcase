@@ -12,15 +12,36 @@ import morgan from "morgan";
 
 // Internal Modules ----------------------------------------------------------
 
+import Author from "./models/Author";
+import AuthorStory from "./models/AuthorStory";
+import Database from "./models/Database";
+import Library from "./models/Library";
+import Story from "./models/Story";
+
 // Configuration Processing --------------------------------------------------
 
 // Configure Models and Associations
 
-// TODO
+console.info("Configure Sequelize Models: Starting");
+console.info(`  Dialect: ${Database.getDialect()}`);
+Database.addModels([
+    Author,
+    AuthorStory,
+    Library,
+    Story,
+]);
+console.info("Configure Sequelize Models: Complete");
 
 // Synchronize Database Metadata
 
-// TODO
+console.info("Configure Database Metadata: Starting");
+const force: boolean = (!!process.env.SYNC_FORCE);
+console.info(`  Sync force: ${force}`);
+Database.sync({
+    force: force
+});
+console.info("Configure Database Metadata: Complete");
+
 
 // Configure Express Middleware
 
