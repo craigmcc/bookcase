@@ -1,3 +1,7 @@
+// Database ------------------------------------------------------------------
+
+// Set up database integration and return a configured Sequelize object.
+
 // External Modules ----------------------------------------------------------
 
 require("custom-env").env(true);
