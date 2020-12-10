@@ -35,9 +35,11 @@ export const authorsSecond = [
 export const librariesData = [
     {
         "name": "First Seed Library",
+        "scope": "first",
     },
     {
         "name": "Second Seed Library",
+        "scope": "second",
     },
 ];
 
@@ -75,3 +77,40 @@ export const storiesSecond = [
     },
 ];
 
+export const oauthUsers = [
+    {
+        active: true,
+        name: "Superuser User",
+        password: "superuser",
+        scope: "superuser",
+        username: "superuser",
+    },
+    {
+        active: true,
+        name: "First Library Admin",
+        password: "firstadmin",
+        scope: "first admin",
+        username: "firstadmin",
+    },
+    {
+        active: true,
+        name: "First Library Regular",
+        password: "firstregular",
+        scope: "first regular",
+        username: "firstregular",
+    },
+    {
+        active: true,
+        name: "Second Library Admin",
+        password: "secondadmin",
+        scope: "second admin",
+        username: "secondadmin",
+    },
+    {
+        active: true,
+        name: "Second Library Regular",
+        password: "secondregular",
+        scope: "second regular",
+        username: "secondregular",
+    },
+]

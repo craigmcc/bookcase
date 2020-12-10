@@ -1,6 +1,6 @@
 // ApiRouters ----------------------------------------------------------------
 
-// Consolidation of Routers for REST APIs for model objects.
+// Consolidation of Routers for REST APIs for application model objects.
 
 // External Modules ----------------------------------------------------------
 

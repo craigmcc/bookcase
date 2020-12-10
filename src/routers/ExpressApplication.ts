@@ -18,6 +18,7 @@ import morgan from "morgan";
 import LibraryRouter from "./LibraryRouter";
 import {handleHttpError, handleServerError, handleValidationError} from "../util/middleware";
 import ApiRouters from "./ApiRouters";
+import OAuthRouters from "../oauth/OAuthRouters";
 
 // Internal Modules ----------------------------------------------------------
 
@@ -49,7 +50,7 @@ app.get("/", (req, res) => {
 
 // Configure application-specific and OAuth-specific routing
 app.use("/api", ApiRouters);
-//app.use("/oauth", OAuthRouters);
+app.use("/oauth", OAuthRouters);
 
 // Configure error handling (must be last)
 app.use(handleHttpError);

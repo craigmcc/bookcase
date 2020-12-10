@@ -9,6 +9,15 @@ import { Sequelize } from "sequelize-typescript";
 
 // Internal Modules ----------------------------------------------------------
 
+import Author from "./Author";
+import AuthorStory from "./AuthorStory";
+import Library from "./Library";
+import Story from "./Story";
+
+import OAuthAccessToken from "../oauth/OAuthAccessToken";
+import OAuthRefreshToken from "../oauth/OAuthRefreshToken";
+import OAuthUser from "../oauth/OAuthUser";
+
 // Configure Database instance ----------------------------------------------
 
 const DB_DB: string = process.env.DB_DB || "";
@@ -42,6 +51,18 @@ export const Database = ((NODE_ENV !== "test")
             }
         )
 );
+
+Database.addModels([
+    // Application specific models
+    Author,
+    AuthorStory,
+    Library,
+    Story,
+    // OAuth2 integration models
+    OAuthAccessToken,
+    OAuthRefreshToken,
+    OAuthUser,
+]);
 
 // Export completed database configuration -----------------------------------
 

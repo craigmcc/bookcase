@@ -93,6 +93,20 @@ export class Library extends AbstractModel<Library> {
     })
     notes?: string;
 
+    @Column({
+        allowNull: false,
+        comment: "Scope required to access this Library.",
+        field: "scope",
+        type: DataType.STRING,
+        unique: true,
+        validate: {
+            notNull: {
+                msg: "scope: Is required"
+            }
+        }
+    })
+    scope!: string;
+
 /*
     @HasMany(() => Series)
     series!: Series[];
@@ -112,6 +126,7 @@ export interface LibraryAttributes {
     active: boolean;
     name: string;
     notes: string | null;
+    scope: string;
 }
 
 export default Library;

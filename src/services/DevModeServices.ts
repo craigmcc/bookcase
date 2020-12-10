@@ -12,6 +12,8 @@ import Database from "../models/Database";
 import Library from "../models/Library";
 import Story from "../models/Story";
 import * as SeedData from "../util/seed-data";
+import {oauthUsers} from "../util/seed-data";
+import OAuthUser from "../oauth/OAuthUser";
 
 // Public Functions ----------------------------------------------------------
 
@@ -28,6 +30,8 @@ export const reload = async (query: any): Promise<any> => {
     let authorsSecond =
         await loadAuthors(librarySecond.id, SeedData.authorsSecond);
 
+    let oauthUsers = await loadOAuthUsers(SeedData.oauthUsers);
+
     let storiesFirst =
         await loadStories(libraryFirst.id, authorsFirst, SeedData.storiesFirst);
     let storiesSecond =
@@ -37,6 +41,7 @@ export const reload = async (query: any): Promise<any> => {
     return {
         authors: await Author.findAll(),
         libraries: await Library.findAll(),
+        oauthUsers: await OAuthUser.findAll(),
         stories: await Story.findAll(),
     }
 }
@@ -67,6 +72,12 @@ const loadAuthors = async (libraryId: number | undefined, authors: any[]): Promi
 
 const loadLibraries = async (libraries: any[]): Promise<Library[]> => {
     return Library.bulkCreate(libraries, {
+        validate: false
+    });
+}
+
+const loadOAuthUsers = async (oauthUsers: any[]): Promise<OAuthUser[]> => {
+    return OAuthUser.bulkCreate(oauthUsers, {
         validate: false
     });
 }

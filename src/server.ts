@@ -8,12 +8,7 @@ require("custom-env").env(true);
 
 // Internal Modules ----------------------------------------------------------
 
-//import ExpressServer from "./controllers/ExpressServer";
-import Author from "./models/Author";
-import AuthorStory from "./models/AuthorStory";
 import Database from "./models/Database";
-import Library from "./models/Library";
-import Story from "./models/Story";
 import ExpressApplication from "./routers/ExpressApplication";
 
 // Configuration Processing --------------------------------------------------
@@ -22,12 +17,6 @@ import ExpressApplication from "./routers/ExpressApplication";
 
 console.info("Configure Sequelize Models: Starting");
 console.info(`  Dialect: ${Database.getDialect()}`);
-Database.addModels([
-    Author,
-    AuthorStory,
-    Library,
-    Story,
-]);
 console.info("Configure Sequelize Models: Complete");
 
 // Synchronize Database Metadata
