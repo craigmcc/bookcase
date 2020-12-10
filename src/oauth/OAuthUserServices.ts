@@ -4,7 +4,7 @@
 
 // External Modules ----------------------------------------------------------
 
-import {FindOptions, Op, Order} from "sequelize";
+import { FindOptions, Op, Order } from "sequelize";
 
 // Internal Modules ----------------------------------------------------------
 
@@ -148,7 +148,6 @@ export class OAuthUserServices extends AbstractServices<OAuthUser> {
         }
         return results[0];
     }
-
 
     // NOTE: match against the "name" field
     public async name(name: string, query?: any): Promise<OAuthUser[]> {

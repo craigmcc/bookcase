@@ -16,7 +16,7 @@ export const OAuthRefreshTokenRouter = Router({
     strict: true,
 });
 
-// Model-Specific Routes (no refreshTokenId) -----------------------------------------
+// Model-Specific Routes (no tokenId) -----------------------------------------
 
 // GET /exact/:token - Find OAuthRefreshToken by exact token
 OAuthRefreshTokenRouter.get("/exact/:token",

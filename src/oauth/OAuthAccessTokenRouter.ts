@@ -16,7 +16,7 @@ export const OAuthAccessTokenRouter = Router({
     strict: true,
 });
 
-// Model-Specific Routes (no accessTokenId) ----------------------------------
+// Model-Specific Routes (no tokenId) ----------------------------------------
 
 // GET /exact/:token - Find OAuthAccessToken by exact token
 OAuthAccessTokenRouter.get("/exact/:token",

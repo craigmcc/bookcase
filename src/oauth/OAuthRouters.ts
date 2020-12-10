@@ -9,6 +9,8 @@ import { Router } from "express";
 // Internal Modules ----------------------------------------------------------
 
 import OAuthUserRouter from "./OAuthUserRouter";
+import OAuthAccessTokenRouter from "./OAuthAccessTokenRouter";
+import OAuthRefreshTokenRouter from "./OAuthRefreshTokenRouter";
 
 // Public Classes ------------------------------------------------------------
 
@@ -18,6 +20,8 @@ export const OAuthRouters = Router({
 
 // Model-Specific Routers ----------------------------------------------------
 
+OAuthRouters.use("/accessTokens", OAuthAccessTokenRouter);
+OAuthRouters.use("/refreshTokens", OAuthRefreshTokenRouter);
 OAuthRouters.use("/users", OAuthUserRouter);
 
 export default OAuthRouters;
