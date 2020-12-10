@@ -111,13 +111,13 @@ export class OAuthRefreshTokenServices extends AbstractServices<OAuthRefreshToke
 
 // Model-Specific Methods ------------------------------------------------
 
-    public async exact(token: string, query?: any): Promise<OAuthUser> {
+    public async exact(token: string, query?: any): Promise<OAuthRefreshToken> {
         let options: FindOptions = appendQuery({
             where: {
                 token: token
             }
         }, query);
-        let results = await OAuthUser.findAll(options);
+        let results = await OAuthRefreshToken.findAll(options);
         if (results.length !== 1) {
             throw new NotFound(
                 `username: Missing OAuthRefreshToken '${token}'`,

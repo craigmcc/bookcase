@@ -48,11 +48,11 @@ export class OAuthAccessTokenServices extends AbstractServices<OAuthAccessToken>
         }
     }
 
-    public async insert(user: OAuthAccessToken): Promise<OAuthAccessToken> {
+    public async insert(accessToken: OAuthAccessToken): Promise<OAuthAccessToken> {
         let transaction;
         try {
             transaction = await Database.transaction();
-            let inserted: OAuthAccessToken = await OAuthAccessToken.create(user, {
+            let inserted: OAuthAccessToken = await OAuthAccessToken.create(accessToken, {
                 fields: fields,
                 transaction: transaction
             });
@@ -112,13 +112,13 @@ export class OAuthAccessTokenServices extends AbstractServices<OAuthAccessToken>
 
 // Model-Specific Methods ------------------------------------------------
 
-    public async exact(token: string, query?: any): Promise<OAuthUser> {
+    public async exact(token: string, query?: any): Promise<OAuthAccessToken> {
         let options: FindOptions = appendQuery({
             where: {
                 token: token
             }
         }, query);
-        let results = await OAuthUser.findAll(options);
+        let results = await OAuthAccessToken.findAll(options);
         if (results.length !== 1) {
             throw new NotFound(
                 `username: Missing OAuthAccessToken '${token}'`,

@@ -5,11 +5,13 @@
 // External Modules ----------------------------------------------------------
 
 require("custom-env").env(true);
+import { OAuthServer } from "@craigmcc/basic-oauth2-server"
 
 // Internal Modules ----------------------------------------------------------
 
 import Database from "./models/Database";
 import ExpressApplication from "./routers/ExpressApplication";
+import { OAuthServerConfig } from "./oauth/OAuthServerConfig";
 
 // Configuration Processing --------------------------------------------------
 
@@ -29,10 +31,16 @@ Database.sync({
 });
 console.info("Configure Database Metadata: Complete");
 
+// Integrate OAuth2 Support
+
+console.info("Configure OAuth2 Support: Starting");
+ExpressApplication.locals.OAuthServer = new OAuthServer(OAuthServerConfig);
+console.info(`  Access token lifetime: ${ExpressApplication.locals.OAuthServer.accessTokenLifetime}`);
+console.info("Configure OAuth2 Support: Complete");
+
 // Configure and Start Server ------------------------------------------------
 
 const port = process.env.PORT ? parseInt(process.env.PORT) : 3000;
-//expressServer.start(port);
 ExpressApplication.listen(port, () => {
     console.log(
         `Bookcase Server in ${process.env.NODE_ENV} mode running on port ${port}`
