@@ -4,16 +4,21 @@
 
 // External Modules ----------------------------------------------------------
 
+import {Logger} from "@overnightjs/logger";
+
 require("custom-env").env(true);
 
 // Internal Modules ----------------------------------------------------------
 
-import ExpressServer from "./controllers/ExpressServer";
+//import ExpressServer from "./controllers/ExpressServer";
 import Author from "./models/Author";
 import AuthorStory from "./models/AuthorStory";
 import Database from "./models/Database";
 import Library from "./models/Library";
 import Story from "./models/Story";
+import ExpressServer from "./routers/ExpressApplication";
+import ExpressApplication from "./routers/ExpressApplication";
+import app from "./routers/ExpressApplication";
 
 // Configuration Processing --------------------------------------------------
 
@@ -41,9 +46,11 @@ console.info("Configure Database Metadata: Complete");
 
 // Configure and Start Server ------------------------------------------------
 
-console.info("Configure Express Server: Starting");
-const expressServer = new ExpressServer();
-console.info("Configure Express Server: Complete");
-
 const port = process.env.PORT ? parseInt(process.env.PORT) : 3000;
-expressServer.start(port);
+//expressServer.start(port);
+ExpressApplication.listen(port, () => {
+    Logger.Imp(
+        `Bookcase Server in ${process.env.NODE_ENV} mode running on port ${port}`
+    )
+});
+
