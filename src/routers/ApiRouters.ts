@@ -11,6 +11,7 @@ import { Router } from "express";
 import AuthorRouter from "./AuthorRouter";
 import LibraryRouter from "./LibraryRouter";
 import StoryRouter from "./StoryRouter";
+import DevModeRouter from "./DevModeRouter";
 
 // Public Classes ------------------------------------------------------------
 
@@ -21,6 +22,7 @@ export const ApiRouters = Router({
 // Model-specific Routers ----------------------------------------------------
 
 ApiRouters.use("/authors", AuthorRouter);
+ApiRouters.use("/devmode", DevModeRouter);
 ApiRouters.use("/libraries", LibraryRouter);
 ApiRouters.use("/stories", StoryRouter);
 

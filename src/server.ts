@@ -4,8 +4,6 @@
 
 // External Modules ----------------------------------------------------------
 
-import {Logger} from "@overnightjs/logger";
-
 require("custom-env").env(true);
 
 // Internal Modules ----------------------------------------------------------
@@ -16,9 +14,7 @@ import AuthorStory from "./models/AuthorStory";
 import Database from "./models/Database";
 import Library from "./models/Library";
 import Story from "./models/Story";
-import ExpressServer from "./routers/ExpressApplication";
 import ExpressApplication from "./routers/ExpressApplication";
-import app from "./routers/ExpressApplication";
 
 // Configuration Processing --------------------------------------------------
 
@@ -49,7 +45,7 @@ console.info("Configure Database Metadata: Complete");
 const port = process.env.PORT ? parseInt(process.env.PORT) : 3000;
 //expressServer.start(port);
 ExpressApplication.listen(port, () => {
-    Logger.Imp(
+    console.log(
         `Bookcase Server in ${process.env.NODE_ENV} mode running on port ${port}`
     )
 });
