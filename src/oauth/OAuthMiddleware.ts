@@ -43,6 +43,7 @@ export const requireAdmin: RequestHandler =
         }
         const required = mapLibraryId(req) + " admin";
         authorizeToken(token, required);
+        res.locals.token = token;
         next();
 }
 
@@ -57,6 +58,8 @@ export const requireRegular: RequestHandler =
         }
         const required = mapLibraryId(req) + " admin";
         authorizeToken(token, required);
+        res.locals.token = token;
+        next();
     }
 
 /**
@@ -69,13 +72,15 @@ export const requireSuperuser: RequestHandler =
             throw new Forbidden("No access token presented", "requireToken");
         }
         authorizeToken(token, "superuser");
+        res.locals.token = token;
+        next();
 }
 
 // Private Functions ---------------------------------------------------------
 
 /**
  * Request the OAuthServer infrastructure to authorize the specified token
- * for the specified required scope.  Returns normally if successsful.
+ * for the specified required scope.  Returns normally if successful.
  *
  * @param token         The access token to be authorized
  * @param required      Required scope for the access token to be used

@@ -2,12 +2,13 @@
 
 // Express operations on OAuthUser model objects.
 
-// Exterrnal Modules ---------------------------------------------------------
+// External Modules ----------------------------------------------------------
 
 import { Request, Response, Router } from "express";
 
 // Internal Modules ----------------------------------------------------------
 
+import { requireSuperuser } from "./OAuthMiddleware";
 import OAuthUserServices from "./OAuthUserServices";
 
 // Public Objects ------------------------------------------------------------
@@ -15,6 +16,11 @@ import OAuthUserServices from "./OAuthUserServices";
 export const OAuthUserRouter = Router({
     strict: true,
 });
+
+// Router-wide Middleware ----------------------------------------------------
+
+// TODO - support admin access to users associated with a particular library
+OAuthUserRouter.use(requireSuperuser);
 
 // Model-Specific Routes (no userId) -----------------------------------------
 

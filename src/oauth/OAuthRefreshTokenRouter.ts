@@ -8,6 +8,7 @@ import { Request, Response, Router } from "express";
 
 // Internal Modules ----------------------------------------------------------
 
+import { requireSuperuser } from "./OAuthMiddleware";
 import OAuthRefreshTokenServices from "./OAuthRefreshTokenServices";
 
 // Public Objects ------------------------------------------------------------
@@ -15,6 +16,10 @@ import OAuthRefreshTokenServices from "./OAuthRefreshTokenServices";
 export const OAuthRefreshTokenRouter = Router({
     strict: true,
 });
+
+// Router-wide Middleware -----------------------------------------------------
+
+OAuthRefreshTokenRouter.use(requireSuperuser);
 
 // Model-Specific Routes (no tokenId) -----------------------------------------
 

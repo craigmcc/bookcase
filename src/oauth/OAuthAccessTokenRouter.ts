@@ -9,12 +9,17 @@ import { Request, Response, Router } from "express";
 // Internal Modules ----------------------------------------------------------
 
 import OAuthAccessTokenServices from "./OAuthAccessTokenServices";
+import { requireSuperuser } from "./OAuthMiddleware";
 
 // Public Objects ------------------------------------------------------------
 
 export const OAuthAccessTokenRouter = Router({
     strict: true,
 });
+
+// Router-wide Middleware ----------------------------------------------------
+
+OAuthAccessTokenRouter.use(requireSuperuser);
 
 // Model-Specific Routes (no tokenId) ----------------------------------------
 

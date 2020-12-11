@@ -31,22 +31,31 @@ import { NotFound } from "../util/http-errors";
 const authenticateUser: AuthenticateUser
     = (username: string, password: string): User | null =>
 {
+    let user: User = {
+        scope: "",
+        userId: 0
+    }
+    console.log(`authenticateUser(${username}, ${password})`);
     OAuthUser.findOne({ where: { username: username } })
         .then((result: OAuthUser | null) => {
             if (!result) {
                 return null;
             }
+            console.log("Found user for this username");
             // TODO - deal with hashed password
             if (password !== result.password) {
+                console.log(`Password mismatch want=${password} found=${result.password}`);
                 return null;
             }
-            const user: User = {
+            user = {
                 scope: result.scope,
                 userId: result.id ? result.id : 0 // Will never happen
             }
+            console.log("Preparing User ", user);
             return user;
         });
-    return null;
+    console.log("Returning User ", user);
+    return user;
 }
 
 const createAccessToken: CreateAccessToken
@@ -83,7 +92,6 @@ const createAccessToken: CreateAccessToken
     return outgoing;
 }
 
-// @ts-ignore (return inside then() or thrown error)
 const createRefreshToken: CreateRefreshToken
     = (accessToken: string, expires: Date, userId: Identifier): RefreshToken =>
 {
@@ -117,7 +125,6 @@ const createRefreshToken: CreateRefreshToken
     return outgoing;
 }
 
-// @ts-ignore (return inside then() or thrown error)
 const retrieveAccessToken: RetrieveAccessToken
     = (token: string): AccessToken =>
 {
@@ -142,7 +149,6 @@ const retrieveAccessToken: RetrieveAccessToken
     return outgoing;
 }
 
-// @ts-ignore (return inside then() or thrown error)
 const retrieveRefreshToken: RetrieveRefreshToken
     = (token: string): RefreshToken =>
 {
