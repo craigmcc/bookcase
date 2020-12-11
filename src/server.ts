@@ -12,6 +12,7 @@ import { OAuthServer } from "@craigmcc/basic-oauth2-server"
 import Database from "./models/Database";
 import ExpressApplication from "./routers/ExpressApplication";
 import { OAuthServerConfig } from "./oauth/OAuthServerConfig";
+export const OAuthServerImpl: OAuthServer = new OAuthServer(OAuthServerConfig);
 
 // Configuration Processing --------------------------------------------------
 

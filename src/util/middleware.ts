@@ -20,12 +20,7 @@ import { HttpError } from "./http-errors";
  * appropriate HTTP response.
  */
 export const handleHttpError: ErrorRequestHandler =
-        (error: HttpError, req: Request, res: Response, next: NextFunction) => {
-/*
-    console.error("handleHttpError: "
-        + JSON.stringify(error, null, 2));
-    console.error("stack Trace: ", error.stack);
-*/
+        (error: Error, req: Request, res: Response, next: NextFunction) => {
             if (error instanceof HttpError) {
                 res.status(error.status).send({
                     message: error.message,

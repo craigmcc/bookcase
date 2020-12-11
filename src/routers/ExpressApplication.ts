@@ -15,10 +15,10 @@ import bodyParser from "body-parser";
 import cors from "cors";
 import express from "express";
 import morgan from "morgan";
-import LibraryRouter from "./LibraryRouter";
 import {handleHttpError, handleServerError, handleValidationError} from "../util/middleware";
 import ApiRouters from "./ApiRouters";
 import OAuthRouters from "../oauth/OAuthRouters";
+import {handleOAuthError} from "../oauth/OAuthMiddleware";
 
 // Internal Modules ----------------------------------------------------------
 
@@ -55,6 +55,7 @@ app.use("/oauth", OAuthRouters);
 // Configure error handling (must be last)
 app.use(handleHttpError);
 app.use(handleValidationError);
-app.use(handleServerError);
+app.use(handleOAuthError);
+app.use(handleServerError); // The last of the last :-)
 
 export default app;

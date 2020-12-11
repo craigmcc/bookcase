@@ -89,7 +89,7 @@ export const oauthUsers = [
         active: true,
         name: "First Library Admin",
         password: "firstadmin",
-        scope: "first admin",
+        scope: "first admin regular",
         username: "firstadmin",
     },
     {
@@ -103,7 +103,7 @@ export const oauthUsers = [
         active: true,
         name: "Second Library Admin",
         password: "secondadmin",
-        scope: "second admin",
+        scope: "second admin regular",
         username: "secondadmin",
     },
     {

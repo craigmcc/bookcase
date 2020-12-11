@@ -9,12 +9,17 @@ import { Request, Response, Router } from "express";
 // Internal Modules ----------------------------------------------------------
 
 import AuthorServices from "../services/AuthorServices";
+import {requireSuperuser} from "../oauth/OAuthMiddleware";
 
 // Public Objects ------------------------------------------------------------
 
 export const AuthorRouter = Router({
     strict: true
 });
+
+// Author-wide Middleware ----------------------------------------------------
+
+AuthorRouter.use(requireSuperuser);
 
 // Standard CRUD Routes ------------------------------------------------------
 
