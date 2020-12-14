@@ -77,7 +77,7 @@ const createAccessToken: CreateAccessToken
     const incoming: Partial<OAuthAccessToken> = {
         expires: expires,
         scope: scope,
-        token: generateRandomToken(),
+        token: await generateRandomToken(),
         userId: incomingId,
     }
 
@@ -109,7 +109,7 @@ const createRefreshToken: CreateRefreshToken
     const incoming: Partial<OAuthRefreshToken> = {
         accessToken: accessToken,
         expires: expires,
-        token: generateRandomToken(),
+        token: await generateRandomToken(),
         userId: incomingId,
     }
 

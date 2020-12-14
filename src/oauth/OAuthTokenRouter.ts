@@ -9,16 +9,16 @@ import {
     RefreshTokenRequest,
     TokenRequest,
     TokenResponse,
-} from "@craigmcc/basic-oauth2-server";
+} from "@craigmcc/basic-oauth-orchestration";
 import { Request, Response, Router } from "express";
-import {requireRegular} from "./OAuthMiddleware";
+import { requireRegular } from "./OAuthMiddleware";
 
 const PASSWORD_GRANT_TYPE = "password";
 const REFRESH_GRANT_TYPE = "refresh_token";
 
 // Internal Modules ----------------------------------------------------------
 
-import { OAuthServerImpl as oauthServer } from "../server";
+import { OAuthOrchestrator } from "../server";
 import { BadRequest, ServerError } from "../util/http-errors";
 
 // Public Objects ------------------------------------------------------------
@@ -41,7 +41,7 @@ OAuthTokenRouter.delete("/",
         // Successful authorization stored our token in res.locals.token
         const token: string = res.locals.token;
         if (token) {
-            oauthServer.revokeAccessToken(token);
+            await OAuthOrchestrator.revoke(token);
             // Any thrown error will get handled by middleware
             res.status(204).send();
         } else {
@@ -80,7 +80,9 @@ OAuthTokenRouter.post("/",
                );
         }
         // Any thrown error will get handled by middleware
-        const tokenResponse: TokenResponse = oauthServer.token(tokenRequest);
+        const tokenResponse: TokenResponse
+            = await OAuthOrchestrator.token(tokenRequest);
+        res.send(tokenResponse);
 
     });
 
