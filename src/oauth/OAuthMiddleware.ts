@@ -4,13 +4,19 @@
 
 // External Modules ----------------------------------------------------------
 
-import { OAuthError, OAuthServer } from "@craigmcc/basic-oauth2-server";
-import {ErrorRequestHandler, NextFunction, Request, RequestHandler, Response} from "express";
+import { OAuthError } from "@craigmcc/basic-oauth-orchestration";
+import {
+    ErrorRequestHandler,
+    NextFunction,
+    Request,
+    RequestHandler,
+    Response
+} from "express";
 
 // Internal Modules ----------------------------------------------------------
 
-import {Forbidden, HttpError} from "../util/http-errors";
-import { OAuthServerImpl as oauthServer } from "../server";
+import { OAuthOrchestrator } from "../server";
+import { Forbidden } from "../util/http-errors";
 
 // Public Functions ----------------------------------------------------------
 
@@ -36,13 +42,13 @@ export const handleOAuthError: ErrorRequestHandler =
  * Require "admin" scope (for a specific library) to handle this request.
  */
 export const requireAdmin: RequestHandler =
-    (req: Request, res: Response, next: NextFunction) => {
+    async (req: Request, res: Response, next: NextFunction) => {
         const token = extractToken(req);
         if (!token) {
             throw new Forbidden("No access token presented", "requireToken");
         }
         const required = mapLibraryId(req) + " admin";
-        authorizeToken(token, required);
+        await authorizeToken(token, required);
         res.locals.token = token;
         next();
 }
@@ -51,13 +57,13 @@ export const requireAdmin: RequestHandler =
  * Require "regular" scope (for a specific library) to handle this request.
  */
 export const requireRegular: RequestHandler =
-    (req: Request, res: Response, next: NextFunction) => {
+    async (req: Request, res: Response, next: NextFunction) => {
         const token = extractToken(req);
         if (!token) {
             throw new Forbidden("No access token presented", "requireToken");
         }
         const required = mapLibraryId(req) + " admin";
-        authorizeToken(token, required);
+        await authorizeToken(token, required);
         res.locals.token = token;
         next();
     }
@@ -66,12 +72,12 @@ export const requireRegular: RequestHandler =
  * Require "superuser" scope to handle this request.
  */
 export const requireSuperuser: RequestHandler =
-    (req: Request, res: Response, next: NextFunction) => {
+    async (req: Request, res: Response, next: NextFunction) => {
         const token = extractToken(req);
         if (!token) {
             throw new Forbidden("No access token presented", "requireToken");
         }
-        authorizeToken(token, "superuser");
+        await authorizeToken(token, "superuser");
         res.locals.token = token;
         next();
 }
@@ -88,9 +94,9 @@ export const requireSuperuser: RequestHandler =
  * @throws              Error returned by OAuthServer.authorize()
  *                      if token was not successfully authorized
  */
-const authorizeToken = (token: string, required: string): void => {
+const authorizeToken = async (token: string, required: string): Promise<void> => {
     try {
-        oauthServer.authorize(token, required);
+        await OAuthOrchestrator.authorize(token, required);
     } catch (error) {
         console.error(`authorizeToken: token '${token}' does not satisfy scope '${required}'`);
         console.error("authorizeToken: error: ", error);

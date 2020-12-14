@@ -1,34 +1,43 @@
 // http-errors ---------------------------------------------------------------
 
-// Public error classes for HTTP responses that optionally include the
-// service name and the status code to be returned.
+// Classes defining HTTP errors that can be returned by this application.
 
-// Public Classes ------------------------------------------------------------
+// Base Error Class ----------------------------------------------------------
+
+export type Source = string | Error;
 
 /**
- * Base class that defines the standard properties of an HTTP error that will be
- * formatted and returned in the body of the response.  In addition, the "status"
- * property will be used to set the HTTP status header value.
+ * Abstract base class for all HTTP errors returned by this application.
+ * Developers should use the specific error subclasses for each specific
+ * use case.
+ *
+ * @param source                String message or an Error to be wrapped
+ * @param context               (Optional) Additional context for this error
  */
-export class HttpError extends Error {
+export abstract class HttpError extends Error {
 
-    constructor(message: string, service : string | undefined, status: number = 500) {
-        super(message);
-        this.service = service;
-        this.status = status;
+    constructor(source: Source, context?: string) {
+        super(source instanceof Error ? source.message : source);
+        this.context = context ? context : undefined;
+        this.inner = source instanceof Error ? source : undefined;
+        this.status = 400;
     }
 
-    service: string | undefined;
-    status: number = 500;
+    context: string | undefined;
+    inner: Error | undefined;
+    status: number;
 
 }
+
+// Specific Error Classes ----------------------------------------------------
 
 /**
  * Report a problem processing the input to a service.
  */
 export class BadRequest extends HttpError {
-    constructor(message: string, service: string | undefined) {
-        super(message, service, 400);
+    constructor(source: Source, context?: string) {
+        super(source, context);
+        this.status = 400;
     }
 }
 
@@ -36,8 +45,9 @@ export class BadRequest extends HttpError {
  * Report that a requested operation is not allowed for the requestor.
  */
 export class Forbidden extends HttpError {
-    constructor(message: string, service: string | undefined) {
-        super(message, service, 403);
+    constructor(source: Source, context?: string) {
+        super(source, context);
+        this.status = 403;
     }
 }
 
@@ -45,8 +55,9 @@ export class Forbidden extends HttpError {
  * Report that requested information was not found by the provided identifiers.
  */
 export class NotFound extends HttpError {
-    constructor(message: string, service: string | undefined) {
-        super(message, service, 404);
+    constructor(source: Source, context?: string) {
+        super(source, context);
+        this.status = 404;
     }
 }
 
@@ -54,8 +65,9 @@ export class NotFound extends HttpError {
  * Report that a requested insert or update would violate uniqueness constraints.
  */
 export class NotUnique extends HttpError {
-    constructor(message: string, service: string | undefined) {
-        super(message, service, 409);
+    constructor(source: Source, context?: string) {
+        super(source, context);
+        this.status = 409;
     }
 }
 
@@ -63,7 +75,8 @@ export class NotUnique extends HttpError {
  * Report that an internal server error of some sort has occurred.
  */
 export class ServerError extends HttpError {
-    constructor(message: string, service: string | undefined) {
-        super(message, service, 500);
+    constructor(source: Source, context?: string) {
+        super(source, context);
+        this.status = 500;
     }
 }

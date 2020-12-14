@@ -5,14 +5,15 @@
 // External Modules ----------------------------------------------------------
 
 require("custom-env").env(true);
-import { OAuthServer } from "@craigmcc/basic-oauth2-server"
+import { Orchestrator } from "@craigmcc/basic-oauth-orchestration";
 
 // Internal Modules ----------------------------------------------------------
 
 import Database from "./models/Database";
 import ExpressApplication from "./routers/ExpressApplication";
-import { OAuthServerConfig } from "./oauth/OAuthServerConfig";
-export const OAuthServerImpl: OAuthServer = new OAuthServer(OAuthServerConfig);
+import OAuthOrchestratorHandlers from "./oauth/OAuthOrchestratorHandlers";
+export const OAuthOrchestrator: Orchestrator
+    = new Orchestrator(OAuthOrchestratorHandlers);
 
 // Configuration Processing --------------------------------------------------
 
@@ -31,13 +32,6 @@ Database.sync({
     force: force
 });
 console.info("Configure Database Metadata: Complete");
-
-// Integrate OAuth2 Support
-
-console.info("Configure OAuth2 Support: Starting");
-ExpressApplication.locals.OAuthServer = new OAuthServer(OAuthServerConfig);
-console.info(`  Access token lifetime: ${ExpressApplication.locals.OAuthServer.accessTokenLifetime}`);
-console.info("Configure OAuth2 Support: Complete");
 
 // Configure and Start Server ------------------------------------------------
 

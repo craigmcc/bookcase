@@ -1,12 +1,12 @@
 // middleware ----------------------------------------------------------------
 
-// Create and return Express middleware functions that can be used to configure
-// Router implementations (or the entire application) via use() calls.
+// Express middleware functions that can be used to configure
+// Router implementations (or the entire application) via use() calls,
+// or be included in the processing flow for a particular route.
 
 // External Modules -----------------------------------------------------------
 
 import { ErrorRequestHandler, NextFunction, Request, Response } from "express";
-//import { SequelizeValidationError } from "sequelize";
 const SequelizeValidationError = require("sequelize");
 
 // Internal Modules ----------------------------------------------------------
@@ -22,9 +22,10 @@ import { HttpError } from "./http-errors";
 export const handleHttpError: ErrorRequestHandler =
         (error: Error, req: Request, res: Response, next: NextFunction) => {
             if (error instanceof HttpError) {
+                // TODO - log the error (with inner if present)?
                 res.status(error.status).send({
+                    context: error.context ? error.context : undefined,
                     message: error.message,
-                    service: error.service ? error.service : "Service",
                     status: error.status,
                 });
             } else {
@@ -39,6 +40,7 @@ export const handleHttpError: ErrorRequestHandler =
  */
 export const handleServerError: ErrorRequestHandler =
     (error: Error, req: Request, res: Response, next: NextFunction) => {
+        // TODO - log the error (with inner if present)?
         console.info("handleServerError: ", error);
         res.status(500).send({
             message: error.message,
@@ -52,12 +54,8 @@ export const handleServerError: ErrorRequestHandler =
  */
 export const handleValidationError: ErrorRequestHandler =
     (error: typeof SequelizeValidationError, req: Request, res: Response, next: NextFunction) => {
-/*
-        console.error("handleValidationError: "
-            + JSON.stringify(error, null, 2));
-        console.error("Stack Trace: " + error.stack);
-*/
         if (error.name && (error.name === "SequelizeValidationError")) {
+            // TODO - log the error (with inner if present)?
             res.status(400).send({
                 message: error.message,
                 status: 400,
