@@ -54,6 +54,21 @@ export const requireAdmin: RequestHandler =
 }
 
 /**
+ * Require just a validated token, no matter what scopes might be allowed.
+ */
+export const requireAny: RequestHandler =
+    async (req: Request, res: Response, next: NextFunction) => {
+        const token = extractToken(req);
+        if (!token) {
+            throw new Forbidden("No access token presented", "requireToken");
+        }
+        const required = "";
+        await authorizeToken(token, required);
+        res.locals.token = token;
+        next();
+    }
+
+/**
  * Require "regular" scope (for a specific library) to handle this request.
  */
 export const requireRegular: RequestHandler =

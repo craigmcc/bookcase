@@ -11,13 +11,13 @@ import {
     TokenResponse,
 } from "@craigmcc/basic-oauth-orchestration";
 import { Request, Response, Router } from "express";
-import { requireRegular } from "./OAuthMiddleware";
 
 const PASSWORD_GRANT_TYPE = "password";
 const REFRESH_GRANT_TYPE = "refresh_token";
 
 // Internal Modules ----------------------------------------------------------
 
+import { requireAny } from "./OAuthMiddleware";
 import { OAuthOrchestrator } from "../server";
 import { BadRequest, ServerError } from "../util/http-errors";
 
@@ -36,7 +36,7 @@ export const OAuthTokenRouter = Router({
 // DELETE /token - Revoke the access token (and any related refresh token)
 //                 that was used to authorize this request
 OAuthTokenRouter.delete("/",
-    requireRegular,
+    requireAny,
     async (req: Request, res: Response) => {
         // Successful authorization stored our token in res.locals.token
         const token: string = res.locals.token;
