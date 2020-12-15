@@ -8,12 +8,13 @@
     "url": "https://github.com/craigmcc/bookcase.git"
   },
   "scripts": {
-    "build": "tsc --watch --preserveWatchOutput",
-    "develop:dev": "concurrently \"npm:build\" \"npm:start:dev\"",
-    "develop:prod": "concurrently \"npm:build\" \"npm:start:prod\"",
+    "build": "tsc",
+    "build:watch": "tsc --watch --preserveWatchOutput",
+    "develop:dev": "concurrently \"npm:build:watch\" \"npm:start:dev\"",
+    "develop:prod": "concurrently \"npm:build:watch\" \"npm:start:prod\"",
     "start:dev": "NODE_ENV=development nodemon dist/server.js",
     "start:prod": "NODE_ENV=production nodemon dist/server.js",
-    "test": "NODE_ENV=test mocha -r ts-node/register test/**/*Test.ts",
+    "test": "NODE_ENV=test mocha -r ts-node/register test/**/*.test.ts",
     "tsc": "tsc"
   },
   "keywords": [
