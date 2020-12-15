@@ -8,6 +8,7 @@ import { Request, Response, Router } from "express";
 
 // Internal Modules ----------------------------------------------------------
 
+import { requireSuperuser } from "../oauth/OAuthMiddleware";
 import StoryServices from "../services/StoryServices";
 
 // Public Objects ------------------------------------------------------------
@@ -15,6 +16,10 @@ import StoryServices from "../services/StoryServices";
 export const StoryRouter = Router({
     strict: true
 });
+
+// Author-wide Middleware ----------------------------------------------------
+
+StoryRouter.use(requireSuperuser);
 
 // Standard CRUD Routes ------------------------------------------------------
 

@@ -8,8 +8,8 @@ import { Request, Response, Router } from "express";
 
 // Internal Modules ----------------------------------------------------------
 
+import { requireSuperuser } from "../oauth/OAuthMiddleware";
 import AuthorServices from "../services/AuthorServices";
-import {requireSuperuser} from "../oauth/OAuthMiddleware";
 
 // Public Objects ------------------------------------------------------------
 
