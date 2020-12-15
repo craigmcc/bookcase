@@ -19,7 +19,7 @@ import OAuthUser from "./OAuthUser";
 // Public Modules ------------------------------------------------------------
 
 @Table({
-    comment: "Access tokens created via @craigmcc.",
+    comment: "Access tokens created via @craigmcc/basic-oauth-orchestration.",
     tableName: "oauth_access_tokens",
 })
 export class OAuthAccessToken extends AbstractModel<OAuthAccessToken> {

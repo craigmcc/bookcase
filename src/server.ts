@@ -5,7 +5,7 @@
 // External Modules ----------------------------------------------------------
 
 require("custom-env").env(true);
-import { Orchestrator } from "@craigmcc/basic-oauth-orchestration";
+import { Orchestrator } from "@craigmcc/oauth-orchestrator";
 
 // Internal Modules ----------------------------------------------------------
 

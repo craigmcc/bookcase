@@ -19,7 +19,7 @@ import OAuthUser from "./OAuthUser";
 // Public Modules ------------------------------------------------------------
 
 @Table({
-    comment: "Refresh tokens created via @craigmcc.",
+    comment: "Refresh tokens created via @craigmcc/basic-oauth-orchestration.",
     tableName: "oauth_refresh_tokens",
 })
 export class OAuthRefreshToken extends AbstractModel<OAuthRefreshToken> {

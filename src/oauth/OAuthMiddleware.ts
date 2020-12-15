@@ -4,7 +4,7 @@
 
 // External Modules ----------------------------------------------------------
 
-import { OAuthError } from "@craigmcc/basic-oauth-orchestration";
+import { OAuthError } from "@craigmcc/oauth-orchestrator";
 import {
     ErrorRequestHandler,
     NextFunction,
