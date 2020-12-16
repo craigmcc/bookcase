@@ -21,6 +21,22 @@ import { Forbidden } from "../util/http-errors";
 // Public Functions ----------------------------------------------------------
 
 /**
+ * Dump request details (for debugging only).
+ */
+export const dumpRequestDetails: RequestHandler =
+    async (req: Request, res: Response, next: NextFunction) => {
+        console.info(`Handling ${req.method} ${req.url} details:`);
+        console.info(`  authorization: ${req.get("authorization")}`);
+        console.info(`  baseUrl:       ${req.baseUrl}`);
+        console.info(`  originalUrl:   ${req.originalUrl}`);
+        console.info(`  params:        ${JSON.stringify(req.params)}`);
+        console.info(`  path:          ${req.path}`);
+        console.info(`  query:         ${JSON.stringify(req.query)}`);
+        console.info(`  token:         ${res.locals.token}`);
+        next();
+}
+
+/**
  * Handle OAuthError errors by formatting and sending the
  * appropriate HTTP response.
  */
@@ -77,7 +93,7 @@ export const requireRegular: RequestHandler =
         if (!token) {
             throw new Forbidden("No access token presented", "requireToken");
         }
-        const required = mapLibraryId(req) + " admin";
+        const required = mapLibraryId(req) + " regular";
         await authorizeToken(token, required);
         res.locals.token = token;
         next();
@@ -114,7 +130,7 @@ const authorizeToken = async (token: string, required: string): Promise<void> =>
         await OAuthOrchestrator.authorize(token, required);
     } catch (error) {
         console.error(`authorizeToken: token '${token}' does not satisfy scope '${required}'`);
-        console.error("authorizeToken: error: ", error);
+//        console.error("authorizeToken: error: ", error);
         throw error;
     }
 

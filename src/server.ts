@@ -26,7 +26,10 @@ console.info("Configure Sequelize Models: Complete");
 // Synchronize Database Metadata
 
 console.info("Configure Database Metadata: Starting");
-const force: boolean = (!!process.env.SYNC_FORCE);
+let force: boolean = false;
+if (process.env.SYNC_FORCE) {
+    force = (process.env.SYNC_FORCE === "true");
+}
 console.info(`  Sync force: ${force}`);
 Database.sync({
     force: force

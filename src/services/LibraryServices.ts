@@ -333,6 +333,9 @@ let appendQuery = function(options: FindOptions, query?: any): FindOptions {
     if ("" === query.withAuthors) {
         include.push(Author);
     }
+    if ("" === query.withLibrary) {
+        include.push(Library);
+    }
     if ("" === query.withStories) {
         include.push(Story);
     }

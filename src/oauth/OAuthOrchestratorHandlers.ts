@@ -16,7 +16,7 @@ import {
     RetrieveAccessToken,
     RetrieveRefreshToken,
     RevokeAccessToken,
-} from "@craigmcc/basic-oauth-orchestration";
+} from "@craigmcc/oauth-orchestrator";
 
 // Internal Modules ----------------------------------------------------------
 

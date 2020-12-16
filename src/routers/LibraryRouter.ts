@@ -9,6 +9,7 @@ import { Request, Response, Router } from "express";
 // Internal Modules ----------------------------------------------------------
 
 import {
+    dumpRequestDetails,
     requireAdmin,
     requireRegular,
     requireSuperuser
@@ -20,6 +21,8 @@ import LibraryServices from "../services/LibraryServices";
 export const LibraryRouter = Router({
     strict: true,
 });
+
+//LibraryRouter.use(dumpRequestDetails);
 
 // Model-Specific Routes (no libraryId) --------------------------------------
 
