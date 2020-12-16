@@ -11,6 +11,7 @@ import { FindOptions, Op, Order } from "sequelize";
 import OAuthAccessToken from "./OAuthAccessToken";
 import OAuthRefreshToken from "./OAuthRefreshToken";
 import OAuthUser from "./OAuthUser";
+import { hashPassword } from "./OAuthUtils";
 import Database from "../models/Database";
 import AbstractServices from "../services/AbstractServices";
 import { NotFound } from "../util/http-errors";
@@ -38,7 +39,11 @@ export class OAuthUserServices extends AbstractServices<OAuthUser> {
         let options: FindOptions = appendQuery({
             order: OAuthUsersOrder
         }, query);
-        return OAuthUser.findAll(options);
+        let results: OAuthUser[] = await OAuthUser.findAll(options);
+        results.forEach(result => {
+            result.password = "";
+        })
+        return results;
     }
 
     public async find(userId: number, query?: any): Promise<OAuthUser> {
@@ -47,6 +52,7 @@ export class OAuthUserServices extends AbstractServices<OAuthUser> {
         }, query);
         let results = await OAuthUser.findAll(options);
         if (results.length === 1) {
+            results[0].password = "";
             return results[0];
         } else {
             throw new NotFound(
@@ -56,15 +62,19 @@ export class OAuthUserServices extends AbstractServices<OAuthUser> {
     }
 
     public async insert(user: OAuthUser): Promise<OAuthUser> {
-        // TODO - hash the password!
+        const newUser: Partial<OAuthUser> = {
+            ...user,
+            password: await hashPassword(user.password)
+        }
         let transaction;
         try {
             transaction = await Database.transaction();
-            let inserted: OAuthUser = await OAuthUser.create(user, {
+            let inserted: OAuthUser = await OAuthUser.create(newUser, {
                 fields: fields,
                 transaction: transaction
             });
             await transaction.commit();
+            inserted.password = "";
             return inserted;
         } catch (error) {
             if (transaction) {
@@ -93,12 +103,16 @@ export class OAuthUserServices extends AbstractServices<OAuthUser> {
     }
 
     public async update(userId: number, user: OAuthUser): Promise<OAuthUser> {
-        // TODO - disallow updating the password this way?
+        // TODO - disallow updating the password this way
+        let updatedUser: Partial<OAuthUser> = {
+            ...user,
+            password: ""
+        }
         let transaction;
         try {
             transaction = await Database.transaction();
             user.id = userId;
-            let result: [number, OAuthUser[]] = await OAuthUser.update(user, {
+            let result: [number, OAuthUser[]] = await OAuthUser.update(updatedUser, {
                 fields: fieldsWithId,
                 transaction: transaction,
                 where: { id: userId }
@@ -130,7 +144,11 @@ export class OAuthUserServices extends AbstractServices<OAuthUser> {
                 active: true
             }
         }, query);
-        return OAuthUser.findAll(options);
+        const results: OAuthUser[] = await OAuthUser.findAll(options);
+        results.forEach(result => {
+            result.password = "";
+        })
+        return results;
     }
 
     // NOTE:  match against the "username" field
@@ -146,6 +164,7 @@ export class OAuthUserServices extends AbstractServices<OAuthUser> {
                 `username: Missing OAuthUser '${username}'`,
                 "OAuthUserServices.exact()");
         }
+        results[0].password = "";
         return results[0];
     }
 
@@ -157,7 +176,11 @@ export class OAuthUserServices extends AbstractServices<OAuthUser> {
                 name: { [Op.iLike]: `%${name}%` }
             }
         }, query);
-        return OAuthUser.findAll(options);
+        const results: OAuthUser[] = await OAuthUser.findAll(options);
+        results.forEach(result => {
+            result.password = "";
+        })
+        return results;
     }
 
     // ***** OAuthAccessToken Lookups *****

@@ -23,8 +23,8 @@ import {
 import OAuthAccessToken from "./OAuthAccessToken";
 import OAuthRefreshToken from "./OAuthRefreshToken";
 import OAuthUser from "./OAuthUser";
+import { generateRandomToken, verifyPassword } from "./OAuthUtils";
 import { NotFound } from "../util/http-errors";
-import { generateRandomToken } from "./OAuthUtils";
 
 // Private Objects -----------------------------------------------------------
 
@@ -45,8 +45,7 @@ const authenticateUser: AuthenticateUser
     }
 
     // Validate against the specified password
-    // TODO - deal with hashed password
-    if (password !== oauthUser.password) {
+    if (!(await verifyPassword(password, oauthUser.password))) {
         // Creative subterfuge to not give anything away
         throw new NotFound(
             "username: Missing or invalid user",

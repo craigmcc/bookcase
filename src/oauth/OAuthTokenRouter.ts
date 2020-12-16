@@ -9,7 +9,7 @@ import {
     RefreshTokenRequest,
     TokenRequest,
     TokenResponse,
-} from "@craigmcc/basic-oauth-orchestration";
+} from "@craigmcc/oauth-orchestrator";
 import { Request, Response, Router } from "express";
 
 const PASSWORD_GRANT_TYPE = "password";

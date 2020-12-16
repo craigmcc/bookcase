@@ -12,8 +12,8 @@ import Database from "../models/Database";
 import Library from "../models/Library";
 import Story from "../models/Story";
 import * as SeedData from "../util/seed-data";
-import {oauthUsers} from "../util/seed-data";
 import OAuthUser from "../oauth/OAuthUser";
+import { hashPassword } from "../oauth/OAuthUtils";
 
 // Public Functions ----------------------------------------------------------
 
@@ -77,7 +77,15 @@ const loadLibraries = async (libraries: any[]): Promise<Library[]> => {
 }
 
 const loadOAuthUsers = async (oauthUsers: any[]): Promise<OAuthUser[]> => {
-    return OAuthUser.bulkCreate(oauthUsers, {
+    let loadedUsers: OAuthUser[] = [];
+    for (const oauthUser of oauthUsers) {
+        const loadedUser: OAuthUser = {
+            ...oauthUser,
+        }
+        loadedUser.password = await hashPassword(loadedUser.password);
+        loadedUsers.push(loadedUser);
+    }
+    return OAuthUser.bulkCreate(loadedUsers, {
         validate: false
     });
 }
@@ -106,4 +114,3 @@ const loadStories = async(
     await authors[1].$add("stories", results[2]);
     return results;
 }
-
