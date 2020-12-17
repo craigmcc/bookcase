@@ -4,6 +4,7 @@
 
 // External Modules ----------------------------------------------------------
 
+require("custom-env").env(true);
 import { OAuthError } from "@craigmcc/oauth-orchestrator";
 import {
     ErrorRequestHandler,
@@ -17,6 +18,12 @@ import {
 
 import { OAuthOrchestrator } from "../server";
 import { Forbidden } from "../util/http-errors";
+
+let oauthEnabled: boolean = true;
+if (process.env.OAUTH_ENABLED !== undefined) {
+    oauthEnabled = (process.env.OAUTH_ENABLED === "true");
+}
+console.info(`OAuthMiddleware: Access Protection Enabled: ${oauthEnabled}`);
 
 // Public Functions ----------------------------------------------------------
 
@@ -45,6 +52,7 @@ export const handleOAuthError: ErrorRequestHandler =
         if (error instanceof OAuthError) {
             res.status(error.status).send({
                 context: error.context ? error.context : undefined,
+                // Do *not* include "inner" if present!
                 message: error.message,
                 name: error.name ? error.name : undefined,
                 status: error.status ? error.status : undefined,
@@ -59,29 +67,37 @@ export const handleOAuthError: ErrorRequestHandler =
  */
 export const requireAdmin: RequestHandler =
     async (req: Request, res: Response, next: NextFunction) => {
-        const token = extractToken(req);
-        if (!token) {
-            throw new Forbidden("No access token presented", "requireToken");
+        if (oauthEnabled) {
+            const token = extractToken(req);
+            if (!token) {
+                throw new Forbidden("No access token presented (ad)", "requireToken");
+            }
+            const required = mapLibraryId(req) + " admin";
+            await authorizeToken(token, required);
+            res.locals.token = token;
+            next();
+        } else {
+            next();
         }
-        const required = mapLibraryId(req) + " admin";
-        await authorizeToken(token, required);
-        res.locals.token = token;
-        next();
-}
+    }
 
 /**
  * Require just a validated token, no matter what scopes might be allowed.
  */
 export const requireAny: RequestHandler =
     async (req: Request, res: Response, next: NextFunction) => {
-        const token = extractToken(req);
-        if (!token) {
-            throw new Forbidden("No access token presented", "requireToken");
+        if (oauthEnabled) {
+            const token = extractToken(req);
+            if (!token) {
+                throw new Forbidden("No access token presented (an)", "requireToken");
+            }
+            const required = "";
+            await authorizeToken(token, required);
+            res.locals.token = token;
+            next();
+        } else {
+            next();
         }
-        const required = "";
-        await authorizeToken(token, required);
-        res.locals.token = token;
-        next();
     }
 
 /**
@@ -89,14 +105,18 @@ export const requireAny: RequestHandler =
  */
 export const requireRegular: RequestHandler =
     async (req: Request, res: Response, next: NextFunction) => {
-        const token = extractToken(req);
-        if (!token) {
-            throw new Forbidden("No access token presented", "requireToken");
+        if (oauthEnabled) {
+            const token = extractToken(req);
+            if (!token) {
+                throw new Forbidden("No access token presented (re)", "requireToken");
+            }
+            const required = mapLibraryId(req) + " regular";
+            await authorizeToken(token, required);
+            res.locals.token = token;
+            next();
+        } else {
+            next();
         }
-        const required = mapLibraryId(req) + " regular";
-        await authorizeToken(token, required);
-        res.locals.token = token;
-        next();
     }
 
 /**
@@ -104,14 +124,19 @@ export const requireRegular: RequestHandler =
  */
 export const requireSuperuser: RequestHandler =
     async (req: Request, res: Response, next: NextFunction) => {
-        const token = extractToken(req);
-        if (!token) {
-            throw new Forbidden("No access token presented", "requireToken");
+        if (oauthEnabled) {
+            console.info("requireSuperuser checking for token");
+            const token = extractToken(req);
+            if (!token) {
+                throw new Forbidden("No access token presented (su)", "requireToken");
+            }
+            await authorizeToken(token, "superuser");
+            res.locals.token = token;
+            next();
+        } else {
+            next();
         }
-        await authorizeToken(token, "superuser");
-        res.locals.token = token;
-        next();
-}
+    }
 
 // Private Functions ---------------------------------------------------------
 
@@ -130,7 +155,7 @@ const authorizeToken = async (token: string, required: string): Promise<void> =>
         await OAuthOrchestrator.authorize(token, required);
     } catch (error) {
         console.error(`authorizeToken: token '${token}' does not satisfy scope '${required}'`);
-//        console.error("authorizeToken: error: ", error);
+        console.error("authorizeToken: error: ", error);
         throw error;
     }
 
@@ -149,16 +174,16 @@ const authorizeToken = async (token: string, required: string): Promise<void> =>
 const extractToken = (req: Request) : string | null => {
     const header: string | undefined = req.header("Authorization");
     if (!header) {
-        console.error("authorizeToken: No Authorization header included");
+        console.error("extractToken: No Authorization header included");
         return null;
     }
     const fields: string[] = header.split(" ");
     if (fields.length != 2) {
-        console.error(`authorizeToken: header '${header}' is malformed`);
+        console.error(`extractToken: header '${header}' is malformed`);
         return null;
     }
     if (fields[0] !== "Bearer") {
-        console.error(`authorizeToken: header '${header}' is not type Bearer`);
+        console.error(`extractToken: header '${header}' is not type Bearer`);
         return null;
     }
     return fields[1];

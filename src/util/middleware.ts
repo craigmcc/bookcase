@@ -22,9 +22,9 @@ import { HttpError } from "./http-errors";
 export const handleHttpError: ErrorRequestHandler =
         (error: Error, req: Request, res: Response, next: NextFunction) => {
             if (error instanceof HttpError) {
-                // TODO - log the error (with inner if present)?
                 res.status(error.status).send({
                     context: error.context ? error.context : undefined,
+                    // Do *not* include "inner" if present!
                     message: error.message,
                     status: error.status,
                 });
@@ -40,9 +40,9 @@ export const handleHttpError: ErrorRequestHandler =
  */
 export const handleServerError: ErrorRequestHandler =
     (error: Error, req: Request, res: Response, next: NextFunction) => {
-        // TODO - log the error (with inner if present)?
         console.info("handleServerError: ", error);
         res.status(500).send({
+            // Do *not* include "inner" if present!
             message: error.message,
             status: 500
         });
@@ -55,8 +55,8 @@ export const handleServerError: ErrorRequestHandler =
 export const handleValidationError: ErrorRequestHandler =
     (error: typeof SequelizeValidationError, req: Request, res: Response, next: NextFunction) => {
         if (error.name && (error.name === "SequelizeValidationError")) {
-            // TODO - log the error (with inner if present)?
             res.status(400).send({
+                // Do *not* include "inner" if present!
                 message: error.message,
                 status: 400,
             });
