@@ -33,18 +33,4 @@ function baseURL(): string {
         default:
             return "http://localhost:8080/api";
     }
-/*
-    let nodeEnv = process.env.REACT_APP_NODE_ENV;
-    console.info("Configuring remote server for "
-        + (nodeEnv ? nodeEnv : "default") + " mode.");
-    switch (nodeEnv) {
-        case "development":
-        case "test":
-            return "http://localhost:8084/api";
-        case "production":
-        default:
-            return "http://wildfly.hopto.org:8084/api";
-    }
-*/
-    return "";
 }
