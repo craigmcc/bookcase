@@ -25,12 +25,15 @@ function baseURL(): string {
     console.info(`Configuring remote server for ${nodeEnv} mode`);
     switch (nodeEnv) {
         case "development":
-            return "http://localhost:8080/api";
+            // client/package.json needs "proxy": "http://localhost:8081"
+            // server needs to route requests with this prefix
+            return "/api";
         case "test":
-            return "http://localhost:8080/api";
+            return "http://localhost:8081/api";
         case "production":
+            // server needs to route requests with this prefix
             return "/api";
         default:
-            return "http://localhost:8080/api";
+            return "http://localhost:8081/api";
     }
 }
