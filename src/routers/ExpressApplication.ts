@@ -15,6 +15,7 @@ import bodyParser from "body-parser";
 import cors from "cors";
 import express from "express";
 import morgan from "morgan";
+import path from "path";
 import {
     handleHttpError,
     handleServerError,
@@ -48,9 +49,9 @@ app.use(bodyParser.urlencoded({
 }));
 
 // Configure static file routing
-app.get("/", (req, res) => {
-    res.send("Hello from Library Server!");
-})
+const CLIENT_BASE: string = path.resolve("./") + "/client/build";
+console.info("Static File Path: " + CLIENT_BASE);
+app.use(express.static(CLIENT_BASE));
 
 // Configure application-specific and OAuth-specific routing
 app.use("/api", ApiRouters);
@@ -61,5 +62,10 @@ app.use(handleHttpError);
 app.use(handleValidationError);
 app.use(handleOAuthError);
 app.use(handleServerError); // The last of the last :-)
+
+// Configure unknown mappings back to client
+app.get("*", (req, res) => {
+    res.sendFile(CLIENT_BASE + "/index.html");
+})
 
 export default app;

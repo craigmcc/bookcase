@@ -19,6 +19,12 @@ export const ApiRouters = Router({
     strict: true,
 })
 
+// Static Routers ------------------------------------------------------------
+
+ApiRouters.get("/", (req, res) => {
+    res.send("Hello from Bookcase Server!");
+})
+
 // Model-specific Routers ----------------------------------------------------
 
 ApiRouters.use("/authors", AuthorRouter);
