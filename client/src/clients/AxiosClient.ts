@@ -21,6 +21,19 @@ export default axios.create({
 // Private Objects -----------------------------------------------------------
 
 function baseURL(): string {
+    const nodeEnv: string = process.env.NODE_ENV;
+    console.info(`Configuring remote server for ${nodeEnv} mode`);
+    switch (nodeEnv) {
+        case "development":
+            return "http://localhost:8080/api";
+        case "test":
+            return "http://localhost:8080/api";
+        case "production":
+            return "/api";
+        default:
+            return "http://localhost:8080/api";
+    }
+/*
     let nodeEnv = process.env.REACT_APP_NODE_ENV;
     console.info("Configuring remote server for "
         + (nodeEnv ? nodeEnv : "default") + " mode.");
@@ -32,4 +45,6 @@ function baseURL(): string {
         default:
             return "http://wildfly.hopto.org:8084/api";
     }
+*/
+    return "";
 }
