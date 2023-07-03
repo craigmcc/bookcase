@@ -1,4 +1,4 @@
-// siteConfig.ts
+// config/siteConfig.ts
 
 /**
  * Configuration variables for the entire site.
