@@ -8,6 +8,25 @@
     "start": "next start",
     "lint": "next lint"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/craigmcc/bookcase.git"
+  },
+  "keywords": [
+    "nextjs",
+    "node",
+    "prisma",
+    "postgres",
+    "react",
+    "shadcn",
+    "typescript"
+  ],
+  "author": "craigmcc",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/craigmcc/bookcase/issues"
+  },
+  "homepage": "https://github.com/craigmcc/bookcase#readme",
   "dependencies": {
     "@types/node": "20.3.3",
     "@types/react": "18.2.14",
