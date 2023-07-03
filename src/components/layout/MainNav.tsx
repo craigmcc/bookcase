@@ -8,11 +8,11 @@
 
 // External Modules ----------------------------------------------------------
 
-//import * as React from "react";
 import Link from "next/link";
 
 // Internal Modules ----------------------------------------------------------
 
+import {Icons} from "@/components/layout/Icons";
 import {siteConfig} from "@/config/siteConfig";
 import {cn} from "@/lib/utils";
 import {NavItem} from "@/types/NavItem";
@@ -27,7 +27,7 @@ export function MainNav({items}: MainNavProps) {
     return (
         <div className="flex gap-6 md:gap-10">
             <Link href="/" className="flex items-center space-x-2">
-                <span>(Logo Icon)</span>
+                <Icons.Library className="h-8 w-8"/>
                 <span className="inline-block font-bold">
                     {siteConfig.name}
                 </span>

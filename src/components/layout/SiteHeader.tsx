@@ -12,6 +12,7 @@ import Link from "next/link";
 
 // Internal Modules ----------------------------------------------------------
 
+import {Icons} from "@/components/layout/Icons";
 import {MainNav} from "@/components/layout/MainNav";
 import {siteConfig} from "@/config/siteConfig";
 
@@ -24,8 +25,13 @@ export function SiteHeader() {
                 <MainNav items={siteConfig.mainNav}/>
                 <div className="flex flex-1 items-center justify-end space-x-4">
                     <nav className="flex items-center space-x-1">
-                        <Link href={siteConfig.links.github} target="_blank" rel="noreferrer">
-                            <span>GitHub</span>
+                        <Link
+                            href={siteConfig.links.github}
+                            rel="noreferrer"
+                            target="_blank"
+                        >
+                            <Icons.Github className="h-5 w-5"/>
+                            <span className="sr-only">GitHub</span>
                         </Link>
                     </nav>
                 </div>
