@@ -1,0 +1,303 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["extendedWhereUnique"]
+}
+
+// TODO - May depend upon per-environment refinements
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Data models for the "library-next" application ----------------------------
+
+/// OAuth access tokens managed by @craigmcc/oauth-orchestrator.
+model AccessToken {
+  /// Primary key for this AccessToken.
+  id      Int      @id @default(autoincrement())
+  /// Timestamp after which this AccessToken is no longer valid.
+  expires DateTime @db.Timestamptz(6)
+  /// Space-separated list of scopes authorized for this AccessToken.
+  scope   String   @db.Text
+  /// The publicly visible value for this AccessToken.
+  token   String   @db.Text
+  /// ID of the User that this AccessToken belongs to.
+  userId  Int      @map("user_id")
+  /// (AccessTokenPlus) The User this AccessToken belongs to.
+  user    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([token])
+  @@map("access_tokens")
+}
+
+/// Contributor to one or more Series, Stories, and/or Volumes.
+model Author {
+  /// Primary key for this Author.
+  id             Int              @id @default(autoincrement())
+  /// Is this author active?
+  active         Boolean?         @default(true)
+  /// ID of the Library this Author belongs to.
+  libraryId      Int              @map("library_id")
+  /// Last name of this Author.
+  lastName       String           @map("last_name") @db.Text
+  /// First name of this Author.
+  firstName      String           @map("first_name") @db.Text
+  /// Optional notes about this Author.
+  notes          String?          @db.Text
+  /// (AuthorPlus) The Library this Author belongs to.
+  library        Library          @relation(fields: [libraryId], references: [id], onDelete: Cascade)
+  /// (AuthorPlus) Many-to-many relationship between this Author and the Series they have contributed to.
+  authorsSeries  AuthorsSeries[]
+  /// (AuthorPlus) Many-to-many relationship between this Author and the Stories they have contributed to.
+  authorsStories AuthorsStories[]
+  /// (AuthorPlus Many-to-many relationship between this Author and the Volumes they have contributed to.
+  authorsVolumes AuthorsVolumes[]
+
+  @@unique([libraryId, lastName, firstName])
+  @@map("authors")
+}
+
+/// Many-to-many relationship between Authors and the Series they have contibuted to.
+model AuthorsSeries {
+  /// ID of the Author referenced by this row.
+  authorId  Int      @map("author_id")
+  /// Is this a "principal" Author (credited) of this Series?
+  principal Boolean?
+  /// ID of the Series referenced by this row.
+  seriesId  Int      @map("series_id")
+  /// (AuthorsSeriesPlus) Author referenced by this row.
+  author    Author   @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  /// (AuthorsSeriesPlus) Series referenced by this row.
+  series    Series   @relation(fields: [seriesId], references: [id], onDelete: Cascade)
+
+  @@id([authorId, seriesId])
+  @@map("authors_series")
+}
+
+/// Many-to-many relationship between Authors and the Stories they have contributed to.
+model AuthorsStories {
+  /// ID of the Author referenced by this row.
+  authorId  Int      @map("author_id")
+  /// Is this a "principal" Author (credited) of this Story?
+  principal Boolean?
+  /// ID of the Story referenced by this row.
+  storyId   Int      @map("story_id")
+  /// (AuthorsStoriesPlus) Author referenced by this row.
+  author    Author   @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  /// (AuthorsStoriesPlus) Story referenced by this row.
+  story     Story    @relation(fields: [storyId], references: [id], onDelete: Cascade)
+
+  @@id([authorId, storyId])
+  @@map("authors_stories")
+}
+
+/// Many-to-many relationship between Authors and the Volumes they have contributed to.
+model AuthorsVolumes {
+  /// ID of the Author referenced by this row.
+  authorId  Int      @map("author_id")
+  /// Is this a "principal" Author (credited) of this Volume?
+  principal Boolean?
+  /// ID of the Volume referenced by this row.
+  volumeId  Int      @map("volume_id")
+  /// (AuthorsVolumesPlus) Author referenced by this row.
+  author    Author   @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  /// (AuthorsVolumesPlus) Volume referenced by this row.
+  volume    Volume   @relation(fields: [volumeId], references: [id], onDelete: Cascade)
+
+  @@id([authorId, volumeId])
+  @@map("authors_volumes")
+}
+
+/// Overall collection of Authors, Series, Stories, and Volumes.
+/// The contents for each Library are permission-protected for each User.
+model Library {
+  /// Primary key for this Library.
+  id      Int      @id @default(autoincrement())
+  /// Is this Library active?
+  active  Boolean? @default(true)
+  /// Globally unique name of this Library.
+  name    String   @unique @db.Text
+  /// Miscellaneous notes about this Library.
+  notes   String?  @db.Text
+  /// Scope prefix required for Users to access this Library.
+  scope   String   @unique @db.Text
+  /// (LibraryPlus) Authors belonging to this Library.
+  authors Author[]
+  /// (LibraryPlus) Series belonging to this Library.
+  series  Series[]
+  /// (LibraryPlus) Stories belonging to this Library.
+  stories Story[]
+  /// (LibraryPlus) Volumes belonging to this Library.
+  volumes Volume[]
+
+  @@map("libraries")
+}
+
+/// OAuth refresh tokens managed by @craigmcc/oauth-orchestrator.
+model RefreshToken {
+  /// Primary key for this RefreshToken.
+  id          Int      @id @default(autoincrement())
+  /// The publicly visible AccessToken value that this RefreshToken is associated with.
+  accessToken String   @map("access_token") @db.Text
+  /// Timestamp after which this RefreshToken is no longer valid.
+  expires     DateTime @db.Timestamptz(6)
+  /// The publicly visible value for this RefreshToken.
+  token       String   @db.Text
+  /// ID of the User that this RefreshToken belongs to.
+  userId      Int      @map("user_id")
+  /// (RefreshTokenPlus) The User this RefreshToken belongs to.
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([token])
+  @@index([accessToken])
+  @@map("refresh_tokens")
+}
+
+/// A named and ordered list of Stories in the same timeline, generally by the same Author(s).
+model Series {
+  /// Primary key for this Series.
+  id            Int             @id @default(autoincrement())
+  /// Is this Series active?
+  active        Boolean?        @default(true)
+  /// Copyright date of this Series.
+  copyright     String?         @db.VarChar(255)
+  /// ID of the Library this Series belongs to.
+  libraryId     Int             @map("library_id")
+  /// Name (unique within Library) of this Series.
+  name          String          @db.Text
+  /// Miscellaneous notes about this Series.
+  notes         String?         @db.Text
+  /// (SeriesPlus) Relationships of this Series to contributing Authors.
+  authorsSeries AuthorsSeries[]
+  /// (SeriesPlus) Library this Series belongs to.
+  library       Library         @relation(fields: [libraryId], references: [id], onDelete: Cascade)
+  /// (SeriesPlus) Relationships of this Series to Stories belonging to it.
+  seriesStories SeriesStories[]
+
+  @@unique([libraryId, name])
+  @@map("series")
+}
+
+/// Many-to-many relationship between Series and the Stories that belong to it.
+model SeriesStories {
+  /// Sort order (nominally one-relative) to this Story in this Series.
+  ordinal  Int?
+  /// ID of the Series referenced by this row.
+  seriesId Int    @map("series_id")
+  /// ID of the Story referenced by this row.
+  storyId  Int    @map("story_id")
+  /// (SeriesStoriesPlus) Series referenced by this row.
+  series   Series @relation(fields: [seriesId], references: [id], onDelete: Cascade)
+  /// (SeriesStoriesPlus) Story referenced by this row.
+  story    Story  @relation(fields: [storyId], references: [id], onDelete: Cascade)
+
+  @@id([seriesId, storyId])
+  @@map("series_stories")
+}
+
+/// Individual story or novel, which may be a participant in one or more Series,
+/// and/or published in one or more Volumes, contributed to by one or more Authors.
+model Story {
+  /// Primary key of this Story.
+  id             Int              @id @default(autoincrement())
+  /// Is this Story active?
+  active         Boolean?         @default(true)
+  /// Copyright date of this Story.
+  copyright      String?          @db.Text
+  /// ID of the Library this Story belongs to.
+  libraryId      Int              @map("library_id")
+  /// Name (unique within Library) of this Story.
+  name           String           @db.Text
+  /// Miscellaneous notes about this Story.
+  notes          String?          @db.Text
+  /// (StoryPlus) Relationship of this Story to contributing Authors.
+  authorsStories AuthorsStories[]
+  /// (StoryPlus) Relationship of this Series to the Stories it contains.
+  seriesStories  SeriesStories[]
+  /// (StoryPlus) Library this Story belongs to.
+  library        Library          @relation(fields: [libraryId], references: [id], onDelete: Cascade)
+  /// (StoryPlus) Relationship of this Story to the Volumes containing it.
+  volumesStories VolumesStories[]
+
+  @@unique([libraryId, name])
+  @@map("stories")
+}
+
+/// Individual user that can be authencitated via @craigmcc/oauth-orchestrator.
+model User {
+  /// Primary key of this User.
+  id                   Int            @id @default(autoincrement())
+  /// Is this User active?
+  active               Boolean?       @default(true)
+  /// API key (for this User) in the Google Books API.
+  google_books_api_key String?        @db.Text
+  /// Name (non-normative) of this User.
+  name                 String         @db.Text
+  /// Password for this User.  In the database, this value is hashed.
+  /// It is never returned as part of a User model representation.
+  password             String         @db.Text
+  /// Space-separated scope values this User is authorized to use.
+  scope                String         @db.Text
+  /// Globally unique (not just Library-unique) username for this User.
+  username             String         @unique
+  /// (UserPlus) AccessTokens associated with this User.
+  accessTokens         AccessToken[]
+  /// (UserPlus) RefreshTokens associated with this User.
+  refreshTokens        RefreshToken[]
+
+  @@map("users")
+}
+
+/// Physical or electronic published unit, contributed to by one or more Authors,
+/// and containing one or more Stories.
+model Volume {
+  /// Primary key of this Volume.
+  id             Int              @id @default(autoincrement())
+  /// Is this Volume active?
+  active         Boolean?         @default(true)
+  /// Copyright date of this Volume.
+  copyright      String?          @db.Text
+  /// ID of this Volume in the Google Books API.
+  googleId       String?          @map("google_id") @db.VarChar(255)
+  /// ISBN identifier of this Volume.
+  isbn           String?          @db.Text
+  /// ID of the Library this Volume belongs to.
+  libraryId      Int              @map("library_id")
+  /// Physical location of this Volume.  TODO - see enumeration.
+  location       String?          @db.Text
+  /// Name (unique within Library) of this Volume.
+  name           String           @db.Text
+  /// Miscellaneous notes about this Volume.
+  notes          String?          @db.Text
+  /// Has this Volume been read already?
+  read           Boolean          @default(false)
+  /// Type of this Volume ("Single", "Collection", "Anthology").  TODO - see enumeration.
+  type           String           @db.Text
+  /// (VolumePlus) Relationship of this Volume to contributing Autohrs.
+  authorsVolumes AuthorsVolumes[]
+  /// (VolumePlus) Library this Volume belongs to.
+  library        Library          @relation(fields: [libraryId], references: [id], onDelete: Cascade)
+  /// (VolumePlus) Relationship of this Volume to the Stories that it contains.
+  volumesStories VolumesStories[]
+
+  @@unique([libraryId, name])
+  @@map("volumes")
+}
+
+/// Many-to-many relationship between Volumes and the Stories that belong to it.
+model VolumesStories {
+  /// ID of the Volume referenced by this row.
+  volumeId Int    @map("volume_id")
+  /// ID of the Story referenced by this row.
+  storyId  Int    @map("story_id")
+  /// (VolumesStoriesPlus) Story referenced by this row.
+  story    Story  @relation(fields: [storyId], references: [id], onDelete: Cascade)
+  /// (VolumesStoriesPlus) Volume referenced by this row.
+  volume   Volume @relation(fields: [volumeId], references: [id], onDelete: Cascade)
+
+  @@id([volumeId, storyId])
+  @@map("volumes_stories")
+}
