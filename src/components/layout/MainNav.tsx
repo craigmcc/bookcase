@@ -33,7 +33,7 @@ export function MainNav({items}: MainNavProps) {
                 </span>
             </Link>
             {items?.length ? (
-                <nav className="flex gap-6">
+                <nav className="flex gap-4">
                     {items.map((item, index) =>
                             item.href && (
                                 <Link
