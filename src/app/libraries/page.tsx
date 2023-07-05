@@ -20,7 +20,7 @@ import {DataTable} from "@/components/shared/DataTable";
 // Public Objects ------------------------------------------------------------
 
 /**
- * Dummy getData() method, will eventually use LibraryActions.all().
+ * TODO: Dummy getData() method, will eventually use LibraryActions.all().
  */
 async function getData(): Promise<Library[]> {
     return [

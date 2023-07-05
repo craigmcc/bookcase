@@ -26,6 +26,9 @@ export const columns: ColumnDef<Library>[] = [
     },
     {
         accessorKey: "active",
+        cell: ({row}) => {
+            return <div className="text-center">{row.getValue("active")}</div>
+        },
         header: "Active",
     },
     {
