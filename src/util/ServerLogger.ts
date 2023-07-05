@@ -1,6 +1,10 @@
-// ServerLogger --------------------------------------------------------------
+// util/ServerLogger.ts
 
-// Configure and return a Pino logger for server generated messages.
+/**
+ * Configure and return a Pino logger for server generated messages.
+ *
+ * @packageDocumentation
+ */
 
 // External Modules ----------------------------------------------------------
 
