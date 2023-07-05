@@ -17,6 +17,8 @@ import {ColumnDef} from "@tanstack/table-core";
 
 // Internal Modules ----------------------------------------------------------
 
+import {Icons} from "@/components/layout/Icons";
+
 // Public Objects ------------------------------------------------------------
 
 export const columns: ColumnDef<Library>[] = [
@@ -27,7 +29,10 @@ export const columns: ColumnDef<Library>[] = [
     {
         accessorKey: "active",
         cell: ({row}) => {
-            return <div className="text-center">{row.getValue("active")}</div>
+            const value = Boolean(row.getValue("active"));
+            return value
+                ? <Icons.Check color="green"/>
+                : <Icons.Uncheck color="red"/>
         },
         header: "Active",
     },
