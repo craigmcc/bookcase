@@ -16,12 +16,18 @@ import {
 
 import {columns} from "./columns";
 import {DataTable} from "@/components/shared/DataTable";
+import * as LibraryActions from "@/actions/LibraryActions";
 
 // Public Objects ------------------------------------------------------------
+
+async function getData(): Promise<LibraryActions.LibraryPlus[]> {
+    return await LibraryActions.all();
+}
 
 /**
  * TODO: Dummy getData() method, will eventually use LibraryActions.all().
  */
+/*
 async function getData(): Promise<Library[]> {
     return [
         {
@@ -47,6 +53,7 @@ async function getData(): Promise<Library[]> {
         },
     ];
 }
+*/
 
 export default async function LibrariesPage() {
     const data = await getData();
