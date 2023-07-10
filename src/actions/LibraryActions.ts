@@ -1,6 +1,6 @@
 "use server"
 
-// src/actions/LibraryActions.ts
+// actions/LibraryActions.ts
 
 /**
  * Server side actions for Library model objects.
