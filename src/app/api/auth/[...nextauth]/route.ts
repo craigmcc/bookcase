@@ -15,7 +15,7 @@ import CredentialsProvider from "next-auth/providers/credentials";
 // Internal Modules ----------------------------------------------------------
 
 import prisma from "@/prisma";
-import * as UserActions from "@/actions/UserActions";
+//import * as UserActions from "@/actions/UserActions";
 import {verifyPassword} from "@/oauth/OAuthUtils";
 import logger from "@/util/ServerLogger";
 
@@ -26,7 +26,7 @@ const handler = NextAuth({
     callbacks: {
 
         async jwt({ token, user}) {
-            logger.info({
+            logger.trace({
                 context: "jwt",
                 token: token,
                 user: user,
@@ -35,14 +35,18 @@ const handler = NextAuth({
         },
 
         async session({ session, token, user }) {
-            logger.info({
-                context: "session",
+            logger.trace({
+                context: "session.input",
                 session: session,
                 token: token,
                 user: user,
             })
-            // @ts-ignore - TODO: Shouldn't AdapterUser already be UserActions.UserPlus?
-            session.user = user; // Should have password already redacted
+            // @ts-ignore TODO: Doesn't make sense, but that's the way lots of examples do things
+            session.user = token;
+            logger.trace({
+                context: "session.output",
+                session: session,
+            });
             return session;
         }
 
@@ -56,7 +60,7 @@ const handler = NextAuth({
          */
         CredentialsProvider({
             async authorize(credentials, req) {
-                logger.info({
+                logger.trace({
                     context: "authorize",
                     credentials: credentials,
                     req: req,
@@ -69,7 +73,7 @@ const handler = NextAuth({
                         const user = await prisma.user.findUnique({
                             where: { username: credentials.username }
                         })
-                        logger.info({
+                        logger.trace({
                             context: "authorize.validate",
                             user: user,
                         })
@@ -77,7 +81,7 @@ const handler = NextAuth({
                             return null;
                         }
                         if (await verifyPassword(credentials.password, user.password)) {
-                            logger.info({
+                            logger.trace({
                                 context: "authorize.success",
                                 user: user,
                             })

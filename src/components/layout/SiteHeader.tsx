@@ -8,7 +8,7 @@
 
 // External Modules ----------------------------------------------------------
 
-import Link from "next/link";
+//import Link from "next/link";
 import {signIn, signOut, useSession} from "next-auth/react";
 
 // Internal Modules ----------------------------------------------------------
@@ -23,16 +23,23 @@ import {siteConfig} from "@/config/siteConfig";
 
 export function SiteHeader() {
     const {data: session} = useSession();
+    // NOTE: session?.user?.scope is available if the user is signed in
+//    console.log("SiteHeader session", session);
     return (
         <header className="sticky top-0 z-40 w-full border-b bg-indigo-50">
             <div className="container flex h-16 items-center space-x-4 sm:justify-between sm:space-x-0">
                 <MainNav items={siteConfig.mainNav}/>
                 <div className="flex flex-1 items-center justify-end space-x-4">
-                    {session?.user ? (
-                        <SignOutButton onClick={() => signOut()}/>
-                    ) : (
-                        <SignInButton onClick={() => signIn()}/>
-                    )}
+                    <div className="flex gap-2">
+                        {session?.user ? (
+                            <>
+                                <p className="align-middle py-2 text-sm text-indigo-600"> {session.user.name}</p>
+                                <SignOutButton onClick={() => signOut()}/>
+                            </>
+                        ) : (
+                            <SignInButton onClick={() => signIn()}/>
+                        )}
+                    </div>
 {/*
                     <nav className="flex items-center space-x-1">
                         <Link
