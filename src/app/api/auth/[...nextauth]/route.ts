@@ -41,10 +41,8 @@ const handler = NextAuth({
                 token: token,
                 user: user,
             })
-            // @ts-ignore
-            const scrubbed = user as UserActions.UserPlus;
-            scrubbed.password = ""; // Redacted
-            session.user = scrubbed;
+            // @ts-ignore - TODO: Shouldn't AdapterUser already be UserActions.UserPlus?
+            session.user = user; // Should have password already redacted
             return session;
         }
 
@@ -66,6 +64,8 @@ const handler = NextAuth({
                 try {
                     if (credentials) {
 //                        const user = await UserActions.exact(credentials.username);
+                        // We need to do this ourselves because UserActions.exact()
+                        // will scrub the (hashed) password we need for verification.
                         const user = await prisma.user.findUnique({
                             where: { username: credentials.username }
                         })
@@ -81,6 +81,8 @@ const handler = NextAuth({
                                 context: "authorize.success",
                                 user: user,
                             })
+                            // We no longer need the (hashed) password, so redact it
+                            user.password = "";
                             return user as any; // TODO - seems flaky
                         } else {
                             logger.info({
