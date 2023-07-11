@@ -9,21 +9,31 @@
 // External Modules ----------------------------------------------------------
 
 import Link from "next/link";
+import {signIn, signOut, useSession} from "next-auth/react";
 
 // Internal Modules ----------------------------------------------------------
 
-import {Icons} from "@/components/layout/Icons";
+//import {Icons} from "@/components/layout/Icons";
 import {MainNav} from "@/components/layout/MainNav";
+import {SignInButton} from "@/components/layout/SignInButton";
+import {SignOutButton} from "@/components/layout/SignOutButton";
 import {siteConfig} from "@/config/siteConfig";
 
 // Public Objects ------------------------------------------------------------
 
 export function SiteHeader() {
+    const {data: session} = useSession();
     return (
         <header className="sticky top-0 z-40 w-full border-b bg-indigo-50">
             <div className="container flex h-16 items-center space-x-4 sm:justify-between sm:space-x-0">
                 <MainNav items={siteConfig.mainNav}/>
                 <div className="flex flex-1 items-center justify-end space-x-4">
+                    {session?.user ? (
+                        <SignOutButton onClick={() => signOut()}/>
+                    ) : (
+                        <SignInButton onClick={() => signIn()}/>
+                    )}
+{/*
                     <nav className="flex items-center space-x-1">
                         <Link
                             href={siteConfig.links.github}
@@ -34,6 +44,7 @@ export function SiteHeader() {
                             <span className="sr-only">GitHub</span>
                         </Link>
                     </nav>
+*/}
                 </div>
             </div>
         </header>

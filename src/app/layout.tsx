@@ -17,7 +17,7 @@ const inter = Inter({ subsets: ['latin'] });
 
 import './globals.css'
 import {siteConfig} from "@/config/siteConfig";
-import {SiteHeader} from "@/components/layout/SiteHeader";
+import RootLayoutClient from "@/app/layout-client";
 
 // Public Objects ------------------------------------------------------------
 
@@ -40,10 +40,9 @@ export default function RootLayout({children}: RootLayoutProps) {
   return (
     <html lang="en">
       <body className={inter.className}>
-        <div className="relative flex min-h-screen flex-col">
-          <SiteHeader/>
-          <div className="flex-1">{children}</div>
-        </div>
+        <RootLayoutClient>
+          {children}
+        </RootLayoutClient>
       </body>
     </html>
   )
