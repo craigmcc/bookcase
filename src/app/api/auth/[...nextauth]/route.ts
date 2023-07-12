@@ -14,9 +14,8 @@ import CredentialsProvider from "next-auth/providers/credentials";
 
 // Internal Modules ----------------------------------------------------------
 
-import prisma from "@/prisma";
-//import * as UserActions from "@/actions/UserActions";
 import {verifyPassword} from "@/oauth/OAuthUtils";
+import prisma from "@/prisma";
 import logger from "@/util/ServerLogger";
 
 // Public Objects ------------------------------------------------------------
@@ -71,7 +70,6 @@ const handler = NextAuth({
                 });
                 try {
                     if (credentials) {
-//                        const user = await UserActions.exact(credentials.username);
                         // We need to do this ourselves because UserActions.exact()
                         // will scrub the (hashed) password we need for verification.
                         const user = await prisma.user.findUnique({
