@@ -21,13 +21,12 @@ import {
 // Internal Modules ----------------------------------------------------------
 
 import * as LibraryActions from "./LibraryActions";
-//import * as SeriesActions from "./SeriesActions";
+import * as SeriesActions from "./SeriesActions";
 //import * as StoryActions from "./StoryActions";
 //import * as VolumeActions from "./VolumeActions";
 import prisma from "../prisma";
 import {PaginationOptions} from "@/types/types";
 import {NotFound, NotUnique, ServerError} from "@/util/HttpErrors";
-import AuthorFindManyArgs = Prisma.AuthorFindManyArgs;
 
 // Public Types --------------------------------------------------------------
 
@@ -274,8 +273,8 @@ export const insert = async (libraryId: number, author: Prisma.AuthorUncheckedCr
  * @throws ServerError                  If a low level error is thrown
  */
 export const remove = async (libraryId: number, authorId: number): Promise<AuthorPlus> => {
+    const author = await find(libraryId, authorId);
     try {
-        const author = await find(libraryId, authorId);
         await prisma.author.delete({
             where: { id: authorId },
         });
@@ -302,7 +301,7 @@ export const seriesConnect =
     async (libraryId: number, authorId: number, seriesId: number): Promise<AuthorPlus> =>
     {
         const author = await find(libraryId, authorId);
-        // TODO: await SeriesActions.find(libraryId, seriesId);
+        await SeriesActions.find(libraryId, seriesId);
         try {
             await prisma.authorsSeries.create({
                 data: {
@@ -341,7 +340,7 @@ export const seriesDisconnect =
     async (libraryId: number, authorId: number, seriesId: number): Promise<AuthorPlus> =>
     {
         const author = await find(libraryId, authorId);
-        // TODO: await SeriesActions.find(libraryId, seriesId);
+        await SeriesActions.find(libraryId, seriesId);
         try {
             await prisma.authorsSeries.delete({
                 where: {
@@ -678,7 +677,7 @@ export const take = (options?: PaginationOptions): number | undefined => {
  */
 export const uniqueName = async(libraryId: number, authorId: number | null, firstName: string, lastName: string): Promise<boolean> => {
     try {
-        const args: AuthorFindManyArgs = {};
+        const args: Prisma.AuthorFindManyArgs = {};
         if (authorId) {
             args.where = {
                 id: {
