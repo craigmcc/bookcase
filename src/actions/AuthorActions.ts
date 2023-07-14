@@ -293,12 +293,13 @@ export const remove = async (libraryId: number, authorId: number): Promise<Autho
  * @param libraryId                     ID of the Library being queried
  * @param authorId                      ID of the Author being connected to
  * @param seriesId                      ID of the Series being connected
+ * @param principal                     Is this Author a principal Author of this Series?
  *
  * @throws NotFound                     If the specified Author or Series is not found
  * @throws ServerError                  If a low level error is thrown
  */
 export const seriesConnect =
-    async (libraryId: number, authorId: number, seriesId: number): Promise<AuthorPlus> =>
+    async (libraryId: number, authorId: number, seriesId: number, principal?: boolean): Promise<AuthorPlus> =>
     {
         const author = await find(libraryId, authorId);
         await SeriesActions.find(libraryId, seriesId);
@@ -306,6 +307,7 @@ export const seriesConnect =
             await prisma.authorsSeries.create({
                 data: {
                     authorId: authorId,
+                    principal: (typeof principal !== undefined) ? principal : undefined,
                     seriesId: seriesId,
                 }
             });
