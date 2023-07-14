@@ -337,9 +337,88 @@ export const remove = async (libraryId: number, seriesId: number): Promise<Serie
     }
 }
 
-// TODO: storyConnect()
+/**
+ * Connect the specified Story to this Series.
+ *
+ * @param libraryId                     ID of the Library being queried
+ * @param seriesId                      ID of the Series being connected to
+ * @param storyId                       ID of the Story being connected
+ * @param ordinal                       Ordinal order of this Story in this Series
+ *
+ * @throws NotFound                     If the specified Author or Story is not found
+ * @throws ServerError                  If a low level error is thrown
+ */
+export const storyConnect =
+    async (libraryId: number, seriesId: number, storyId: number, ordinal?: number): Promise<SeriesPlus> =>
+    {
+        const series = await find(libraryId, seriesId);
+        // TODO: await StoryActions.find(libraryId, storyId);
+        try {
+            await prisma.seriesStories.create({
+                data: {
+                    ordinal: ordinal,
+                    seriesId: seriesId,
+                    storyId: storyId,
+                }
+            });
+            return series;
+        } catch (error) {
+            if (error instanceof Prisma.PrismaClientKnownRequestError) {
+                if (error.code === "P2002") {
+                    throw new NotUnique(
+                        `connect: Series ID ${seriesId} and Story ID ${storyId} are already connected`,
+                        "SeriesActions.storyConnect"
+                    );
+                }
+            }
+            throw new ServerError(
+                error as Error,
+                "SeriesActions.storyConnect",
+            );
+        }
+    }
 
-// TODO: storyDisconnect()
+/**
+ * Disconnect the specified Story from this Series.
+ *
+ * @param libraryId                     ID of the Library being queried
+ * @param seriesId                      ID of the Series being disconnected from
+ * @param storyId                       ID of the Story being disconnected
+ *
+ * @throws NotFound                     If the specified Author or Story is not found
+ * @throws ServerError                  If a low level error is thrown
+ */
+export const storyDisconnect =
+    async (libraryId: number, seriesId: number, storyId: number): Promise<SeriesPlus> =>
+    {
+        const series = await find(libraryId, seriesId);
+        // TODO: await StoryActions.find(libraryId, storyId);
+        try {
+            await prisma.seriesStories.delete({
+                where: {
+                    seriesId_storyId: {
+                        seriesId: seriesId,
+                        storyId: storyId,
+                    }
+                },
+            });
+            return series;
+        } catch (error) {
+            if (error instanceof Prisma.PrismaClientKnownRequestError) {
+                if (error.code === "P2025") {
+                    throw new NotFound(
+                        `disconnect: Series ID ${seriesId} and Story ID ${storyId} are not connected`,
+                        "SeriesActions.storyDisconnect",
+                    );
+                }
+            }
+            throw new ServerError(
+                error as Error,
+                "SeriesActions.storyDisconnect",
+            );
+        }
+
+    }
 
 /**
  * Update and return the specified Series.
