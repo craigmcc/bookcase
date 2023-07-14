@@ -8,7 +8,7 @@
 
 // External Modules ----------------------------------------------------------
 
-import rfs from "rotating-file-stream";
+const rfs = require("rotating-file-stream");
 
 // Internal Modules ----------------------------------------------------------
 
