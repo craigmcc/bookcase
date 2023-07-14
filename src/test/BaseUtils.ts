@@ -117,34 +117,34 @@ export abstract class BaseUtils {
 
         // Load relationships if both related tables were requested
         if (options.withAuthors && options.withSeries) {
-            loadAuthorsSeries(authors0[0], [series0[0]]);
-            loadAuthorsSeries(authors0[1], [series0[0]]);
-            loadAuthorsSeries(authors1[0], [series1[0]]);
-            loadAuthorsSeries(authors1[1], [series1[0]]);
+            await loadAuthorsSeries(authors0[0], [series0[0]]);
+            await loadAuthorsSeries(authors0[1], [series0[0]]);
+            await loadAuthorsSeries(authors1[0], [series1[0]]);
+            await loadAuthorsSeries(authors1[1], [series1[0]]);
         }
         if (options.withAuthors && options.withStories) {
-            loadAuthorsStories(authors0[0], [stories0[0], stories0[2]]);
-            loadAuthorsStories(authors0[1], [stories0[1], stories0[2]]);
-            loadAuthorsStories(authors1[0], [stories1[0], stories1[2]]);
-            loadAuthorsStories(authors1[1], [stories1[1], stories1[2]]);
+            await loadAuthorsStories(authors0[0], [stories0[0], stories0[2]]);
+            await loadAuthorsStories(authors0[1], [stories0[1], stories0[2]]);
+            await loadAuthorsStories(authors1[0], [stories1[0], stories1[2]]);
+            await loadAuthorsStories(authors1[1], [stories1[1], stories1[2]]);
         }
         if (options.withAuthors && options.withVolumes) {
-            loadAuthorsVolumes(authors0[0], [volumes0[0], volumes0[2]]);
-            loadAuthorsVolumes(authors0[1], [volumes0[1], volumes0[2]]);
-            loadAuthorsVolumes(authors1[0], [volumes1[0], volumes1[2]]);
-            loadAuthorsVolumes(authors1[1], [volumes1[1], volumes1[2]]);
+            await loadAuthorsVolumes(authors0[0], [volumes0[0], volumes0[2]]);
+            await loadAuthorsVolumes(authors0[1], [volumes0[1], volumes0[2]]);
+            await loadAuthorsVolumes(authors1[0], [volumes1[0], volumes1[2]]);
+            await loadAuthorsVolumes(authors1[1], [volumes1[1], volumes1[2]]);
         }
         if (options.withSeries && options.withStories) {
-            loadSeriesStories(series0[0], stories0);
-            loadSeriesStories(series1[0], stories1);
+            await loadSeriesStories(series0[0], stories0);
+            await loadSeriesStories(series1[0], stories1);
         }
         if (options.withVolumes && options.withStories) {
-            loadVolumesStories(volumes0[0], [stories0[0]]);
-            loadVolumesStories(volumes0[1], [stories0[1]]);
-            loadVolumesStories(volumes0[2], [stories0[0], stories0[1], stories0[2]]);
-            loadVolumesStories(volumes1[0], [stories1[0]]);
-            loadVolumesStories(volumes1[1], [stories1[1]]);
-            loadVolumesStories(volumes1[2], [stories1[0], stories1[1], stories1[2]]);
+            await loadVolumesStories(volumes0[0], [stories0[0]]);
+            await loadVolumesStories(volumes0[1], [stories0[1]]);
+            await loadVolumesStories(volumes0[2], [stories0[0], stories0[1], stories0[2]]);
+            await loadVolumesStories(volumes1[0], [stories1[0]]);
+            await loadVolumesStories(volumes1[1], [stories1[1]]);
+            await loadVolumesStories(volumes1[2], [stories1[0], stories1[1], stories1[2]]);
         }
 
     }

@@ -37,6 +37,8 @@ describe("LibraryActions Functional Tests", () => {
             withSeries: true,
             withStories: true,
             withVolumes: true,
+            // TODO - for now, load so interactive login testing can work
+            withUsers: true,
         });
     });
 
