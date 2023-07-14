@@ -292,10 +292,10 @@ export const include = (options?: IncludeOptions): Prisma.UserInclude | undefine
         return undefined;
     }
     const include: Prisma.UserInclude = {};
-    if (options.hasOwnProperty("withAccessTokens")) {
+    if (options.withAccessTokens) {
         include.accessTokens = true;
     }
-    if (options.hasOwnProperty("withRefreshTokens")) {
+    if (options.withRefreshTokens) {
         include.refreshTokens = true;
     }
     if (Object.keys(include).length > 0) {
@@ -324,38 +324,30 @@ export const select = (options?: any): Prisma.UserSelect | undefined => {
 }
 
 /**
- * Calculate and return the "skip" options from the specified query
- * options, if any were specified.
- *
- * For backwards compatibility, either "offset" or "skip" are recognized.
+ * Calculate and return the "skip" options (pre-prisma called "offset")
+ * from the specified query options, if any were specified.
  */
-export const skip = (options?: any): number | undefined => {
+export const skip = (options?: PaginationOptions): number | undefined => {
     if (!options) {
         return undefined;
     }
-    if (options.hasOwnProperty("offset")) {
+    if (options.offset) {
         return Number(options.offset);
-    } else if (options.hasOwnProperty("skip")) {
-        return Number(options.skip);
     } else {
         return undefined;
     }
 }
 
 /**
- * Calculate and return the "take" options from the specified query
- * options, if any were specified.
- *
- * For backwards compatibility, either "limit" or "take" are recognized.
+ * Calculate and return the "take" options (pre-prisma called "limit")
+ * from the specified query options, if any were specified.
  */
-export const take = (options?: any): number | undefined => {
+export const take = (options?: PaginationOptions): number | undefined => {
     if (!options) {
         return undefined;
     }
-    if (options.hasOwnProperty("limit")) {
+    if (options.limit) {
         return Number(options.limit);
-    } else if (options.hasOwnProperty("take")) {
-        return Number(options.take);
     } else {
         return undefined;
     }
@@ -392,11 +384,11 @@ export const where = (options?: any): Prisma.UserWhereInput | undefined => {
         return undefined;
     }
     const where: Prisma.UserWhereInput = {};
-    if (options.hasOwnProperty("active")) {
-        where.active = true;
+    if (options.active !== undefined) {
+        where.active = options.active;
     }
-    if (options.hasOwnProperty("username")) {
-        where.username = {              // TODO - verify that this does an "ilike"
+    if (options.username) {
+        where.username = {
             contains: options.username,
             mode: "insensitive",
         }
