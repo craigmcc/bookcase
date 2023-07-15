@@ -343,20 +343,22 @@ export const remove = async (libraryId: number, storyId: number): Promise<StoryP
  *
  * @param libraryId                     ID of the Library being queried
  * @param storyId                       ID of the Story being connected to
- * @param seriesId                      ID of the SEries being connected
+ * @param seriesId                      ID of the Series being connected
+ * @param ordinal                       Optional order of this Story in this Series
  *
  * @throws NotFound                     If the specified Story or Volume is not found
  * @throws NotUnique                    If this Volume and Story are already connected
  * @throws ServerError                  If a low level error is thrown
  */
 export const seriesConnect =
-    async (libraryId: number, storyId: number, seriesId: number): Promise<StoryPlus> =>
+    async (libraryId: number, storyId: number, seriesId: number, ordinal?: number): Promise<StoryPlus> =>
     {
         const story = await find(libraryId, storyId);
         await SeriesActions.find(libraryId, seriesId);
         try {
             await prisma.seriesStories.create({
                 data: {
+                    ordinal: ordinal ? ordinal : undefined,
                     seriesId: seriesId,
                     storyId: storyId,
                 }
@@ -669,7 +671,7 @@ export const uniqueName = async(libraryId: number, storyId: number | null, name:
  * Calculate and return the "where" options from the specified query
  * options, if any were specified.
  */
-export const where = (libraryId: number, options?: any): Prisma.StoryWhereInput | undefined => {
+export const where = (libraryId: number, options?: MatchOptions): Prisma.StoryWhereInput | undefined => {
     const where: Prisma.StoryWhereInput = {
         libraryId: libraryId,
     }
