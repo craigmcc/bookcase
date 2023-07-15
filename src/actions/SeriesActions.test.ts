@@ -20,7 +20,7 @@ import {
 import * as AuthorActions from "./AuthorActions";
 import * as LibraryActions from "./LibraryActions";
 import * as SeriesActions from "./SeriesActions";
-//import * as StoryActions from "./StoryActions";
+import * as StoryActions from "./StoryActions";
 import ActionsUtils from "@/test/ActionsUtils";
 import * as SeedData from "@/test/SeedData";
 import {NotFound, NotUnique} from "@/util/HttpErrors";
@@ -525,9 +525,155 @@ describe("SeriesActions Functional Tests", () => {
 
     });
 
-    // TODO: storyConnect
+    describe("SeriesActions.storyConnect()", () => {
 
-    // TODO: storyDisconnect
+        it("should fail on connecting twice", async () => {
+            // Set up LIBRARY, SERIES, and STORY
+            const LIBRARY =
+                await LibraryActions.exact(SeedData.LIBRARY_NAME_THIRD);
+            const SERIES =
+                await SeriesActions.insert(LIBRARY.id, {
+                    libraryId: LIBRARY.id,
+                    name: "Test Series",
+                });
+            const STORY =
+                await StoryActions.insert(LIBRARY.id, {
+                    libraryId: LIBRARY.id,
+                    name: "Test Story",
+                });
+            // Perform the storyConnect() action once
+            try {
+                await SeriesActions.storyConnect(LIBRARY.id, SERIES.id, STORY.id);
+            } catch (error) {
+                expect.fail(`Should not have thrown '${error}'`);
+            }
+            // Attempt to perform the action again
+            try {
+                await SeriesActions.storyConnect(LIBRARY.id, SERIES.id, STORY.id);
+                expect.fail("Should have thrown NotUnique");
+            } catch (error) {
+                if (error instanceof NotUnique) {
+                    expect(error.message).to.include
+                    (`connect: Series ID ${SERIES.id} and Story ID ${STORY.id} are already connected`);
+                } else {
+                    expect.fail(`Should not have thrown '${error}`);
+                }
+            }
+        });
+
+        it("should pass on valid data", async () => {
+            // Set up LIBRARY, SERIES, and STORY
+            const LIBRARY =
+                await LibraryActions.exact(SeedData.LIBRARY_NAME_THIRD);
+            const SERIES =
+                await SeriesActions.insert(LIBRARY.id, {
+                    libraryId: LIBRARY.id,
+                    name: "Test Series",
+                });
+            const STORY =
+                await StoryActions.insert(LIBRARY.id, {
+                    libraryId: LIBRARY.id,
+                    name: "Test Story",
+                });
+            // Perform the storyConnect() action
+            try {
+                await SeriesActions.storyConnect(LIBRARY.id, SERIES.id, STORY.id);
+            } catch (error) {
+                expect.fail(`Should not have thrown '${error}'`);
+            }
+            // Verify that the connection is represented correctly
+            const OUTPUT =
+                await SeriesActions.find(LIBRARY.id, SERIES.id, {
+                    withStories: true,
+                });
+            expect(OUTPUT.seriesStories).to.exist;
+            const SERIES_STORIES = OUTPUT.seriesStories as SeriesActions.SeriesStoriesPlus[];
+            expect(SERIES_STORIES.length).to.equal(1);
+            expect(SERIES_STORIES[0].seriesId).to.equal(SERIES.id);
+//            expect(SERIES_STORIES[0].series).to.exist;
+            expect(SERIES_STORIES[0].story.id).to.equal(STORY.id);
+            expect(SERIES_STORIES[0].story).to.exist;
+        });
+
+    });
+
+    describe("SeriesActions.storyDisconnect()", () => {
+
+        it("should fail on disconnecting twice", async () => {
+            // Set up LIBRARY, SERIES, and STORY
+            const LIBRARY =
+                await LibraryActions.exact(SeedData.LIBRARY_NAME_THIRD);
+            const SERIES =
+                await SeriesActions.insert(LIBRARY.id, {
+                    libraryId: LIBRARY.id,
+                    name: "Test Series",
+                });
+            const STORY =
+                await StoryActions.insert(LIBRARY.id, {
+                    libraryId: LIBRARY.id,
+                    name: "Test Story",
+                });
+            // Perform the authorConnect() action
+            try {
+                await SeriesActions.storyConnect(LIBRARY.id, SERIES.id, STORY.id);
+            } catch (error) {
+                expect.fail(`Should not have thrown '${error}'`);
+            }
+            // Perform the storyDisconnect() action
+            try {
+                await SeriesActions.storyDisconnect(LIBRARY.id, SERIES.id, STORY.id);
+            } catch (error) {
+                expect.fail(`Should not have thrown '${error}'`);
+            }
+            // Verify that disconnecting twice fails
+            try {
+                await SeriesActions.storyDisconnect(LIBRARY.id, SERIES.id, STORY.id);
+                expect.fail("Should have thrown NotFound");
+            } catch (error) {
+                if (error instanceof NotFound) {
+                    expect(error.message).to.include
+                    (`disconnect: Series ID ${SERIES.id} and Story ID ${STORY.id} are not connected`);
+                } else {
+                    expect.fail(`Should not have thrown '${error}'`);
+                }
+            }
+        });
+
+        it("should pass on valid data", async () => {
+            // Set up LIBRARY, SERIES, and STORY
+            const LIBRARY =
+                await LibraryActions.exact(SeedData.LIBRARY_NAME_THIRD);
+            const SERIES =
+                await SeriesActions.insert(LIBRARY.id, {
+                    libraryId: LIBRARY.id,
+                    name: "Test Series",
+                });
+            const STORY =
+                await StoryActions.insert(LIBRARY.id, {
+                    libraryId: LIBRARY.id,
+                    name: "Test Story",
+                });
+            // Perform the storyConnect() action
+            try {
+                await SeriesActions.storyConnect(LIBRARY.id, SERIES.id, STORY.id);
+            } catch (error) {
+                expect.fail(`Should not have thrown '${error}'`);
+            }
+            // Perform the storyDisconnect() action
+            try {
+                await SeriesActions.storyDisconnect(LIBRARY.id, SERIES.id, STORY.id);
+            } catch (error) {
+                expect.fail(`Should not have thrown '${error}'`);
+            }
+            // Verify that the disconnect occurred
+            const OUTPUT = await SeriesActions.find(LIBRARY.id, SERIES.id, {
+                withStories: true,
+            });
+            expect(OUTPUT.seriesStories).to.exist;
+            expect(OUTPUT.seriesStories.length).to.equal(0);
+        });
+
+    });
 
     describe("SeriesActions.update()", () => {
 
