@@ -124,10 +124,11 @@ export const all = async (libraryId: number, options?: AllOptions): Promise<Seri
  *
  * @param libraryId                     ID of the Library being queried
  * @param seriesId                      ID of the Series being connected to
- * @param authorId                      ID of the Author being connecte
+ * @param authorId                      ID of the Author being connected
+ * @param principal                     Is this Author a principal Author of this Series?
  */
-export const AuthorConnect =
-    async (libraryId: number, seriesId: number, authorId: number): Promise<SeriesPlus> =>
+export const authorConnect =
+    async (libraryId: number, seriesId: number, authorId: number, principal: boolean): Promise<SeriesPlus> =>
     {
         const series = await find(libraryId, seriesId);
         await AuthorActions.find(libraryId, authorId);
@@ -135,6 +136,7 @@ export const AuthorConnect =
             await prisma.authorsSeries.create({
                 data: {
                     authorId: authorId,
+                    principal: (typeof principal !== "undefined") ? principal : undefined,
                     seriesId: seriesId,
                 }
             });
@@ -166,7 +168,7 @@ export const AuthorConnect =
  * @throws NotFound                     If the specified Author or Story is not found
  * @throws ServerError                  If a low level error is thrown
  */
-export const seriesDisconnect =
+export const authorDisconnect =
     async (libraryId: number, seriesId: number, authorId: number): Promise<SeriesPlus> =>
     {
         const series = await find(libraryId, seriesId);
