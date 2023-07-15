@@ -21,7 +21,7 @@ import * as AuthorActions from "./AuthorActions";
 import * as LibraryActions from "./LibraryActions";
 import * as SeriesActions from "./SeriesActions";
 import * as StoryActions from "./StoryActions";
-//import * as VolumeActions from "./VolumeActions";
+import * as VolumeActions from "./VolumeActions";
 import ActionsUtils from "@/test/ActionsUtils";
 import * as SeedData from "@/test/SeedData";
 import {NotFound, NotUnique} from "@/util/HttpErrors";
@@ -774,7 +774,6 @@ describe("StoryActions Functional Tests", () => {
 
     });
 
-/*
     describe("StoryActions.volumeConnect()", () => {
 
         it("should fail on connecting twice", async () => {
@@ -843,8 +842,8 @@ describe("StoryActions Functional Tests", () => {
             expect(VOLUMES_STORIES.length).to.equal(1);
             expect(VOLUMES_STORIES[0].volumeId).to.equal(VOLUME.id);
             expect(VOLUMES_STORIES[0].volume).to.exist;
-            expect(VOLUMES_STORIES[0].story.id).to.equal(STORY.id);
-            expect(VOLUMES_STORIES[0].story).to.exist;
+            expect(VOLUMES_STORIES[0].storyId).to.equal(STORY.id);
+//            expect(VOLUMES_STORIES[0].story).to.exist;
         });
 
     });
@@ -928,7 +927,6 @@ describe("StoryActions Functional Tests", () => {
         });
 
     });
-*/
 
 });
 

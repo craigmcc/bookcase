@@ -20,7 +20,7 @@ import {
 import * as AuthorActions from "./AuthorActions";
 import * as LibraryActions from "./LibraryActions";
 import * as SeriesActions from "./SeriesActions";
-//import * as VolumeActions from "./VolumeActions";
+import * as VolumeActions from "./VolumeActions";
 import prisma from "../prisma";
 import {PaginationOptions} from "@/types/types";
 import {NotFound, NotUnique, ServerError} from "@/util/HttpErrors";
@@ -474,7 +474,7 @@ export const volumeConnect =
     async (libraryId: number, storyId: number, volumeId: number): Promise<StoryPlus> =>
     {
         const story = await find(libraryId, storyId);
-        // TODO: await VolumeActions.find(libraryId, volumeId);
+        await VolumeActions.find(libraryId, volumeId);
         try {
             await prisma.volumesStories.create({
                 data: {
@@ -513,7 +513,7 @@ export const volumeDisconnect =
     async (libraryId: number, storyId: number, volumeId: number): Promise<StoryPlus> =>
     {
         const story = await find(libraryId, storyId);
-        // TODO: await VolumeActions.find(libraryId, volumeId);
+        await VolumeActions.find(libraryId, volumeId);
         try {
             await prisma.volumesStories.delete({
                 where: {

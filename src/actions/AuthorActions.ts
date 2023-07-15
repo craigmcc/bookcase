@@ -22,8 +22,8 @@ import {
 
 import * as LibraryActions from "./LibraryActions";
 import * as SeriesActions from "./SeriesActions";
-//import * as StoryActions from "./StoryActions";
-//import * as VolumeActions from "./VolumeActions";
+import * as StoryActions from "./StoryActions";
+import * as VolumeActions from "./VolumeActions";
 import prisma from "../prisma";
 import {PaginationOptions} from "@/types/types";
 import {NotFound, NotUnique, ServerError} from "@/util/HttpErrors";
@@ -385,7 +385,7 @@ export const storyConnect =
     async (libraryId: number, authorId: number, storyId: number, principal?: boolean): Promise<AuthorPlus> =>
     {
         const author = await find(libraryId, authorId);
-        // TODO: await StoryActions.find(libraryId, storyId);
+        await StoryActions.find(libraryId, storyId);
         try {
             await prisma.authorsStories.create({
                 data: {
@@ -425,7 +425,7 @@ export const storyDisconnect =
     async (libraryId: number, authorId: number, storyId: number): Promise<AuthorPlus> =>
     {
         const author = await find(libraryId, authorId);
-        // TODO: await StoryActions.find(libraryId, storyId);
+        await StoryActions.find(libraryId, storyId);
         try {
             await prisma.authorsStories.delete({
                 where: {
@@ -507,7 +507,7 @@ export const volumeConnect =
     async (libraryId: number, authorId: number, volumeId: number, principal?: boolean): Promise<AuthorPlus> =>
     {
         const author = await find(libraryId, authorId);
-        // TODO: await VolumeActions.find(libraryId, volumeId);
+        await VolumeActions.find(libraryId, volumeId);
         try {
             await prisma.authorsVolumes.create({
                 data: {
@@ -547,7 +547,7 @@ export const volumeDisconnect =
     async (libraryId: number, authorId: number, volumeId: number): Promise<AuthorPlus> =>
     {
         const author = await find(libraryId, authorId);
-        // TODO: await VolumeActions.find(libraryId, volumeId);
+        await VolumeActions.find(libraryId, volumeId);
         try {
             await prisma.authorsVolumes.delete({
                 where: {
