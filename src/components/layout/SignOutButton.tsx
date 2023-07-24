@@ -23,8 +23,8 @@ export interface SignOutButtonProps {
 export function SignOutButton(props: SignOutButtonProps) {
     return (
         <Button
+            className="bg-primary-700"
             onClick={props.onClick}
-            variant="secondary"
         >
             Sign Out
         </Button>

@@ -112,7 +112,7 @@ export default function SignIn() {
                         </FormItem>
                     )}
                 />
-                <Button type="submit">Sign In</Button>
+                <Button className="bg-primary-700" type="submit">Sign In</Button>
             </form>
         </Form>
     )

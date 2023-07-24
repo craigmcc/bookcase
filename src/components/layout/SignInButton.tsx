@@ -23,6 +23,7 @@ export interface SignInButtonProps {
 export function SignInButton(props: SignInButtonProps) {
     return (
         <Button
+            className="bg-primary-700"
             onClick={props.onClick}
         >
             Sign In

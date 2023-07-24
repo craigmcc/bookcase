@@ -33,7 +33,7 @@ export function SiteHeader() {
                     <div className="flex gap-2">
                         {session?.user ? (
                             <>
-                                <p className="align-middle py-2 text-sm text-indigo-600"> {session.user.name}</p>
+                                <p className="align-middle px-2 py-2 text-sm text-info-900">{session.user.name}</p>
                                 <SignOutButton onClick={() => signOut()}/>
                             </>
                         ) : (
