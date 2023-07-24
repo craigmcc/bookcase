@@ -2,8 +2,8 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-  provider        = "prisma-client-js"
-  previewFeatures = ["extendedWhereUnique"]
+  provider = "prisma-client-js"
+  //  previewFeatures = ["extendedWhereUnique"]
 }
 
 // TODO - May depend upon per-environment refinements
