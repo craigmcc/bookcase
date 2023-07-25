@@ -53,7 +53,7 @@ export default function SignIn() {
 
     async function onSubmit(values: z.infer<typeof formSchema>) {
         const result = await signIn<"credentials">("credentials", {
-            callbackUrl: callbackUrl,
+            callbackUrl: "/select",
             password: values.password,
             redirect: true,
             username: values.username,

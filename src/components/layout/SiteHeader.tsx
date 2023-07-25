@@ -34,7 +34,9 @@ export function SiteHeader() {
                         {session?.user ? (
                             <>
                                 <p className="align-middle px-2 py-2 text-sm text-info-900">{session.user.name}</p>
-                                <SignOutButton onClick={() => signOut()}/>
+                                <SignOutButton onClick={() => signOut({
+                                    callbackUrl: "/",
+                                })}/>
                             </>
                         ) : (
                             <SignInButton onClick={() => signIn()}/>

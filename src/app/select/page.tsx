@@ -20,11 +20,17 @@ import SelectLibraryCard from "@/components/select/SelectLibraryCard";
 export default function SelectPage() {
 
     return (
-        <div className="flex mx-auto py-10">
-            <SelectLibraryCard/>
+        <div className="container mx-auto p-6 grid grid-cols-3 gap-4">
+            <div className="flex flex-col flex-auto p-4">
+                <SelectLibraryCard/>
+            </div>
             {/* TODO: manage options restricted to superuser */}
-            <ManageLibrariesCard/>
-            <ManageUsersCard/>
+            <div className="flex flex-col flex-auto p-4">
+                <ManageLibrariesCard/>
+            </div>
+            <div className="flex flex-col flex-auto p-4">
+                <ManageUsersCard/>
+            </div>
         </div>
     )
 
