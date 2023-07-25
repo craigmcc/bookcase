@@ -26,13 +26,11 @@ import {
  */
 export function authorizedAdmin(user: User, library: Library): boolean {
     const scopes = user.scope.split(" ");
-    const required = library.scope + ":admin";
-    for (const scope in scopes) {
-        if (scope === "superuser") {
-            return true;
-        } else if (scope === required) {
-            return true;
-        }
+    if (scopes.includes("superuser")) {
+        return true;
+    }
+    if (scopes.includes(`${library.scope}:admin`)) {
+        return true;
     }
     return false;
 }
@@ -44,18 +42,24 @@ export function authorizedAdmin(user: User, library: Library): boolean {
  */
 export function authorizedRegular(user: User, library: Library): boolean {
     const scopes = user.scope.split(" ");
-    const required1 = library.scope + ":admin";
-    const required2 = library.scope + ":regular";
-    for (const scope in scopes) {
-        if (scope === "superuser") {
-            return true;
-        } else if (scope === required1) {
-            return true;
-        } else if (scope === required2) {
-            return true;
-        }
+    if (scopes.includes("superuser")) {
+        return true;
+    }
+    if (scopes.includes(`${library.scope}:admin`)) {
+        return true;
+    }
+    if (scopes.includes(`${library.scope}:regular`)) {
+        return true;
     }
     return false;
 }
 
-
+/**
+ * Is this User an authorized superuser?
+ *
+ * @param user                          User to be checked
+ */
+export function authorizedSuperuser(user: User): boolean {
+    const scopes = user.scope.split(" ");
+    return scopes.includes("superser");
+}

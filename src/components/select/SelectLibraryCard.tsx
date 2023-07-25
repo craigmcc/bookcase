@@ -38,34 +38,21 @@ import {authorizedRegular} from "@/util/Authorizations";
 export default async function SelectLibraryCard() {
 
     const session = await getServerSession(authOptions);
-    console.log("SESSION", JSON.stringify(session));
-
-/*
-    const {data: session} = useSession({
-        required: true,
-        /!*
-                onUnauthenticated() {
-                    // TODO: redirect to sign in page (should be the default)
-                }
-        *!/
-    });
-*/
 
     async function getData(): Promise<LibraryActions.LibraryPlus[]> {
+        if (!session || !session.user) {
+            return [];
+        }
         const results: LibraryActions.LibraryPlus[] = [];
         const libraries = await LibraryActions.all();
         for (const library of libraries) {
-            if (authorizedRegular(session!.user!, library)) {
+            if (authorizedRegular(session.user, library)) {
                 results.push(library);
             }
         }
         return results;
     }
-    let libraries: LibraryActions.LibraryPlus[] = [];
-    getData().then((values) => {
-            libraries = values;
-        }
-    );
+    const libraries: LibraryActions.LibraryPlus[] = await getData();
 
     return (
         <Card className="border-solid">
@@ -73,7 +60,7 @@ export default async function SelectLibraryCard() {
                 <CardTitle>Select A Library</CardTitle>
             </CardHeader>
             <CardContent>
-                <div>
+                <div className="p-2">
                     <Image
                         alt="Library"
                         height={300}
