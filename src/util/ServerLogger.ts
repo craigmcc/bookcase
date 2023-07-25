@@ -8,7 +8,7 @@
 
 // External Modules ----------------------------------------------------------
 
-const rfs = require("rotating-file-stream");
+//const rfs = require("rotating-file-stream");
 
 // Internal Modules ----------------------------------------------------------
 
@@ -17,8 +17,17 @@ import {Timestamps} from "@craigmcc/shared-utils";
 // Public Objects -----------------------------------------------------------
 
 const NODE_ENV = process.env.NODE_ENV;
-const SERVER_LOG = process.env.SERVER_LOG ? process.env.SERVER_LOG : "stderr";
+//const SERVER_LOG = process.env.SERVER_LOG ? process.env.SERVER_LOG : "stderr";
 
+const logger = require("pino")({
+    base: null, // Remove "hostname", "name", and "pid"
+    level: (NODE_ENV === "production") ? "info" : "debug",
+    timestamp: function (): string {
+        return ',"time":"' + Timestamps.iso() + '"';
+    },
+}, process.stdout);
+
+/*
 const logger = (SERVER_LOG === "stderr") || (SERVER_LOG === "stdout")
     ? require("pino")({
         base: null, // Remove "hostname", "name", and "pid"
@@ -37,5 +46,6 @@ const logger = (SERVER_LOG === "stderr") || (SERVER_LOG === "stdout")
         interval: "1d",
         path: "log",
     }));
+*/
 
 export default logger;

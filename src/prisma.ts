@@ -1,3 +1,4 @@
+
 // prisma.ts
 
 /**
@@ -7,6 +8,7 @@
 
 // External Modules ----------------------------------------------------------
 
+import "server-only";
 import { PrismaClient } from "@prisma/client";
 
 // Internal Modules ----------------------------------------------------------

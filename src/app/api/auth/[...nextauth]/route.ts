@@ -10,6 +10,7 @@
 
 //import {NextApiRequest, NextApiResponse} from "next";
 import NextAuth from "next-auth";
+import type {NextAuthOptions} from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 
 // Internal Modules ----------------------------------------------------------
@@ -20,8 +21,7 @@ import logger from "@/util/ServerLogger";
 
 // Public Objects ------------------------------------------------------------
 
-const handler = NextAuth({
-
+export const authOptions: NextAuthOptions = {
     callbacks: {
 
         async jwt({ token, user}) {
@@ -117,6 +117,8 @@ const handler = NextAuth({
 
     ],
 
-});
+}
+
+const handler = NextAuth(authOptions);
 
 export { handler as GET, handler as POST }
