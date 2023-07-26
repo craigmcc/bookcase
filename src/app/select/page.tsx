@@ -21,14 +21,14 @@ export default function SelectPage() {
 
     return (
         <div className="container mx-auto p-6 grid grid-cols-3 gap-4">
-            <div className="flex flex-col flex-auto p-4">
+            <div className="block h-full p-4">
                 <SelectLibraryCard/>
             </div>
             {/* TODO: manage options restricted to superuser */}
-            <div className="flex flex-col flex-auto p-4">
+            <div className="block h-full p-4">
                 <ManageLibrariesCard/>
             </div>
-            <div className="flex flex-col flex-auto p-4">
+            <div className="block h-full p-4">
                 <ManageUsersCard/>
             </div>
         </div>
