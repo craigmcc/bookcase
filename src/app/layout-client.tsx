@@ -17,6 +17,7 @@ import {SessionProvider} from "next-auth/react";
 // Internal Modules ----------------------------------------------------------
 
 import {RootLayoutProps} from "./layout";
+import {LibraryContextProvider} from "@/components/layout/LibraryContext";
 import {SiteHeader} from "@/components/layout/SiteHeader";
 
 // Public Objects ------------------------------------------------------------
@@ -24,10 +25,12 @@ import {SiteHeader} from "@/components/layout/SiteHeader";
 export default function RootLayoutClient({children}: RootLayoutProps) {
     return (
         <SessionProvider>
-            <div className="relative flex min-h-screen flex-col">
-                <SiteHeader/>
-                <div className="flex-1">{children}</div>
-            </div>
+            <LibraryContextProvider>
+                <div className="relative flex min-h-screen flex-col">
+                    <SiteHeader/>
+                    <div className="flex-1">{children}</div>
+                </div>
+            </LibraryContextProvider>
         </SessionProvider>
     );
 }
