@@ -1,6 +1,6 @@
 "use client"
 
-// app/components/shared/NotSignedIn.tsx
+// components/shared/NotSignedIn.tsx
 
 /**
  * Display a dialog indicating that a user who has not signed in attempted

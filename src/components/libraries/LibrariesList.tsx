@@ -1,6 +1,6 @@
 "use client"
 
-// app/components/libraries/LibrariesList.tsx
+// components/libraries/LibrariesList.tsx
 
 /**
  * React component containing the list of Libraries for the "/libraries" page.
@@ -26,6 +26,7 @@ import {authorizedSuperuser} from "@/util/Authorizations";
 // Public Objects ------------------------------------------------------------
 
 type LibrariesListProps = {
+    // Array of Libraries to be presented
     libraries: LibraryActions.LibraryPlus[],
 }
 

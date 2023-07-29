@@ -1,6 +1,6 @@
 "use client"
 
-// app/components/shared/NotSuperuser.tsx
+// components/shared/NotSuperuser.tsx
 
 /**
  * Display a dialog indicating that a user is signed in, but has not been
