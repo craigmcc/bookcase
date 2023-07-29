@@ -19,6 +19,9 @@ import {useSession} from "next-auth/react";
 import {columns} from "./columns";
 import * as LibraryActions from "@/actions/LibraryActions";
 import {DataTable} from "@/components/shared/DataTable";
+import NotAuthorized from "@/components/shared/NotAuthorized";
+import NotSignedIn from "@/components/shared/NotSignedIn";
+import {authorizedSuperuser} from "@/util/Authorizations";
 
 // Public Objects ------------------------------------------------------------
 
@@ -27,8 +30,16 @@ type LibrariesListProps = {
 }
 
 export default function LibrariesList(props: LibrariesListProps) {
+
+    // Validate access to this function
     const {data: session} = useSession();
-    // TODO: validate signed in user that is a superuser
+    if (!session || !session.user) {
+        return <NotSignedIn/>;
+    } else if (!authorizedSuperuser(session.user)) {
+        return <NotAuthorized/>;
+    }
+
+    // Render the requested content
     return (
         <div className="container mx-auto py-10">
             <DataTable columns={columns} data={props.libraries}/>

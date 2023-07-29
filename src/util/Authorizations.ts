@@ -61,5 +61,5 @@ export function authorizedRegular(user: User, library: Library): boolean {
  */
 export function authorizedSuperuser(user: User): boolean {
     const scopes = user.scope.split(" ");
-    return scopes.includes("superser");
+    return scopes.includes("superuser");
 }
