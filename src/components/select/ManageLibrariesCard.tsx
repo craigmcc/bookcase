@@ -35,7 +35,14 @@ export default function ManageLibrariesCard() {
                 <CardTitle>Manage Libraries</CardTitle>
             </CardHeader>
             <CardContent>
-                <span>TODO: Libraries image goes here</span>
+                <div className="mb-2 ml-3.5 w-full">
+                    <Image
+                        alt="Library"
+                        height={300}
+                        src="/images/libraries.jpg"
+                        width={300}
+                    />
+                </div>
             </CardContent>
             <CardFooter>
                 <Button

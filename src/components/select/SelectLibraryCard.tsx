@@ -69,7 +69,7 @@ export default async function SelectLibraryCard() {
                 <CardTitle>Select A Library</CardTitle>
             </CardHeader>
             <CardContent>
-                <div className="mb-2 w-full">
+                <div className="mb-2 ml-3.5 w-full">
                     <Image
                         alt="Library"
                         height={300}

@@ -35,7 +35,14 @@ export default function ManageUsersCard() {
                 <CardTitle>Manage Users</CardTitle>
             </CardHeader>
             <CardContent>
-                <span>TODO: Users image goes here</span>
+                <div className="mb-2 ml-3.5">
+                    <Image
+                        alt="Library"
+                        height={300}
+                        src="/images/users.png"
+                        width={300}
+                    />
+                </div>
             </CardContent>
             <CardFooter>
                 <Button
