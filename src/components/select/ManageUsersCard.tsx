@@ -35,12 +35,12 @@ export default function ManageUsersCard() {
                 <CardTitle>Manage Users</CardTitle>
             </CardHeader>
             <CardContent>
-                <div className="mb-2 ml-3.5">
+                <div className="mb-2 ml-6">
                     <Image
                         alt="Library"
-                        height={300}
+                        height={250}
                         src="/images/users.png"
-                        width={300}
+                        width={250}
                     />
                 </div>
             </CardContent>

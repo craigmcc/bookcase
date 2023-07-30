@@ -38,7 +38,7 @@ export interface RootLayoutProps {
 
 export default function RootLayout({children}: RootLayoutProps) {
   return (
-    <html lang="en" className="bg-info-100">
+    <html lang="en" className="bg-info-50">
       <body className={inter.className}>
         <RootLayoutClient>
           {children}
