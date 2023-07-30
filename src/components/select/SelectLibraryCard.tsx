@@ -1,3 +1,5 @@
+"use server"
+
 // components/select/SelectLibraryCard.tsx
 
 /**
@@ -15,15 +17,17 @@ import {authOptions} from "@/app/api/auth/[...nextauth]/route";
 
 // Internal Modules ----------------------------------------------------------
 
+import SelectLibraryForm from "./SelectLibraryForm";
 import * as LibraryActions from "@/actions/LibraryActions";
-import {Button} from "@/components/ui/button";
+//import {Button} from "@/components/ui/button";
 import {
     Card,
     CardContent,
-    CardFooter,
+//    CardFooter,
     CardHeader,
     CardTitle,
 } from "@/components/ui/card";
+/*
 import {
     Select,
     SelectContent,
@@ -31,6 +35,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
+*/
 import {authorizedRegular} from "@/util/Authorizations";
 
 // Public Objects ------------------------------------------------------------
@@ -39,7 +44,11 @@ export default async function SelectLibraryCard() {
 
     const session = await getServerSession(authOptions);
 
-    async function getData(): Promise<LibraryActions.LibraryPlus[]> {
+    /**
+     * Return a list of Libraries for which this user is authorized
+     * to select one of them.
+     */
+    async function filterLibraries(): Promise<LibraryActions.LibraryPlus[]> {
         if (!session || !session.user) {
             return [];
         }
@@ -52,7 +61,7 @@ export default async function SelectLibraryCard() {
         }
         return results;
     }
-    const libraries: LibraryActions.LibraryPlus[] = await getData();
+    const libraries: LibraryActions.LibraryPlus[] = await filterLibraries();
 
     return (
         <Card className="border-solid">
@@ -60,7 +69,7 @@ export default async function SelectLibraryCard() {
                 <CardTitle>Select A Library</CardTitle>
             </CardHeader>
             <CardContent>
-                <div className="p-2">
+                <div className="mb-2 w-full">
                     <Image
                         alt="Library"
                         height={300}
@@ -68,6 +77,10 @@ export default async function SelectLibraryCard() {
                         width={300}
                     />
                 </div>
+                <div>
+                    <SelectLibraryForm libraries={libraries}/>
+                </div>
+{/*
                 <div>
                     <Select>
                         <SelectTrigger>
@@ -82,7 +95,9 @@ export default async function SelectLibraryCard() {
                         </SelectContent>
                     </Select>
                 </div>
+*/}
             </CardContent>
+{/*
             <CardFooter>
                 <Button
                     className="w-full bg-primary"
@@ -91,6 +106,7 @@ export default async function SelectLibraryCard() {
                     Select Library
                 </Button>
             </CardFooter>
+*/}
         </Card>
     )
 

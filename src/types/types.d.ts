@@ -13,3 +13,11 @@ export type PaginationOptions = {
     // The zero-relative offset to the first row to be returned.
     offset?: number;
 }
+
+/**
+ * The options offered by a Select input control.
+ */
+type SelectOption = {
+    label: string;                      // Label displayed for this option
+    value: string;                      // Value returned when this option is selected
+}
