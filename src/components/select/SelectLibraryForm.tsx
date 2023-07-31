@@ -10,6 +10,7 @@
 
 // External Modules ----------------------------------------------------------
 
+import {redirect} from "next/navigation";
 import {ChangeEvent, useContext, useState} from "react";
 //import * as z from "zod";
 //import {zodResolver} from "@hookform/resolvers/zod";
@@ -91,7 +92,7 @@ export default function SelectLibraryForm(props: SelectLibraryFormProps) {
             }
         }
         //console.log("onChosen", libraryContext.library);
-        // TODO - redirect to base page after Library selection
+        redirect("/base");
     }
 
     /*

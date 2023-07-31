@@ -1,18 +1,17 @@
 "use client"
 
-// components/shared/NotSignedIn.tsx
+// components/shared/NotSelected.tsx
 
 /**
- * Display a dialog indicating that a user who has not signed in attempted
- * to access a function requiring that.  After "Sign In" is clicked, redirect
- * the user to the sign-in page.
+ * Display a dialog indicating that a user has not yet selected a Library
+ * to be worked on.  Redirects the user to the "/select" page.
  *
  * @packageDocumentation
  */
 
 // External Modules ----------------------------------------------------------
 
-import {signIn} from "next-auth/react";
+import {redirect} from "next/navigation";
 import {useState} from "react";
 
 // Internal Modules ----------------------------------------------------------
@@ -29,27 +28,29 @@ import {
 
 // Public Objects ------------------------------------------------------------
 
-export default function NotSignedIn() {
+export default function NotSSelected() {
     const [open, setOpen] = useState<boolean>(true);
     return (
         <Dialog open={open}>
             <DialogContent>
                 <DialogHeader>
-                    <DialogTitle>Not Signed In</DialogTitle>
+                    <DialogTitle>No Selected Library</DialogTitle>
                     <DialogDescription>
-                        You must be signed in to access this function.
+                        You must have selected a Library to use this function.
                     </DialogDescription>
                 </DialogHeader>
                 <DialogFooter>
                     <Button
                         className="bg-primary-700"
                         onClick={() => {
-                            //console.log("Clicked OK in NotSignedIn dialog
+                            //console.log("Clicked OK in NotSelected dialog");
                             setOpen(false);
-                            signIn();
-                        }}
+                            redirect("/select");
+                        }
+
+                        }
                     >
-                        Sign In
+                        Select Library
                     </Button>
                 </DialogFooter>
             </DialogContent>

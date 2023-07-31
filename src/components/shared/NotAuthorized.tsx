@@ -32,7 +32,7 @@ import {
 export default function NotAuthorized() {
     const [open, setOpen] = useState<boolean>(true);
     return (
-        <Dialog open={true}>
+        <Dialog open={open}>
             <DialogContent>
                 <DialogHeader>
                     <DialogTitle>Not Authorized</DialogTitle>
