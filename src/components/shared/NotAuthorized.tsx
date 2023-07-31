@@ -12,10 +12,9 @@
 
 // External Modules ----------------------------------------------------------
 
-import Link from "next/link";
-
 // Internal Modules ----------------------------------------------------------
 
+import LinkButton from "@/components/shared/LinkButton";
 import {
     Dialog,
     DialogContent,
@@ -38,23 +37,13 @@ export default function NotAuthorized() {
                     </DialogDescription>
                 </DialogHeader>
                 <DialogFooter>
-                    <Link
-                        // className="bg-primary-700 text-white rounded"
-                        className="inline-flex items-center justify-center rounded
-                          text-sm font-medium ring-offset-white transition-colors
-                          focus-visible:outline-none focus-visible:ring-2
-                          focus-visible:ring-slate-400 focus-visible:ring-offset-2
-                          disabled:pointer-events-none disabled:opacity-50
-                          text-slate-50 bg-primary-700
-                          hover:bg-primary-900
-                          p-2"
+                    <LinkButton
+                        className="bg-primary-700 hover:bg-primary-900"
                         href="/select"
-                    >
-                        <span className="p-2">OK</span>
-                    </Link>
+                        label="OK"
+                    />
                 </DialogFooter>
             </DialogContent>
         </Dialog>
     )
 }
-
