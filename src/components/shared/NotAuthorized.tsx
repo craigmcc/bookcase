@@ -12,12 +12,10 @@
 
 // External Modules ----------------------------------------------------------
 
-import {redirect} from "next/navigation";
-import {useState} from "react";
+import Link from "next/link";
 
 // Internal Modules ----------------------------------------------------------
 
-import {Button} from "@/components/ui/button";
 import {
     Dialog,
     DialogContent,
@@ -30,9 +28,8 @@ import {
 // Public Objects ------------------------------------------------------------
 
 export default function NotAuthorized() {
-    const [open, setOpen] = useState<boolean>(true);
     return (
-        <Dialog open={open}>
+        <Dialog open={true}>
             <DialogContent>
                 <DialogHeader>
                     <DialogTitle>Not Authorized</DialogTitle>
@@ -41,16 +38,20 @@ export default function NotAuthorized() {
                     </DialogDescription>
                 </DialogHeader>
                 <DialogFooter>
-                    <Button
-                        className="bg-primary-700"
-                        onClick={() => {
-                            //console.log("Clicked OK in NotAuthorized dialog");
-                            setOpen(false);
-                            redirect("/select")
-                        }}
+                    <Link
+                        // className="bg-primary-700 text-white rounded"
+                        className="inline-flex items-center justify-center rounded
+                          text-sm font-medium ring-offset-white transition-colors
+                          focus-visible:outline-none focus-visible:ring-2
+                          focus-visible:ring-slate-400 focus-visible:ring-offset-2
+                          disabled:pointer-events-none disabled:opacity-50
+                          text-slate-50 bg-primary-700
+                          hover:bg-primary-900
+                          p-2"
+                        href="/select"
                     >
-                        OK
-                    </Button>
+                        <span className="p-2">OK</span>
+                    </Link>
                 </DialogFooter>
             </DialogContent>
         </Dialog>
