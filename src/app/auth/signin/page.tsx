@@ -87,7 +87,7 @@ export default function SignIn() {
                         <FormItem>
                             <FormLabel>Username:</FormLabel>
                             <FormControl>
-                                <Input {...field} />
+                                <Input autoFocus {...field} />
                             </FormControl>
                             <FormDescription>
                                 Enter your assigned username.

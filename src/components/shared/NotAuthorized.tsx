@@ -1,10 +1,10 @@
 "use client"
 
-// components/shared/NotSuperuser.tsx
+// components/shared/NotAuthorized.tsx
 
 /**
  * Display a dialog indicating that a user is signed in, but has not been
- * granted authorization to be a superuser.  After "OK" is clicked,
+ * granted authorization to perform this function.  After "OK" is clicked,
  * redirect the user to the "/select" page.
  *
  * @packageDocumentation
@@ -12,38 +12,47 @@
 
 // External Modules ----------------------------------------------------------
 
+import Link from "next/link";
+
+
 // Internal Modules ----------------------------------------------------------
 
 import LinkButton from "@/components/shared/LinkButton";
 import {
-    Dialog,
-    DialogContent,
-    DialogDescription,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle,
-} from "@/components/ui/dialog";
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import {Button} from "@/components/ui/button";
 
 // Public Objects ------------------------------------------------------------
 
 export default function NotAuthorized() {
     return (
-        <Dialog open={true}>
-            <DialogContent>
-                <DialogHeader>
-                    <DialogTitle>Not Authorized</DialogTitle>
-                    <DialogDescription>
+        <AlertDialog open={true}>
+            <AlertDialogContent>
+                <AlertDialogHeader>
+                    <AlertDialogTitle>Not Authorized</AlertDialogTitle>
+                    <AlertDialogDescription>
                         You have not been permitted access to this function.
-                    </DialogDescription>
-                </DialogHeader>
-                <DialogFooter>
-                    <LinkButton
-                        className="bg-primary-700 hover:bg-primary-900"
-                        href="/select"
-                        label="OK"
-                    />
-                </DialogFooter>
-            </DialogContent>
-        </Dialog>
+                    </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                    <AlertDialogAction asChild>
+                        <Link href="/select">
+                            <Button
+                                className="bg-primary-700 hover:bg-primary-900"
+                            >
+                                OK
+                            </Button>
+                        </Link>
+                    </AlertDialogAction>
+                </AlertDialogFooter>
+            </AlertDialogContent>
+        </AlertDialog>
     )
 }

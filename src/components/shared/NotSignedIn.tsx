@@ -19,41 +19,44 @@ import {useState} from "react";
 
 import {Button} from "@/components/ui/button";
 import {
-    Dialog,
-    DialogContent,
-    DialogDescription,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle,
-} from "@/components/ui/dialog";
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
 // Public Objects ------------------------------------------------------------
 
 export default function NotSignedIn() {
     const [open, setOpen] = useState<boolean>(true);
     return (
-        <Dialog open={open}>
-            <DialogContent>
-                <DialogHeader>
-                    <DialogTitle>Not Signed In</DialogTitle>
-                    <DialogDescription>
+        <AlertDialog open={open}>
+            <AlertDialogContent>
+                <AlertDialogHeader>
+                    <AlertDialogTitle>Not Signed In</AlertDialogTitle>
+                    <AlertDialogDescription>
                         You must be signed in to access this function.
-                    </DialogDescription>
-                </DialogHeader>
-                <DialogFooter>
-                    <Button
-                        className="bg-primary-700"
-                        onClick={() => {
-                            //console.log("Clicked OK in NotSignedIn dialog
-                            setOpen(false);
-                            signIn();
-                        }}
-                    >
-                        Sign In
-                    </Button>
-                </DialogFooter>
-            </DialogContent>
-        </Dialog>
+                    </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                    <AlertDialogAction asChild>
+                        <Button
+                            className="bg-primary-700 hover:bg-primary-900"
+                            onClick={() => {
+                                //console.log("Clicked OK in NotSignedIn dialog
+                                setOpen(false);
+                                signIn();
+                            }}
+                        >
+                            Sign In
+                        </Button>
+                    </AlertDialogAction>
+                </AlertDialogFooter>
+            </AlertDialogContent>
+        </AlertDialog>
     )
 }
 

@@ -11,43 +11,47 @@
 
 // External Modules ----------------------------------------------------------
 
-import {redirect} from "next/navigation";
+import Link from "next/link";
 import {useState} from "react";
 
 // Internal Modules ----------------------------------------------------------
 
-import LinkButton from "@/components/shared/LinkButton";
+import {Button} from "@/components/ui/button";
 import {
-    Dialog,
-    DialogContent,
-    DialogDescription,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle,
-} from "@/components/ui/dialog";
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
 // Public Objects ------------------------------------------------------------
 
 export default function NotSSelected() {
-    const [open, setOpen] = useState<boolean>(true);
     return (
-        <Dialog open={open}>
-            <DialogContent>
-                <DialogHeader>
-                    <DialogTitle>No Selected Library</DialogTitle>
-                    <DialogDescription>
+        <AlertDialog open={true}>
+            <AlertDialogContent>
+                <AlertDialogHeader>
+                    <AlertDialogTitle>No Selected Library</AlertDialogTitle>
+                    <AlertDialogDescription>
                         You must have selected a Library to use this function.
-                    </DialogDescription>
-                </DialogHeader>
-                <DialogFooter>
-                    <LinkButton
-                        className="bg-primary-700 hover:bg-primary-900"
-                        href="/select"
-                        label="Select Library"
-                    />
-                </DialogFooter>
-            </DialogContent>
-        </Dialog>
+                    </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                    <AlertDialogAction asChild>
+                        <Link href="/select">
+                            <Button
+                                className="bg-primary-700 hover:bg-primary-900"
+                            >
+                                Select Library
+                            </Button>
+                        </Link>
+                    </AlertDialogAction>
+                </AlertDialogFooter>
+            </AlertDialogContent>
+        </AlertDialog>
     )
 }
 
