@@ -6,6 +6,8 @@
  * Card for the /select page to choose which Library the user
  * wants to interact with.
  *
+ * ASSUMPTION:  Parent page has validated user has signed in.
+ *
  * @packageDocumentation
  */
 
@@ -19,23 +21,13 @@ import {authOptions} from "@/app/api/auth/[...nextauth]/route";
 
 import SelectLibraryForm from "./SelectLibraryForm";
 import * as LibraryActions from "@/actions/LibraryActions";
-//import {Button} from "@/components/ui/button";
 import {
     Card,
     CardContent,
-//    CardFooter,
+    CardDescription,
     CardHeader,
     CardTitle,
 } from "@/components/ui/card";
-/*
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from "@/components/ui/select";
-*/
 import {authorizedRegular} from "@/util/Authorizations";
 
 // Public Objects ------------------------------------------------------------
@@ -67,6 +59,9 @@ export default async function SelectLibraryCard() {
         <Card className="border-solid">
             <CardHeader>
                 <CardTitle>Select A Library</CardTitle>
+                <CardDescription>
+                    Select the Library whose contents you wish to review and/or edit.
+                </CardDescription>
             </CardHeader>
             <CardContent>
                 <div className="mb-2 ml-3.5 w-full">
@@ -80,33 +75,7 @@ export default async function SelectLibraryCard() {
                 <div>
                     <SelectLibraryForm libraries={libraries}/>
                 </div>
-{/*
-                <div>
-                    <Select>
-                        <SelectTrigger>
-                            <SelectValue placeholder="Select a library"/>
-                        </SelectTrigger>
-                        <SelectContent>
-                            {libraries.map((library, index) => (
-                                <SelectItem key={index} value={String(library.id)}>
-                                    {library.name}
-                                </SelectItem>
-                            ))}
-                        </SelectContent>
-                    </Select>
-                </div>
-*/}
             </CardContent>
-{/*
-            <CardFooter>
-                <Button
-                    className="w-full bg-primary"
-                    // TODO - how to redirect and know the selected Library
-                >
-                    Select Library
-                </Button>
-            </CardFooter>
-*/}
         </Card>
     )
 

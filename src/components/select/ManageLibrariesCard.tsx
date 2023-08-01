@@ -12,7 +12,7 @@
 // External Modules ----------------------------------------------------------
 
 import Image from "next/image";
-import {redirect} from "next/navigation";
+import Link from "next/link";
 
 // Internal Modules ----------------------------------------------------------
 
@@ -20,7 +20,7 @@ import {Button} from "@/components/ui/button";
 import {
     Card,
     CardContent,
-    CardFooter,
+    CardDescription,
     CardHeader,
     CardTitle,
 } from "@/components/ui/card";
@@ -33,9 +33,12 @@ export default function ManageLibrariesCard() {
         <Card className="border-solid">
             <CardHeader>
                 <CardTitle>Manage Libraries</CardTitle>
+                <CardDescription>
+                    Browse and edit the set of Libraries belonging to this application.
+                </CardDescription>
             </CardHeader>
             <CardContent>
-                <div className="mb-2 ml-3.0 w-full">
+                <div className="mb-4 ml-3.0 w-full">
                     <Image
                         alt="Library"
                         height={330}
@@ -43,15 +46,14 @@ export default function ManageLibrariesCard() {
                         width={330}
                     />
                 </div>
+                <Link href="/libraries">
+                    <Button
+                        className="w-full bg-secondary"
+                    >
+                        Manage Libraries
+                    </Button>
+                </Link>
             </CardContent>
-            <CardFooter>
-                <Button
-                    className="w-full bg-secondary"
-                    onClick={() => redirect("/libraries")}
-                >
-                    Manage Libraries
-                </Button>
-            </CardFooter>
         </Card>
     )
 

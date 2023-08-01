@@ -12,7 +12,7 @@
 // External Modules ----------------------------------------------------------
 
 import Image from "next/image";
-import {redirect} from "next/navigation";
+import Link from "next/link";
 
 // Internal Modules ----------------------------------------------------------
 
@@ -20,7 +20,7 @@ import {Button} from "@/components/ui/button";
 import {
     Card,
     CardContent,
-    CardFooter,
+    CardDescription,
     CardHeader,
     CardTitle,
 } from "@/components/ui/card";
@@ -33,25 +33,27 @@ export default function ManageUsersCard() {
         <Card className="border-solid">
             <CardHeader>
                 <CardTitle>Manage Users</CardTitle>
+                <CardDescription>
+                    Browse and edit the set of Users authorized to use this application.
+                </CardDescription>
             </CardHeader>
             <CardContent>
                 <div className="mb-2 ml-6">
                     <Image
-                        alt="Library"
+                        alt="Users"
                         height={250}
                         src="/images/users.png"
                         width={250}
                     />
                 </div>
-            </CardContent>
-            <CardFooter>
+                <Link href="/users">
                 <Button
                     className="w-full bg-secondary"
-                    onClick={() => redirect("/users")}
                 >
                     Manage Users
                 </Button>
-            </CardFooter>
+                </Link>
+            </CardContent>
         </Card>
     )
 
