@@ -10,13 +10,14 @@
 
 // External Modules ----------------------------------------------------------
 
+import Link from "next/link";
 import {ChangeEvent, useContext, useState} from "react";
 
 // Internal Modules ----------------------------------------------------------
 
 import {LibraryPlus} from "@/actions/LibraryActions";
 import {LibraryContext} from "@/components/layout/LibraryContext";
-import LinkButton from "@/components/shared/LinkButton";
+import {Button} from "@/components/ui/button";
 import {SelectOption} from "@/types/types";
 
 // Public Objects ------------------------------------------------------------
@@ -48,11 +49,12 @@ export default function SelectLibraryForm(props: SelectLibraryFormProps) {
 
     function onChange(event: ChangeEvent<HTMLSelectElement>) {
         const newLibraryId = Number(event.target.value);
-        console.log("Selecting: ", libraryId);
+//        console.log("Selecting: ", libraryId);
         setLibraryId(newLibraryId);
+        libraryContext.library = null;
         for (const library of props.libraries) {
             if (library.id === newLibraryId) {
-                console.log("Storing: ", library);
+//                console.log("Storing: ", library);
                 libraryContext.library = library;
             }
         }
@@ -71,11 +73,14 @@ export default function SelectLibraryForm(props: SelectLibraryFormProps) {
                     </option>
                 ))}
             </select>
-            <LinkButton
-                className="bg-primary-700 hover:bg-primary-900 disabled:opacity-50 p-2 w-full"
-                href="/base"
-                label="Select Library"
-            />
+            <Link href="/base">
+                <Button
+                    className="bg-primary-700 hover:bg-primary-900 p-2 w-full"
+                    disabled={libraryId < 0}
+                >
+                    Select Library
+                </Button>
+            </Link>
         </>
     )
 
