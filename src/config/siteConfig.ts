@@ -23,6 +23,10 @@ export const siteConfig = {
             href: "/select",
         },
         {
+            title: "Base",
+            href: "/base",
+        },
+        {
             title: "Libraries",
             href: "/libraries",
         },
