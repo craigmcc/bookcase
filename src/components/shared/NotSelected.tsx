@@ -16,7 +16,7 @@ import {useState} from "react";
 
 // Internal Modules ----------------------------------------------------------
 
-import {Button} from "@/components/ui/button";
+import LinkButton from "@/components/shared/LinkButton";
 import {
     Dialog,
     DialogContent,
@@ -40,18 +40,11 @@ export default function NotSSelected() {
                     </DialogDescription>
                 </DialogHeader>
                 <DialogFooter>
-                    <Button
-                        className="bg-primary-700"
-                        onClick={() => {
-                            //console.log("Clicked OK in NotSelected dialog");
-                            setOpen(false);
-                            redirect("/select");
-                        }
-
-                        }
-                    >
-                        Select Library
-                    </Button>
+                    <LinkButton
+                        className="bg-primary-700 hover:bg-primary-900"
+                        href="/select"
+                        label="Select Library"
+                    />
                 </DialogFooter>
             </DialogContent>
         </Dialog>

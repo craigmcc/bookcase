@@ -39,7 +39,7 @@ export default function BasePage() {
     // Render the requested content
     return (
         <div className="container mx-auto py-10">
-            <span>Base page for Library {libraryContext.library.name}</span>
+            <span>Base page for Library <strong>{libraryContext.library.name}</strong></span>
         </div>
     )
 
