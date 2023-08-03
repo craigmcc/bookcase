@@ -13,11 +13,10 @@
 // External Modules ----------------------------------------------------------
 
 import {signIn} from "next-auth/react";
-import {useState} from "react";
 
 // Internal Modules ----------------------------------------------------------
 
-import {Button} from "@/components/ui/button";
+import {Button} from "@/components/my/Button";
 import {
     AlertDialog,
     AlertDialogAction,
@@ -31,9 +30,8 @@ import {
 // Public Objects ------------------------------------------------------------
 
 export default function NotSignedIn() {
-    const [open, setOpen] = useState<boolean>(true);
     return (
-        <AlertDialog open={open}>
+        <AlertDialog open={true}>
             <AlertDialogContent>
                 <AlertDialogHeader>
                     <AlertDialogTitle>Not Signed In</AlertDialogTitle>
@@ -44,12 +42,11 @@ export default function NotSignedIn() {
                 <AlertDialogFooter>
                     <AlertDialogAction asChild>
                         <Button
-                            className="bg-primary-700 hover:bg-primary-900"
                             onClick={() => {
-                                //console.log("Clicked OK in NotSignedIn dialog
-                                setOpen(false);
+                                //console.log("Clicked OK in NotSignedIn dialog")
                                 signIn();
                             }}
+                            variant="primary"
                         >
                             Sign In
                         </Button>

@@ -17,7 +17,7 @@ import {ChangeEvent, useContext, useState} from "react";
 
 import {LibraryPlus} from "@/actions/LibraryActions";
 import {LibraryContext} from "@/components/layout/LibraryContext";
-import {Button} from "@/components/ui/button";
+import {Button} from "@/components/my/Button";
 import {SelectOption} from "@/types/types";
 
 // Public Objects ------------------------------------------------------------
@@ -75,8 +75,9 @@ export default function SelectLibraryForm(props: SelectLibraryFormProps) {
             </select>
             <Link href="/base">
                 <Button
-                    className="bg-primary-700 hover:bg-primary-900 p-2 w-full"
                     disabled={libraryId < 0}
+                    fullWidth
+                    variant="primary"
                 >
                     Select Library
                 </Button>

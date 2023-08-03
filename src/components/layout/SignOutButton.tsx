@@ -12,19 +12,23 @@ import {MouseEventHandler} from "react";
 
 // Internal Modules ----------------------------------------------------------
 
-import {Button} from "@/components/ui/button";
+import {Button} from "@/components/my/Button";
 
 // Public Objects ------------------------------------------------------------
 
 export interface SignOutButtonProps {
-    onClick: MouseEventHandler<HTMLButtonElement>
+    // Optional CSS classes to add
+    className?: string,
+    // Required handler for button clicks
+    onClick: MouseEventHandler<HTMLButtonElement>,
 }
 
 export function SignOutButton(props: SignOutButtonProps) {
     return (
         <Button
-            className="bg-primary-700"
+            className={props.className ? props.className : undefined}
             onClick={props.onClick}
+            variant="primary"
         >
             Sign Out
         </Button>

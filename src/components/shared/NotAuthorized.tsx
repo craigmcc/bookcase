@@ -14,10 +14,9 @@
 
 import Link from "next/link";
 
-
 // Internal Modules ----------------------------------------------------------
 
-import LinkButton from "@/components/shared/LinkButton";
+import {Button} from "@/components/my/Button";
 import {
     AlertDialog,
     AlertDialogAction,
@@ -27,7 +26,6 @@ import {
     AlertDialogHeader,
     AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import {Button} from "@/components/ui/button";
 
 // Public Objects ------------------------------------------------------------
 
@@ -44,9 +42,7 @@ export default function NotAuthorized() {
                 <AlertDialogFooter>
                     <AlertDialogAction asChild>
                         <Link href="/select">
-                            <Button
-                                className="bg-primary-700 hover:bg-primary-900"
-                            >
+                            <Button variant="primary">
                                 OK
                             </Button>
                         </Link>

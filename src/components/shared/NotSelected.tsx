@@ -12,11 +12,10 @@
 // External Modules ----------------------------------------------------------
 
 import Link from "next/link";
-import {useState} from "react";
 
 // Internal Modules ----------------------------------------------------------
 
-import {Button} from "@/components/ui/button";
+import {Button} from "@/components/my/Button";
 import {
     AlertDialog,
     AlertDialogAction,
@@ -42,9 +41,7 @@ export default function NotSSelected() {
                 <AlertDialogFooter>
                     <AlertDialogAction asChild>
                         <Link href="/select">
-                            <Button
-                                className="bg-primary-700 hover:bg-primary-900"
-                            >
+                            <Button variant="primary">
                                 Select Library
                             </Button>
                         </Link>

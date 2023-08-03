@@ -16,7 +16,7 @@ import Link from "next/link";
 
 // Internal Modules ----------------------------------------------------------
 
-import {Button} from "@/components/ui/button";
+import {Button} from "@/components/my/Button";
 import {
     Card,
     CardContent,
@@ -48,7 +48,8 @@ export default function ManageUsersCard() {
                 </div>
                 <Link href="/users">
                 <Button
-                    className="w-full bg-secondary"
+                    fullWidth
+                    variant="secondary"
                 >
                     Manage Users
                 </Button>

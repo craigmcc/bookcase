@@ -37,7 +37,6 @@ export const ButtonVariants = cva(
             fullWidth: { true: "w-full", false: "w-fit" },
             // Component size selection
             size: {
-                default: [],
                 sm: "h-9 rounded-md px-3",
                 lg: "h-11 rounded-md px-8",
                 icon: "h-10 w-10",
@@ -45,11 +44,8 @@ export const ButtonVariants = cva(
             // Overall style selection
             // TODO: dark mode support across the board
             variant: {
-                default: [
-                    "bg-primary-500", "hover:bg-primary-700", "text-slate-50",
-                ],
                 info: [
-                    "bg-info-500", "hover:bg-info-700", "text-slate-50",
+                    "bg-info-700", "hover:bg-info-900", "text-slate-50",
                 ],
                 // TODO: outline with different border colors?
                 outline: [
@@ -57,24 +53,24 @@ export const ButtonVariants = cva(
                     "text-slate-50", "hover:text-slate-900",
                 ],
                 primary: [
-                    "bg-primary-500", "hover:bg-primary-700", "text-slate-50",
+                    "bg-primary-700", "hover:bg-primary-900", "text-slate-50",
                 ],
                 secondary: [
-                    "bg-secondary-500", "hover:bg-secondary-700", "text-slate-50",
+                    "bg-secondary-700", "hover:bg-secondary-900", "text-slate-50",
                 ],
                 success: [
-                    "bg-success-500", "hover:bg-success-700", "text-slate-50",
+                    "bg-success-700", "hover:bg-success-900", "text-slate-50",
                 ],
                 warning: [
-                    "bg-warning-500", "hover:bg-warning-500", "text-slate-50",
+                    "bg-warning-700", "hover:bg-warning-900", "text-slate-50",
                 ],
             },
         },
         // Defaults for variants that are not specified
         defaultVariants: {
             fullWidth: false,
-            size: "default",
-            variant: "default",
+            size: "sm",
+            variant: "primary",
         }
     }
 )
@@ -90,7 +86,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         const Comp = asChild ? Slot : "button";
         return (
             <Comp
-                className={cn({className, fullWidth, size, variant})}
+                className={cn(ButtonVariants({className, fullWidth, size, variant}))}
                 ref={ref}
                 {...props}
             />

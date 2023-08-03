@@ -18,7 +18,7 @@ import {zodResolver} from "@hookform/resolvers/zod";
 
 // Internal Modules ----------------------------------------------------------
 
-import {Button} from "@/components/ui/button";
+import {Button} from "@/components/my/Button";
 import {
     Form,
     FormControl,
@@ -112,7 +112,7 @@ export default function SignIn() {
                         </FormItem>
                     )}
                 />
-                <Button className="bg-primary-700" type="submit">Sign In</Button>
+                <Button type="submit" variant="primary">Sign In</Button>
             </form>
         </Form>
     )
