@@ -16,7 +16,6 @@ import Link from "next/link";
 
 // Internal Modules ----------------------------------------------------------
 
-import {Button} from "@/components/my/Button";
 import {
     AlertDialog,
     AlertDialogAction,
@@ -42,9 +41,7 @@ export default function NotAuthorized() {
                 <AlertDialogFooter>
                     <AlertDialogAction asChild>
                         <Link href="/select">
-                            <Button variant="primary">
-                                OK
-                            </Button>
+                            OK
                         </Link>
                     </AlertDialogAction>
                 </AlertDialogFooter>

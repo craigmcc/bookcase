@@ -15,7 +15,6 @@ import Link from "next/link";
 
 // Internal Modules ----------------------------------------------------------
 
-import {Button} from "@/components/my/Button";
 import {
     AlertDialog,
     AlertDialogAction,
@@ -41,9 +40,7 @@ export default function NotSSelected() {
                 <AlertDialogFooter>
                     <AlertDialogAction asChild>
                         <Link href="/select">
-                            <Button variant="primary">
-                                Select Library
-                            </Button>
+                            Select Library
                         </Link>
                     </AlertDialogAction>
                 </AlertDialogFooter>
