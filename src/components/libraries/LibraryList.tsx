@@ -1,6 +1,6 @@
 "use client"
 
-// components/libraries/LibrariesList.tsx
+// components/libraries/LibraryList.tsx
 
 /**
  * React component containing the list of Libraries for the "/libraries" page.
@@ -25,12 +25,12 @@ import {authorizedSuperuser} from "@/util/Authorizations";
 
 // Public Objects ------------------------------------------------------------
 
-type LibrariesListProps = {
+type LibraryListProps = {
     // Array of Libraries to be presented
     libraries: LibraryActions.LibraryPlus[],
 }
 
-export default function LibrariesList(props: LibrariesListProps) {
+export default function LibraryList(props: LibraryListProps) {
 
     // Validate access to this function
     const {data: session} = useSession();

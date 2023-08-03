@@ -13,7 +13,7 @@
 // Internal Modules ----------------------------------------------------------
 
 import * as LibraryActions from "@/actions/LibraryActions";
-import LibrariesList from "@/components/libraries/LibrariesList";
+import LibraryList from "@/components/libraries/LibraryList";
 
 // Public Objects ------------------------------------------------------------
 
@@ -25,7 +25,7 @@ export default async function LibrariesPage() {
     const libraries = await getLibraries();
     return (
         <div className="container mx-auto py-10">
-            <LibrariesList libraries={libraries}/>
+            <LibraryList libraries={libraries}/>
         </div>
     )
 }
