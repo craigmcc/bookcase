@@ -77,7 +77,7 @@ export default function SignIn() {
     return (
         <Form {...form}>
             <form
-                className="container mx-auto py-10 space-y-8"
+                className="container w-[600px] mx-auto py-10 space-y-6"
                 onSubmit={form.handleSubmit(onSubmit)}
             >
                 <FormField
