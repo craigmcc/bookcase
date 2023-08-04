@@ -21,6 +21,7 @@ import prisma from "../prisma";
 import {PaginationOptions} from "@/types/types";
 import {validateLibraryScope} from "@/util/ApplicationValidators";
 import {BadRequest, NotFound, NotUnique, ServerError} from "@/util/HttpErrors";
+import logger from "@/util/ServerLogger";
 
 // Public Types --------------------------------------------------------------
 
@@ -88,6 +89,10 @@ type MatchOptions = {
  * @throws ServerError                  If a low level error is thrown
  */
 export const all = async (options?: AllOptions): Promise<LibraryPlus[]> => {
+    logger.info({
+        context: "LibraryActions.all",
+        options: options,
+    });
     const args: Prisma.LibraryFindManyArgs = {
         // cursor???
         // distinct???
@@ -123,6 +128,11 @@ export const all = async (options?: AllOptions): Promise<LibraryPlus[]> => {
  */
 export const exact = async (name: string, options?: FindOptions): Promise<LibraryPlus> => {
     try {
+        logger.info({
+            context: "LibraryActions.exact",
+            name: name,
+            options: options,
+        });
         const result = await prisma.library.findUnique({
             include: include(options),
             where: {
@@ -160,6 +170,11 @@ export const exact = async (name: string, options?: FindOptions): Promise<Librar
  */
 export const find = async (libraryId: number, options?: FindOptions): Promise<LibraryPlus> => {
     try {
+        logger.info({
+            context: "LoggerActions.find",
+            libraryId: libraryId,
+            options: options,
+        });
         const result =
             await prisma.library.findUnique({
                 include: include(options),
