@@ -15,6 +15,11 @@
 import * as LibraryActions from "@/actions/LibraryActions";
 import LibraryList from "@/components/libraries/LibraryList";
 
+// Caching Configuration -----------------------------------------------------
+
+// https://nextjs.org/docs/app/api-reference/file-conventions/route-segment-config
+export const revalidate = 0;            // Never cache
+
 // Public Objects ------------------------------------------------------------
 
 async function getLibraries(): Promise<LibraryActions.LibraryPlus[]> {

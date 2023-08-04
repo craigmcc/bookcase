@@ -15,6 +15,11 @@ import {Library, Prisma} from "@prisma/client";
 import * as LibraryActions from "@/actions/LibraryActions";
 import LibraryForm from "@/components/libraries/LibraryForm";
 
+// Caching Configuration -----------------------------------------------------
+
+// https://nextjs.org/docs/app/api-reference/file-conventions/route-segment-config
+export const revalidate = 0;            // Never cache
+
 // Public Objects ------------------------------------------------------------
 
 export default async function LibraryPage({params}: {params: {libraryId: string}}) {
