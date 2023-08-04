@@ -212,6 +212,10 @@ export const find = async (libraryId: number, options?: FindOptions): Promise<Li
  * @throws ServerError                  If some other error occurs
  */
 export const insert = async (library: Prisma.LibraryCreateInput): Promise<LibraryPlus> => {
+    logger.info({
+        context: "LibraryActions.insert",
+        library: library,
+    });
     if (!validateLibraryScope(library.scope)) {
         throw new BadRequest(
             `scope: Scope '${library.scope}' must not contain spaces`,
@@ -251,6 +255,10 @@ export const insert = async (library: Prisma.LibraryCreateInput): Promise<Librar
  * @throws ServerError                  If a low level error is thrown
  */
 export const remove = async (libraryId: number): Promise<LibraryPlus> => {
+    logger.info({
+        context: "LibraryAction.remove",
+        libraryId: libraryId,
+    });
     await find(libraryId); // May throw NotFound
     try {
         const result = await prisma.library.delete({
@@ -283,6 +291,11 @@ export const remove = async (libraryId: number): Promise<LibraryPlus> => {
  * @throws ServerError                  If some other error is thrown
  */
 export const update = async (libraryId: number, library: Prisma.LibraryUpdateInput): Promise<LibraryPlus> => {
+    logger.info({
+        context: "LibraryActions.update",
+        libraryId: libraryId,
+        library: library,
+    });
     if (library.scope && (typeof library.scope === "string") && !validateLibraryScope(library.scope)) {
         throw new BadRequest(
             `scope: Scope '${library.scope}' must not contain spaces`,
