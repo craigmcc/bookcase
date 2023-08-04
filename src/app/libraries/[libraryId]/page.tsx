@@ -33,9 +33,19 @@ export default async function LibraryPage({params}: {params: {libraryId: string}
     const handleSave = async (saved: Library) => {
         "use server"
         if (saved.id < 0) {
-            await LibraryActions.insert(saved as Prisma.LibraryCreateInput);
+            const input: Prisma.LibraryCreateInput = {
+                // Omit id
+                active: saved.active,
+                name: saved.name,
+                notes: saved.notes,
+                scope: saved.scope,
+            }
+            await LibraryActions.insert(input);
         } else {
-            await LibraryActions.update(saved.id, saved as Prisma.LibraryUpdateInput);
+            const input: Prisma.LibraryUpdateInput = {
+                ...saved,
+            }
+            await LibraryActions.update(saved.id, input);
         }
     }
 
