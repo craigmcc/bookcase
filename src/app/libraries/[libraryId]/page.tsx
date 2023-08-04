@@ -18,27 +18,24 @@ import LibraryForm from "@/components/libraries/LibraryForm";
 // Public Objects ------------------------------------------------------------
 
 export default async function LibraryPage({params}: {params: {libraryId: string}}) {
-    // TODO: this won't work for the "add" use case
-    const library = await getLibrary(Number(params.libraryId));
+
+    const id = Number(params.libraryId);
+    const library: Library = (id < 0)
+        ? {
+            id: -1,
+            active: true,
+            name: "",
+            notes: null,
+            scope: "",
+          }
+        : await getLibrary(id);
 
     const handleSave = async (saved: Library) => {
         "use server"
         if (saved.id < 0) {
-            const input: Prisma.LibraryCreateInput = {
-                active: saved.active,
-                name: saved.name,
-                notes: saved.notes,
-                scope: saved.scope,
-            }
-            await LibraryActions.insert(input);
+            await LibraryActions.insert(saved as Prisma.LibraryCreateInput);
         } else {
-            const input: Prisma.LibraryUpdateInput = {
-                active: saved.active,
-                name: saved.name,
-                notes: saved.notes,
-                scope: saved.scope,
-            }
-            await LibraryActions.update(saved.id, input);
+            await LibraryActions.update(saved.id, saved as Prisma.LibraryUpdateInput);
         }
     }
 

@@ -28,7 +28,7 @@ export function SignOutButton(props: SignOutButtonProps) {
         <Button
             className={props.className ? props.className : undefined}
             onClick={props.onClick}
-            variant="primary"
+            variant="info"
         >
             Sign Out
         </Button>

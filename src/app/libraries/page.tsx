@@ -24,7 +24,7 @@ async function getLibraries(): Promise<LibraryActions.LibraryPlus[]> {
 export default async function LibrariesPage() {
     const libraries = await getLibraries();
     return (
-        <div className="container mx-auto py-10">
+        <div className="container mx-auto py-6">
             <LibraryList libraries={libraries}/>
         </div>
     )

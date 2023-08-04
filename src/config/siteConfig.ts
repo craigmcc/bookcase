@@ -15,10 +15,6 @@ export const siteConfig = {
     },
     mainNav: [
         {
-            title: "Home",
-            href: "/",
-        },
-        {
             title: "Select",
             href: "/select",
         },
