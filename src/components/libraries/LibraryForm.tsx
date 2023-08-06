@@ -49,7 +49,7 @@ export default function LibraryForm(props: LibraryFormProps) {
 
     const form = useForm<z.infer<typeof formSchema>>({
         defaultValues: {
-            active: props.library.active ? props.library.active : true,
+            active: (typeof props.library.active === "boolean") ? props.library.active : true,
             name: props.library.name,
             notes: props.library.notes ? props.library.notes : "",
             scope: props.library.scope,
@@ -73,7 +73,7 @@ export default function LibraryForm(props: LibraryFormProps) {
     function onSubmit(values: z.infer<typeof formSchema>) {
         const result: Library = {
             id: props.library.id,
-            active: values.active,
+            active: (typeof values.active === "undefined") ? null : values.active,
             name: values.name,
             notes: values.notes === "" ? null : values.notes,
             scope: values.scope,
@@ -170,14 +170,17 @@ export default function LibraryForm(props: LibraryFormProps) {
 
                 <div className="grid grid-cols-2 space-x-2">
 
-                    {/* TODO: register checkbox with RHF somehow */}
                     <FormField
                         control={form.control}
                         name="active"
                         render={({ field }) => (
                             <FormItem>
                                 <FormControl>
-                                    <Checkbox className="mr-2" id="active"/>
+                                    <Checkbox
+                                        checked={field.value}
+                                        className="mr-2"
+                                        onCheckedChange={() => field.onChange(!field.value)}
+                                    />
                                 </FormControl>
                                 <FormLabel>Active?</FormLabel>
                                 <FormMessage />
@@ -206,7 +209,7 @@ export default function LibraryForm(props: LibraryFormProps) {
 // Private Objects -----------------------------------------------------------
 
 const formSchema = z.object({
-    active: z.boolean(),
+    active: z.boolean().optional(),
     name: z.string().nonempty(), // TODO: uniqueness check
     notes: z.string(),
     scope: z.string().nonempty(), // TODO: uniqueness check and format validity
