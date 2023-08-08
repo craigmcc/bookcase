@@ -14,6 +14,7 @@
 
 import * as LibraryActions from "@/actions/LibraryActions";
 import LibraryList from "@/components/libraries/LibraryList";
+import {LibraryPlus} from "@/types/models/Library";
 
 // Caching Configuration -----------------------------------------------------
 
@@ -22,7 +23,7 @@ export const revalidate = 0;            // Never cache
 
 // Public Objects ------------------------------------------------------------
 
-async function getLibraries(): Promise<LibraryActions.LibraryPlus[]> {
+async function getLibraries(): Promise<LibraryPlus[]> {
     return await LibraryActions.all();
 }
 

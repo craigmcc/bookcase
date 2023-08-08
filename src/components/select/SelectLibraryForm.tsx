@@ -15,9 +15,9 @@ import {ChangeEvent, useContext, useState} from "react";
 
 // Internal Modules ----------------------------------------------------------
 
-import {LibraryPlus} from "@/actions/LibraryActions";
 import {LibraryContext} from "@/components/layout/LibraryContext";
 import {Button} from "@/components/my/Button";
+import {LibraryPlus} from "@/types/models/Library";
 import {SelectOption} from "@/types/types";
 
 // Public Objects ------------------------------------------------------------

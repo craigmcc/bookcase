@@ -15,7 +15,7 @@ import {createContext} from "react";
 
 // Internal Modules ----------------------------------------------------------
 
-import {LibraryPlus} from "@/actions/LibraryActions";
+import {LibraryPlus} from "@/types/models/Library";
 
 // Context Properties --------------------------------------------------------
 

@@ -14,6 +14,7 @@ import {Library, Prisma} from "@prisma/client";
 
 import * as LibraryActions from "@/actions/LibraryActions";
 import LibraryForm from "@/components/libraries/LibraryForm";
+import {LibraryPlus} from "@/types/models/Library";
 
 // Caching Configuration -----------------------------------------------------
 
@@ -66,7 +67,7 @@ export default async function LibraryPage({params}: {params: {libraryId: string}
 
 // Private Objects -----------------------------------------------------------
 
-async function getLibrary(libraryId: number): Promise<LibraryActions.LibraryPlus> {
+async function getLibrary(libraryId: number): Promise<LibraryPlus> {
     return await LibraryActions.find(libraryId);
 }
 

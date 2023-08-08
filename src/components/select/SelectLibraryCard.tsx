@@ -28,6 +28,7 @@ import {
     CardHeader,
     CardTitle,
 } from "@/components/ui/card";
+import {LibraryPlus} from "@/types/models/Library";
 import {authorizedRegular} from "@/util/Authorizations";
 
 // Public Objects ------------------------------------------------------------
@@ -40,11 +41,11 @@ export default async function SelectLibraryCard() {
      * Return a list of Libraries for which this user is authorized
      * to select one of them.
      */
-    async function filterLibraries(): Promise<LibraryActions.LibraryPlus[]> {
+    async function filterLibraries(): Promise<LibraryPlus[]> {
         if (!session || !session.user) {
             return [];
         }
-        const results: LibraryActions.LibraryPlus[] = [];
+        const results: LibraryPlus[] = [];
         const libraries = await LibraryActions.all();
         for (const library of libraries) {
             if (authorizedRegular(session.user, library)) {
@@ -53,7 +54,7 @@ export default async function SelectLibraryCard() {
         }
         return results;
     }
-    const libraries: LibraryActions.LibraryPlus[] = await filterLibraries();
+    const libraries: LibraryPlus[] = await filterLibraries();
 
     return (
         <Card className="border-solid">
