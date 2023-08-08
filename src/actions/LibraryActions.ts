@@ -27,19 +27,6 @@ import {validateLibraryScope} from "@/util/ApplicationValidators";
 import {BadRequest, NotFound, NotUnique, ServerError} from "@/util/HttpErrors";
 import logger from "@/util/ServerLogger";
 
-/**
- * The type for criteria that select which Library objects should be included
- * in the response.
- */
-type MatchOptions = {
-    // Whether to limit this response to Libraries with matching active values.
-    active?: boolean;
-    // The name (wildcard match) of the Libraries that should be returned.
-    name?: string;
-    // The scope (unique per Library) for authorizations for this Library.
-    scope?: string;
-}
-
 // Public Actions ------------------------------------------------------------
 
 /**
