@@ -1,14 +1,14 @@
-// components/layout/SignInButton.tsx
+// components/shared/SaveButton.tsx
 
 /**
- * Button to trigger signing in to the site.
+ * Button to perform a submit action on a form.
  *
  * @packageDocumentation
  */
 
 // External Modules ----------------------------------------------------------
 
-import {MouseEventHandler} from "react";
+import {useRouter} from "next/navigation";
 
 // Internal Modules ----------------------------------------------------------
 
@@ -17,22 +17,21 @@ import {Button} from "@/components/my/Button";
 
 // Public Objects ------------------------------------------------------------
 
-export interface SignInButtonProps {
+export interface SaveButtonProps {
     // Optional CSS classes to add
     className?: string,
-    // Required handler for button clicks
-    onClick: MouseEventHandler<HTMLButtonElement>,
 }
 
-export function SignInButton(props: SignInButtonProps) {
-    return (
+export function SaveButton(props: SaveButtonProps) {
+    const router = useRouter();
+    return(
         <Button
             className={props.className ? props.className : undefined}
-            onClick={props.onClick}
+            type="submit"
             variant="primary"
         >
-            <Icons.SignIn className="mr-1"/>
-            Sign In
+            <Icons.Save className="mr-1"/>
+            Save
         </Button>
     )
 }

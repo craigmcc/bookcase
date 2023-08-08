@@ -18,10 +18,9 @@ import {useSession} from "next-auth/react";
 
 // Internal Modules ----------------------------------------------------------
 
-import {LibraryListColumns} from "./LibraryListColumns";
-import * as LibraryActions from "@/actions/LibraryActions";
-import {Button} from "@/components/my/Button";
-import {DataTable} from "@/components/shared/DataTable";
+import {AddButton} from "@/components/shared/AddButton";
+import {BackButton} from "@/components/shared/BackButton";
+import {EditButton} from "@/components/shared/EditButton";
 import NotAuthorized from "@/components/shared/NotAuthorized";
 import NotSignedIn from "@/components/shared/NotSignedIn";
 import {Icons} from "@/components/layout/Icons";
@@ -34,13 +33,14 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table";
+import {LibraryPlus} from "@/types/models/Library";
 import {authorizedSuperuser} from "@/util/Authorizations";
 
 // Public Objects ------------------------------------------------------------
 
 type LibraryListProps = {
     // Array of Libraries to be presented
-    libraries: LibraryActions.LibraryPlus[],
+    libraries: LibraryPlus[],
 }
 
 export default function LibraryList(props: LibraryListProps) {
@@ -60,29 +60,17 @@ export default function LibraryList(props: LibraryListProps) {
         <>
             <div className="grid grid-cols-3">
                 <div className="text-left">
-                    <Button
-                        onClick={() => router.push("/select")}
-                        variant="secondary"
-                    >
-                        <Icons.Back className="mr2"/>
-                        Back
-                    </Button>
+                    <BackButton href="/select"/>
                 </div>
                 <div className="text-center items-center">
                     <strong>Manage Libraries</strong>
                 </div>
                 <div className="text-right">
-                    <Button
-                        onClick={() => router.push("/libraries/-1")}
-                    >
-                        <Icons.Add className="mr-2"/>
-                        Add
-                    </Button>
+                    <AddButton href={"/libraries/-1"}/>
                 </div>
             </div>
 
             <div className="container mx-auto py-6">
-                {/*<DataTable columns={LibraryListColumns} data={props.libraries}/>*/}
                 <Table>
                     <TableHeader>
                         <TableRow>
@@ -113,14 +101,7 @@ export default function LibraryList(props: LibraryListProps) {
                                     {library.scope}
                                 </TableCell>
                                 <TableCell>
-                                    <Link href={`/libraries/${library.id}`}>
-                                        <Button
-                                            variant="success"
-                                        >
-                                            <Icons.Edit className="mr-2"/>
-                                            Edit
-                                        </Button>
-                                    </Link>
+                                    <EditButton href={`/libraries/${library.id}`}/>
                                 </TableCell>
                             </TableRow>
                         ))}

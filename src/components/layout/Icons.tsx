@@ -10,9 +10,12 @@
 
 import {
     ArrowBigLeft,
+    ArrowDownToLine,
     Check,
     Github,
     Library,
+    LogIn,
+    LogOut,
     Pencil,
     Plus,
     X,
@@ -30,5 +33,8 @@ export const Icons = {
     Github: Github,
     Library: Library,
     Remove: XOctagon,
+    Save: ArrowDownToLine,
+    SignIn: LogIn,
+    SignOut: LogOut,
     Uncheck: X,
 }

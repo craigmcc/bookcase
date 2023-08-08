@@ -19,10 +19,10 @@ import {Library} from "@prisma/client";
 
 // Internal Modules ----------------------------------------------------------
 
-import {Icons} from "@/components/layout/Icons";
-import {Button} from "@/components/my/Button";
+import {BackButton} from "@/components/shared/BackButton";
 import NotAuthorized from "@/components/shared/NotAuthorized";
 import NotSignedIn from "@/components/shared/NotSignedIn";
+import {SaveButton} from "@/components/shared/SaveButton";
 import {Checkbox} from "@/components/ui/checkbox";
 import {
     Form,
@@ -89,13 +89,7 @@ export default function LibraryForm(props: LibraryFormProps) {
 
             <div className="grid grid-cols-3">
                 <div>
-                    <Button
-                        onClick={() => router.push("/libraries")}
-                        variant="secondary"
-                    >
-                        <Icons.Back className="mr-2"/>
-                        Back
-                    </Button>
+                    <BackButton href="/libraries"/>
                 </div>
                 <div className="text-center">
                     <strong>
@@ -188,12 +182,7 @@ export default function LibraryForm(props: LibraryFormProps) {
                         )}
                     />
 
-                    <Button
-                        type="submit"
-                        variant="primary"
-                    >
-                        Save
-                    </Button>
+                    <SaveButton/>
 
                 </div>
 

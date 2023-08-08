@@ -1,14 +1,14 @@
-// components/layout/SignInButton.tsx
+// components/shared/AddButton.tsx
 
 /**
- * Button to trigger signing in to the site.
+ * Button to trigger "add" navigation.
  *
  * @packageDocumentation
  */
 
 // External Modules ----------------------------------------------------------
 
-import {MouseEventHandler} from "react";
+import {useRouter} from "next/navigation";
 
 // Internal Modules ----------------------------------------------------------
 
@@ -17,22 +17,23 @@ import {Button} from "@/components/my/Button";
 
 // Public Objects ------------------------------------------------------------
 
-export interface SignInButtonProps {
+export interface BackButtonProps {
     // Optional CSS classes to add
     className?: string,
-    // Required handler for button clicks
-    onClick: MouseEventHandler<HTMLButtonElement>,
+    // HREF to which the user should be redirected
+    href: string,
 }
 
-export function SignInButton(props: SignInButtonProps) {
-    return (
+export function AddButton(props: BackButtonProps) {
+    const router = useRouter();
+    return(
         <Button
             className={props.className ? props.className : undefined}
-            onClick={props.onClick}
+            onClick={() => router.push(`${props.href}`)}
             variant="primary"
         >
-            <Icons.SignIn className="mr-1"/>
-            Sign In
+            <Icons.Add className="mr-1"/>
+            Add
         </Button>
     )
 }

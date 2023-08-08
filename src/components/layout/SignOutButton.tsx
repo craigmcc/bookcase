@@ -12,6 +12,7 @@ import {MouseEventHandler} from "react";
 
 // Internal Modules ----------------------------------------------------------
 
+import {Icons} from "@/components/layout/Icons";
 import {Button} from "@/components/my/Button";
 
 // Public Objects ------------------------------------------------------------
@@ -30,6 +31,7 @@ export function SignOutButton(props: SignOutButtonProps) {
             onClick={props.onClick}
             variant="info"
         >
+            <Icons.SignOut className="mr-1"/>
             Sign Out
         </Button>
     )
