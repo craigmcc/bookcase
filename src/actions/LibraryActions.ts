@@ -10,61 +10,22 @@
 
 // External Modules ----------------------------------------------------------
 
-import {
-    Library,
-    Prisma,
-} from "@prisma/client";
+import {Prisma} from "@prisma/client";
 
 // Internal Modules ----------------------------------------------------------
 
 import prisma from "../prisma";
+import {
+    LibraryAllOptions,
+    LibraryFindOptions,
+    LibraryIncludeOptions,
+    LibraryMatchOptions,
+    LibraryPlus,
+} from "@/types/models/Library";
 import {PaginationOptions} from "@/types/types";
 import {validateLibraryScope} from "@/util/ApplicationValidators";
 import {BadRequest, NotFound, NotUnique, ServerError} from "@/util/HttpErrors";
 import logger from "@/util/ServerLogger";
-
-// Public Types --------------------------------------------------------------
-
-/**
- * A base Library with optional nested child object arrays.
- */
-export type LibraryPlus = Library & Prisma.LibraryGetPayload<{
-    include: {
-        authors: true,
-        series: true,
-        stories: true,
-        volumes: true,
-    }
-}>;
-
-/**
- * The type for options of an "all" function for this model.
- */
-export type AllOptions = IncludeOptions & MatchOptions & PaginationOptions;
-
-/**
- * The type for options of a "find" (or related single result) function
- * for this model.
- */
-export type FindOptions = IncludeOptions;
-
-// Private Types -------------------------------------------------------------
-
-/**
- * The type for options that select which child or parent models should be
- * included in a response.
- */
-type IncludeOptions = {
-    // Include child Authors?
-    withAuthors?: boolean;
-    // Include child Series?
-    withSeries?: boolean;
-    // Include child Stories?
-    withStories?: boolean;
-    // Include child Volumes?
-    withVolumes?: boolean;
-}
-
 
 /**
  * The type for criteria that select which Library objects should be included
@@ -88,7 +49,7 @@ type MatchOptions = {
  *
  * @throws ServerError                  If a low level error is thrown
  */
-export const all = async (options?: AllOptions): Promise<LibraryPlus[]> => {
+export const all = async (options?: LibraryAllOptions): Promise<LibraryPlus[]> => {
     logger.info({
         context: "LibraryActions.all",
         options: options,
@@ -126,7 +87,7 @@ export const all = async (options?: AllOptions): Promise<LibraryPlus[]> => {
  * @throws NotFound                     If no such Library is found
  * @throws ServerError                  If a low level error is thrown
  */
-export const exact = async (name: string, options?: FindOptions): Promise<LibraryPlus> => {
+export const exact = async (name: string, options?: LibraryFindOptions): Promise<LibraryPlus> => {
     try {
         logger.info({
             context: "LibraryActions.exact",
@@ -168,7 +129,7 @@ export const exact = async (name: string, options?: FindOptions): Promise<Librar
  * @throws NotFound                     If no such Library is found
  * @throws ServerError                  If a low level error is thrown
  */
-export const find = async (libraryId: number, options?: FindOptions): Promise<LibraryPlus> => {
+export const find = async (libraryId: number, options?: LibraryFindOptions): Promise<LibraryPlus> => {
     try {
         logger.info({
             context: "LoggerActions.find",
@@ -341,7 +302,7 @@ export const update = async (libraryId: number, library: Prisma.LibraryUpdateInp
  * Calculate and return the "include" options from the specified query
  * options, if any were specified.
  */
-export const include = (options?: IncludeOptions): Prisma.LibraryInclude | undefined => {
+export const include = (options?: LibraryIncludeOptions): Prisma.LibraryInclude | undefined => {
     if (!options) {
         return undefined;
     }
@@ -466,7 +427,7 @@ export const uniqueScope = async (libraryId: number | null, scope: string): Prom
  *
  * @param options                       MatchOptions relevant for this model
  */
-export const where = (options?: MatchOptions): Prisma.LibraryWhereInput | undefined => {
+export const where = (options?: LibraryMatchOptions): Prisma.LibraryWhereInput | undefined => {
     if (!options) {
         return undefined;
     }
