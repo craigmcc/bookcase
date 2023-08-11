@@ -26,26 +26,36 @@ export const siteConfig = {
             title: "Libraries",
             href: "/libraries",
         },
+/*
         {
             title: "Authors",
             href: "/authors",
         },
+*/
+/*
         {
             title: "Series",
             href: "/series",
         },
+*/
+/*
         {
             title: "Stories",
             href: "/stories",
         },
+*/
+/*
         {
             title: "Volumes",
             href: "/volumes",
         },
+*/
+/*
         {
             title: "Users",
             href: "/users",
         },
+*/
     ],
     name: "Bookcase",
 }
