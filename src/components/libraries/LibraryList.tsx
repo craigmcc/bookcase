@@ -3,8 +3,8 @@
 // components/libraries/LibraryList.tsx
 
 /**
- * Rendering the specified list of Libraries.  Perform callbacks to
- * parent component when the filter criteria are changed.
+ * Render the specified Libraries in a table.  Perform callbacks to the
+ * parent component when any filter criteria are changed.
  *
  * @packageDocumentation
  */
@@ -15,9 +15,6 @@ import {useState} from "react";
 
 // Internal Modules ----------------------------------------------------------
 
-import {AddButton} from "@/components/shared/AddButton";
-import {BackButton} from "@/components/shared/BackButton";
-import {EditButton} from "@/components/shared/EditButton";
 import {Icons} from "@/components/layout/Icons";
 import {
     Table,
@@ -27,10 +24,13 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table";
+import {AddButton} from "@/components/shared/AddButton";
+import {BackButton} from "@/components/shared/BackButton";
+import {CheckBox} from "@/components/shared/CheckBox";
+import {EditButton} from "@/components/shared/EditButton";
+import {SearchBar} from "@/components/shared/SearchBar";
 import {LibraryPlus} from "@/types/models/Library";
 import {HandleBoolean, HandleString} from "@/types/types";
-import {SearchBar} from "@/components/shared/SearchBar";
-import {CheckBox} from "@/components/shared/CheckBox";
 
 // Public Objects ------------------------------------------------------------
 

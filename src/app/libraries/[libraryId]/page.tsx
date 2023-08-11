@@ -1,7 +1,10 @@
+"use client"
+
 // app/libraries/[libraryId]/page.tsx
 
 /**
- * Editing page for Library objects.
+ * Editing page for Library objects.  Performs authorization checks for
+ * the route, and retrieves the Library specified as a path parameter.
  *
  * @packageDocumentation
  */
@@ -9,65 +12,96 @@
 // External Modules ----------------------------------------------------------
 
 import {Library, Prisma} from "@prisma/client";
+import {useRouter} from "next/navigation";
+import {useSession} from "next-auth/react";
+import {useEffect, useState, useTransition} from "react";
 
 // Internal Modules ----------------------------------------------------------
 
-import * as LibraryActions from "@/actions/LibraryActions";
+import * as LibraryActions from "@/actions/LibraryActionsShim";
 import LibraryForm from "@/components/libraries/LibraryForm";
-import {LibraryPlus} from "@/types/models/Library";
-
-// Caching Configuration -----------------------------------------------------
-
-// https://nextjs.org/docs/app/api-reference/file-conventions/route-segment-config
-export const revalidate = 0;            // Never cache
+import NotSignedIn from "@/components/shared/NotSignedIn";
+import NotAuthorized from "@/components/shared/NotAuthorized";
+import {authorizedSuperuser} from "@/util/Authorizations";
 
 // Public Objects ------------------------------------------------------------
 
-export default async function LibraryPage({params}: {params: {libraryId: string}}) {
+export default function LibraryPage({params}: {params: {libraryId: string}}) {
 
-    const id = Number(params.libraryId);
-    const library: Library = (id < 0)
-        ? {
-            id: -1,
-            active: true,
-            name: "",
-            notes: null,
-            scope: "",
-          }
-        : await getLibrary(id);
+    const router = useRouter();
+    const [library, setLibrary] =
+        useState<Library | null>(null);
+    const [isPending, startTransition] = useTransition();
 
-    const handleSave = async (saved: Library) => {
-        "use server"
-        if (saved.id < 0) {
-            const input: Prisma.LibraryCreateInput = {
-                // Omit id
-                active: saved.active,
-                name: saved.name,
-                notes: saved.notes,
-                scope: saved.scope,
-            }
-            await LibraryActions.insert(input);
+    // Set up the Library that will be passed to LibraryForm
+    useEffect(() => {
+        const requestedId = Number(params.libraryId);
+        //console.log("LibraryPage.requested", requestedId);
+        if (requestedId > 0) {
+            startTransition(async () => {
+                const result = await LibraryActions.find(requestedId);
+                //console.log("LibraryPage.returned", JSON.stringify(result));
+                setLibrary(result);
+            });
         } else {
-            const input: Prisma.LibraryUpdateInput = {
-                ...saved,
+            const newLibrary: Library = {
+                id: -1,
+                active: true,
+                name: "",
+                notes: null,
+                scope: "",
+
             }
-            await LibraryActions.update(saved.id, input);
+            //console.log("LibraryPage.new", JSON.stringify(newLibrary));
+            setLibrary(newLibrary);
         }
+    }, [/* params.libraryId */]);
+
+    // Validate access to this function
+    const {data: session} = useSession();
+    if (!session || !session.user) {
+        return <NotSignedIn/>;
+    } else if (!authorizedSuperuser(session.user)) {
+        return <NotAuthorized/>;
     }
 
+    // Handle the Save action
+    const handleSave = async (saved: Library) => {
+        //console.log("LibraryPage.saving", JSON.stringify(saved));
+        if (saved.id < 0) {
+            startTransition(async () => {
+                const input: Prisma.LibraryCreateInput = {
+                    // Omit id
+                    active: saved.active,
+                    name: saved.name,
+                    notes: saved.notes,
+                    scope: saved.scope,
+                }
+                await LibraryActions.insert(input);
+            });
+        } else {
+            startTransition(async () => {
+                const input: Prisma.LibraryUpdateInput = {
+                    ...saved,
+                }
+                await LibraryActions.update(saved.id, input);
+            });
+        }
+        //console.log("LibraryPage.pushing");
+        router.push("/libraries");
+    }
+
+    //console.log("LibraryPage.rendered", (library) ? JSON.stringify(library) : "SKIPPED");
     return (
-        <div className="container mx-auto py-6">
-            <LibraryForm
-                handleSave={handleSave}
-                library={library}
-            />
+        <div className="container mx-auto py-6" suppressHydrationWarning>
+            {(library) ? (
+                <LibraryForm
+                    handleSave={handleSave}
+                    library={library}
+                />
+            ) : (
+                <span>Loading Library ...</span>
+            )}
         </div>
     )
 }
-
-// Private Objects -----------------------------------------------------------
-
-async function getLibrary(libraryId: number): Promise<LibraryPlus> {
-    return await LibraryActions.find(libraryId);
-}
-

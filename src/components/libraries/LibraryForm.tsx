@@ -3,7 +3,7 @@
 // components/libraries/LibraryForm.tsx
 
 /**
- * Input form for adding or editing a Library object.
+ * Input form for adding or editing a Library.
  *
  * @packageDocumentation
  */
@@ -11,7 +11,6 @@
 // External Modules ----------------------------------------------------------
 
 import {useRouter} from "next/navigation";
-import {useSession} from "next-auth/react";
 import {useForm} from "react-hook-form";
 import * as z from "zod";
 import {zodResolver} from "@hookform/resolvers/zod";
@@ -20,8 +19,6 @@ import {Library} from "@prisma/client";
 // Internal Modules ----------------------------------------------------------
 
 import {BackButton} from "@/components/shared/BackButton";
-import NotAuthorized from "@/components/shared/NotAuthorized";
-import NotSignedIn from "@/components/shared/NotSignedIn";
 import {SaveButton} from "@/components/shared/SaveButton";
 import {Checkbox} from "@/components/ui/checkbox";
 import {
@@ -33,7 +30,6 @@ import {
     FormLabel,
     FormMessage,
 } from "@/components/ui/form";
-import {authorizedSuperuser} from "@/util/Authorizations";
 import {Input} from "@/components/ui/input";
 
 // Public Objects ------------------------------------------------------------
@@ -46,6 +42,8 @@ type LibraryFormProps = {
 }
 
 export default function LibraryForm(props: LibraryFormProps) {
+
+    //console.log("LibraryForm.entry", JSON.stringify(props.library));
 
     const form = useForm<z.infer<typeof formSchema>>({
         defaultValues: {
@@ -60,16 +58,6 @@ export default function LibraryForm(props: LibraryFormProps) {
     });
     const router = useRouter();
 
-    // Validate access to this function
-/* TODO - causes hydration errors
-    const {data: session} = useSession();
-    if (!session || !session.user) {
-        return <NotSignedIn/>;
-    } else if (!authorizedSuperuser(session.user)) {
-        return <NotAuthorized/>;
-    }
-*/
-
     function onSubmit(values: z.infer<typeof formSchema>) {
         const result: Library = {
             id: props.library.id,
@@ -78,7 +66,7 @@ export default function LibraryForm(props: LibraryFormProps) {
             notes: values.notes === "" ? null : values.notes,
             scope: values.scope,
         }
-        props.handleSave(result); // TODO - is it async?
+        props.handleSave(result);
         router.push("/libraries");
     }
 
