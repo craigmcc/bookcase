@@ -59,13 +59,14 @@ export function CheckBox(props: CheckBoxProps) {
     return (
         <div className={props.className ? props.className : undefined}>
             <Checkbox
+                autoFocus={props.autoFocus ? props.autoFocus : undefined}
                 checked={value}
                 className="mr-2"
                 disabled={props.disabled}
                 onChange={() => handleChange()}
             />
             <label htmlFor={name}>
-                <span>{props.label}</span>
+                <span className="text-sm">{props.label}</span>
             </label>
         </div>
     )

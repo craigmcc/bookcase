@@ -3,25 +3,28 @@
 // app/libraries/page.tsx
 
 /**
- * React component for the "/libraries" page.  This is a server component,
- * so we delegate user authorization to the LibrariesList client component
- * that actually renders the table.
+ * Routing page for "/libraries".  Performs authorization checks for the
+ * route, and retrieves the Libraries that match the specified filter
+ * criteria.
  *
  * @packageDocumentation
  */
 
 // External Modules ----------------------------------------------------------
 
+import {useSession} from "next-auth/react";
 import {useEffect, useState, useTransition} from "react";
 
 // Internal Modules ----------------------------------------------------------
 
 import * as LibraryActions from "@/actions/LibraryActionsShim";
-import LibraryList from "@/components/libraries/LibraryList";
-import {CheckBox} from "@/components/shared/CheckBox";
-import {SearchBar} from "@/components/shared/SearchBar";
+import LibrariesList from "@/components/libraries/LibraryList";
+
+import NotAuthorized from "@/components/shared/NotAuthorized";
+import NotSignedIn from "@/components/shared/NotSignedIn";
 import {LibraryAllOptions, LibraryPlus} from "@/types/models/Library";
 import {HandleBoolean, HandleString} from "@/types/types";
+import {authorizedSuperuser} from "@/util/Authorizations";
 
 // Public Objects ------------------------------------------------------------
 
@@ -33,21 +36,28 @@ export default function LibrariesPage() {
     const [isPending, startTransition] = useTransition();
 
     useEffect(() => {
-        console.log("/libraries", {
+        console.log("LibrariesPage.useEffect", {
             active: active,
             search: search,
         });
         startTransition(async ()  => {
             const options: LibraryAllOptions = {
-                active: (active === true) ? true : undefined,
+                active: (active) ? true : undefined,
                 name: (search.length > 0) ? search : undefined,
             };
             const results = await LibraryActions.all(options);
-            console.log("/libraries", JSON.stringify(results));
+            console.log("LibrariesPage", JSON.stringify(results));
             setLibraries(results);
         });
     }, [active, search])
 
+    // Validate access to this function
+    const {data: session} = useSession();
+    if (!session || !session.user) {
+        return <NotSignedIn/>;
+    } else if (!authorizedSuperuser(session.user)) {
+        return <NotAuthorized/>;
+    }
 
     const handleActive: HandleBoolean = (newActive) => {
         setActive(newActive);
@@ -57,28 +67,13 @@ export default function LibrariesPage() {
         setSearch(newSearch);
     }
 
-//    const libraries: LibraryPlus[] = []; //await getLibraries();
     return (
-        <div className="container mx-auto py-6">
-            <>
-                <div className="grid grid-cols-2">
-                    <div className="text-left">
-                        <SearchBar
-                            autoFocus={true}
-                            handleChange={handleSearch}
-                            label="Search for Libraries:"
-                            value={search}
-                        />
-                    </div>
-                    <div className="text-right">
-                        <CheckBox
-                            label="Active Only?"
-                            value={active}
-                        />
-                    </div>
-                </div>
-                <LibraryList libraries={libraries}/>
-            </>
+        <div className="container mx-auto py-6" suppressHydrationWarning>
+            <LibrariesList
+                handleActive={handleActive}
+                handleSearch={handleSearch}
+                libraries={libraries}
+            />
         </div>
     )
 }

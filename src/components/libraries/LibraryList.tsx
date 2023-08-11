@@ -3,61 +3,67 @@
 // components/libraries/LibraryList.tsx
 
 /**
- * React component containing the list of Libraries for the "/libraries" page.
- * This needs to be a client component so that it is not async, and can
- * therefore use the useSession() hook from next-auth.
+ * Rendering the specified list of Libraries.  Perform callbacks to
+ * parent component when the filter criteria are changed.
  *
  * @packageDocumentation
  */
 
 // External Modules ----------------------------------------------------------
 
-import Link from "next/link";
-import {useRouter} from "next/navigation";
-import {useSession} from "next-auth/react";
+import {useState} from "react";
 
 // Internal Modules ----------------------------------------------------------
 
 import {AddButton} from "@/components/shared/AddButton";
 import {BackButton} from "@/components/shared/BackButton";
 import {EditButton} from "@/components/shared/EditButton";
-import NotAuthorized from "@/components/shared/NotAuthorized";
-import NotSignedIn from "@/components/shared/NotSignedIn";
 import {Icons} from "@/components/layout/Icons";
 import {
     Table,
     TableBody,
-    TableCaption,
     TableCell,
     TableHead,
     TableHeader,
     TableRow,
 } from "@/components/ui/table";
 import {LibraryPlus} from "@/types/models/Library";
-import {authorizedSuperuser} from "@/util/Authorizations";
+import {HandleBoolean, HandleString} from "@/types/types";
+import {SearchBar} from "@/components/shared/SearchBar";
+import {CheckBox} from "@/components/shared/CheckBox";
 
 // Public Objects ------------------------------------------------------------
 
 type LibraryListProps = {
+    // Handle new value for the "active" filter
+    handleActive: HandleBoolean;
+    // Handle new value for the "search" filter
+    handleSearch: HandleString;
     // Array of Libraries to be presented
     libraries: LibraryPlus[],
 }
 
 export default function LibraryList(props: LibraryListProps) {
 
-    const router = useRouter();
+    const [active, setActive] = useState<boolean>(false);
+    const [search, setSearch] = useState<string>("");
 
-    // Validate access to this function
-    const {data: session} = useSession();
-    if (!session || !session.user) {
-        return <NotSignedIn/>;
-    } else if (!authorizedSuperuser(session.user)) {
-        return <NotAuthorized/>;
+    const handleActive: HandleBoolean = (newActive) => {
+        console.log("LibrariesList.handleActive", `'${newActive}'`);
+        setActive(newActive);
+        props.handleActive(newActive);
+    }
+
+    const handleSearch: HandleString = (newSearch) => {
+        console.log("LibrariesList.handleSearch", `'${newSearch}')`);
+        setSearch(newSearch);
+        props.handleSearch(newSearch);
     }
 
     // Render the requested content
     return (
         <>
+
             <div className="grid grid-cols-3">
                 <div className="text-left">
                     <BackButton href="/select"/>
@@ -70,7 +76,26 @@ export default function LibraryList(props: LibraryListProps) {
                 </div>
             </div>
 
-            <div className="container mx-auto py-6">
+            <div className="grid grid-cols-2 py-4">
+                <div className="text-left">
+                    <SearchBar
+                        autoFocus={true}
+                        handleChange={handleSearch}
+                        label="Search for Libraries:"
+                        placeholder="Search by all or part of name"
+                        value={search}
+                    />
+                </div>
+                <div className="text-right">
+                    <CheckBox
+                        handleValue={handleActive}
+                        label="Active Libraries Only?"
+                        value={active}
+                    />
+                </div>
+            </div>
+
+            <div className="container mx-auto">
                 <Table>
                     <TableHeader>
                         <TableRow>
