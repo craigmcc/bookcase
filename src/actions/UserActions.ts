@@ -19,55 +19,15 @@ import {
 
 import prisma from "@/prisma";
 import {hashPassword} from "@/oauth/OAuthUtils";
+import {
+    UserAllOptions,
+    UserFindOptions,
+    UserIncludeOptions,
+    UserMatchOptions,
+    UserPlus,
+} from "@/types/models/User";
 import {PaginationOptions} from "@/types/types";
 import {BadRequest, NotFound, NotUnique, ServerError} from "@/util/HttpErrors";
-
-// Public Types --------------------------------------------------------------
-
-/**
- * A base User with optional nested child object arrays.
- */
-export type UserPlus = User & Prisma.UserGetPayload<{
-    include: {
-        accessTokens: true,
-        refreshTokens: true,
-    }
-}>;
-
-/**
- * The type for options of an "all" function for this model.
- */
-export type AllOptions = IncludeOptions & MatchOptions & PaginationOptions;
-
-/**
- * The type for options of a "find" (or related single result) function
- * for this model.
- */
-export type FindOptions = IncludeOptions;
-
-// Private Types -------------------------------------------------------------
-
-/**
- * The type for options that select which child models should be
- * included in a response.
- */
-type IncludeOptions = {
-    // Include access tokens?
-    withAccessTokens?: boolean;
-    // Include refresh tokens?
-    withRefreshTokens?: boolean;
-}
-
-/**
- * The type for criteria that select which User objects should be included
- * in the response.
- */
-type MatchOptions = {
-    // Whether to limit this response to Users with matching active values.
-    active?: boolean;
-    // The username (wildcard match) of Users that should be returned.
-    username?: string;
-}
 
 // Public Actions ------------------------------------------------------------
 
@@ -78,7 +38,7 @@ type MatchOptions = {
  *
  * @throws ServerError                  If a low level error is thrown
  */
-export const all = async (options?: AllOptions): Promise<UserPlus[]> => {
+export const all = async (options?: UserAllOptions): Promise<UserPlus[]> => {
     const args: Prisma.UserFindManyArgs = {
         // cursor???
         // distinct???
@@ -112,7 +72,7 @@ export const all = async (options?: AllOptions): Promise<UserPlus[]> => {
  * @throws NotFound                     If no such User is found
  * @throws ServerError                  If a low level error is thrown
  */
-export const exact = async (username: string, options?: FindOptions): Promise<UserPlus> => {
+export const exact = async (username: string, options?: UserFindOptions): Promise<UserPlus> => {
     try {
         const result = await prisma.user.findUnique({
             include: include(options),
@@ -150,7 +110,7 @@ export const exact = async (username: string, options?: FindOptions): Promise<Us
  * @throws NotFound                     If no such User is found
  * @throws ServerError                  If a low level error is thrown
  */
-export const find = async (userId: number, options?: FindOptions): Promise<UserPlus> => {
+export const find = async (userId: number, options?: UserFindOptions): Promise<UserPlus> => {
     try {
         const result = await prisma.user.findUnique({
             include: include(options),
@@ -287,7 +247,7 @@ export const update = async (userId: number, user: Prisma.UserUpdateInput): Prom
  * Calculate and return the "include" options from the specified query
  * options, if any were specified.
  */
-export const include = (options?: IncludeOptions): Prisma.UserInclude | undefined => {
+export const include = (options?: UserIncludeOptions): Prisma.UserInclude | undefined => {
     if (!options) {
         return undefined;
     }
@@ -379,7 +339,7 @@ export const uniqueUsername = async (userId: number | null, username: string): P
  * Calculate and return the "where" options from the specified query
  * options, if any were specified.
  */
-export const where = (options?: any): Prisma.UserWhereInput | undefined => {
+export const where = (options?: UserMatchOptions): Prisma.UserWhereInput | undefined => {
     if (!options) {
         return undefined;
     }
