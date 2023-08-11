@@ -55,7 +55,7 @@ export default function LibraryPage({params}: {params: {libraryId: string}}) {
             //console.log("LibraryPage.new", JSON.stringify(newLibrary));
             setLibrary(newLibrary);
         }
-    }, [/* params.libraryId */]);
+    }, [params.libraryId]);
 
     // Validate access to this function
     const {data: session} = useSession();

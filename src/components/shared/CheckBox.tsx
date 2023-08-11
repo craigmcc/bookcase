@@ -9,11 +9,19 @@
 
 // External Modules ----------------------------------------------------------
 
-import {useEffect, useState} from "react";
+import {useState} from "react";
+import {useForm} from "react-hook-form";
 
 // Internal Modules ----------------------------------------------------------
 
 import {Checkbox} from "@/components/ui/checkbox";
+import {
+    Form,
+    FormControl,
+    FormField,
+    FormItem,
+    FormLabel,
+} from "@/components/ui/form";
 import {HandleBoolean} from "@/types/types";
 
 // Incoming Properties -------------------------------------------------------
@@ -29,7 +37,7 @@ type CheckBoxProps = {
     handleValue?: HandleBoolean;
     // Label for the checkbox [NO DEFAULT]
     label: string;
-    // Input control name [checkBox]
+    // Input control name [thisCheckBox] TODO currently ignored due to form usage
     name?: string;
     // Initial state [false]
     value?: boolean;
@@ -39,17 +47,21 @@ type CheckBoxProps = {
 
 export function CheckBox(props: CheckBoxProps) {
 
-    const name = props.name ? props.name : "checkBox";
     const [value, setValue] =
         useState<boolean>(props.value !== undefined ? props.value : false);
 
-    // Force rerender if props or value change
-    useEffect(() => {
-    }, [value, props.disabled, props.value]);
+    type FormFields = {
+        thisCheckBox: boolean,
+    }
 
-    // Handle value change in the input
-    const handleChange = () => {
-        const newValue = !value;
+    const form = useForm<FormFields>({
+        defaultValues: {
+            thisCheckBox: (typeof props.value !== "undefined") ? props.value : false,
+        },
+    });
+
+    const handleClick = (newValue: boolean) => {
+//        console.log("handleClick, new value =", newValue);
         setValue(newValue);
         if (props.handleValue) {
             props.handleValue(newValue);
@@ -58,16 +70,28 @@ export function CheckBox(props: CheckBoxProps) {
 
     return (
         <div className={props.className ? props.className : undefined}>
-            <Checkbox
-                autoFocus={props.autoFocus ? props.autoFocus : undefined}
-                checked={value}
-                className="mr-2"
-                disabled={props.disabled}
-                onChange={() => handleChange()}
-            />
-            <label htmlFor={name}>
-                <span className="text-sm">{props.label}</span>
-            </label>
+            <Form {...form}>
+                <form>
+                    <FormField
+                        control={form.control}
+                        name="thisCheckBox"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormControl>
+                                    <Checkbox
+                                        checked={field.value}
+                                        className="mr-2"
+                                        onCheckedChange={() => field.onChange(!field.value)}
+                                        onClick={() => handleClick(!field.value)}
+                                    />
+                                </FormControl>
+                                <FormLabel>{props.label}</FormLabel>
+                            </FormItem>
+                        )}
+                    />
+
+                </form>
+            </Form>
         </div>
     )
 

@@ -73,7 +73,7 @@ export function SearchBar(props: SearchBarProps) {
     return (
         <div className={props.className ? props.className : undefined}>
             <label htmlFor={name}>
-                <span className="mr-2 text-sm">{label}</span>
+                <span className="mr-2 text-sm font-medium">{label}</span>
             </label>
             <input
                 autoFocus={props.autoFocus ? props.autoFocus : undefined}
