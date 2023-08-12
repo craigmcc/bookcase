@@ -164,7 +164,7 @@ export default function LibraryForm(props: LibraryFormProps) {
                                         onCheckedChange={() => field.onChange(!field.value)}
                                     />
                                 </FormControl>
-                                <FormLabel>Active?</FormLabel>
+                                <FormLabel>Active Library?</FormLabel>
                                 <FormMessage />
                             </FormItem>
                         )}
