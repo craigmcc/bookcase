@@ -50,12 +50,10 @@ export const siteConfig = {
             href: "/volumes",
         },
 */
-/*
         {
             title: "Users",
             href: "/users",
         },
-*/
     ],
     name: "Bookcase",
 }
