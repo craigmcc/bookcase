@@ -187,7 +187,14 @@ export default function LibraryForm(props: LibraryFormProps) {
 
 const formSchema = z.object({
     active: z.boolean().optional(),
-    name: z.string().nonempty(), // TODO: uniqueness check
+    name: z.string() // TODO: uniqueness check
+        .nonempty(),
     notes: z.string(),
-    scope: z.string().nonempty(), // TODO: uniqueness check and format validity
+    scope: z.string() // TODO: uniqueness check
+        .nonempty()
+        .refine((scope) => {
+            return scope.match(/^[a-zA-Z0-9]+$/);
+        },  {
+            message: "Scope must contain only letters and digits",
+        }),
 });
