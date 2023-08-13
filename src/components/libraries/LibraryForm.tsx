@@ -66,6 +66,7 @@ export default function LibraryForm(props: LibraryFormProps) {
             notes: values.notes === "" ? null : values.notes,
             scope: values.scope,
         }
+        console.log("ONSUBMIT", JSON.stringify(result));
         props.handleSave(result);
         router.push("/libraries");
     }
@@ -92,90 +93,90 @@ export default function LibraryForm(props: LibraryFormProps) {
                 <div/>
             </div>
 
-        <Form {...form}>
-            <form
-                className="container mx-auto py-6 space-y-6"
-                onSubmit={form.handleSubmit(onSubmit)}
-            >
+            <Form {...form}>
+                <form
+                    className="container mx-auto py-6 space-y-6"
+                    onSubmit={form.handleSubmit(onSubmit)}
+                >
 
-                <div className="grid grid-cols-2 space-x-2">
+                    <div className="grid grid-cols-2 space-x-2">
+                        <FormField
+                            control={form.control}
+                            name="name"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Name:</FormLabel>
+                                    <FormControl>
+                                        <Input autoFocus {...field} />
+                                    </FormControl>
+                                    <FormDescription>
+                                        Name of this Library (must be unique).
+                                    </FormDescription>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                        <FormField
+                            control={form.control}
+                            name="scope"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Scope:</FormLabel>
+                                    <FormControl>
+                                        <Input {...field} />
+                                    </FormControl>
+                                    <FormDescription>
+                                        Permission scope for this Library (must be unique).
+                                    </FormDescription>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                    </div>
+
                     <FormField
                         control={form.control}
-                        name="name"
+                        name="notes"
                         render={({ field }) => (
                             <FormItem>
-                                <FormLabel>Name:</FormLabel>
-                                <FormControl>
-                                    <Input autoFocus {...field} />
-                                </FormControl>
-                                <FormDescription>
-                                    Name of this Library (must be unique).
-                                </FormDescription>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
-                    <FormField
-                        control={form.control}
-                        name="scope"
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>Scope:</FormLabel>
+                                <FormLabel>Notes:</FormLabel>
                                 <FormControl>
                                     <Input {...field} />
                                 </FormControl>
                                 <FormDescription>
-                                    Permission scope for this Library (must be unique).
+                                    Miscellaneous notes about this Library.
                                 </FormDescription>
                                 <FormMessage />
                             </FormItem>
                         )}
                     />
-                </div>
 
-                <FormField
-                    control={form.control}
-                    name="notes"
-                    render={({ field }) => (
-                        <FormItem>
-                            <FormLabel>Notes:</FormLabel>
-                            <FormControl>
-                                <Input {...field} />
-                            </FormControl>
-                            <FormDescription>
-                                Miscellaneous notes about this Library.
-                            </FormDescription>
-                            <FormMessage />
-                        </FormItem>
-                    )}
-                />
+                    <div className="grid grid-cols-2 space-x-2">
 
-                <div className="grid grid-cols-2 space-x-2">
+                        <FormField
+                            control={form.control}
+                            name="active"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormControl>
+                                        <Checkbox
+                                            checked={field.value}
+                                            className="mr-2"
+                                            onCheckedChange={() => field.onChange(!field.value)}
+                                        />
+                                    </FormControl>
+                                    <FormLabel>Active Library?</FormLabel>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
 
-                    <FormField
-                        control={form.control}
-                        name="active"
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormControl>
-                                    <Checkbox
-                                        checked={field.value}
-                                        className="mr-2"
-                                        onCheckedChange={() => field.onChange(!field.value)}
-                                    />
-                                </FormControl>
-                                <FormLabel>Active Library?</FormLabel>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
+                        <SaveButton/>
 
-                    <SaveButton/>
+                    </div>
 
-                </div>
-
-            </form>
-        </Form>
+                </form>
+            </Form>
 
 
         </>
@@ -187,7 +188,8 @@ export default function LibraryForm(props: LibraryFormProps) {
 
 const formSchema = z.object({
     active: z.boolean().optional(),
-    name: z.string() // TODO: uniqueness check
+    id: z.number(),
+    name: z.string()
         .nonempty(),
     notes: z.string(),
     scope: z.string() // TODO: uniqueness check
@@ -197,4 +199,20 @@ const formSchema = z.object({
         },  {
             message: "Scope must contain only letters and digits",
         }),
-});
+}); // Remove semicolon when uncommenting the below
+/* TODO - seems to cause save action to never work.
+    .refine(async (library) => {
+        console.log("GET RESPONSE", JSON.stringify(library));
+        const response = await fetch(`/api/libraries/exact/${library.name}`);
+        console.log("GOT RESPONSE", JSON.stringify(response));
+        if (response.ok) {
+            const result = await response.json();
+            return (library.id === result.id);
+        } else {
+            return true; // Definitely unique
+        }
+    }, {
+        message: "That name is already in use",
+        path: [ "name" ],
+    });
+*/
