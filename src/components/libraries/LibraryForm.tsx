@@ -48,9 +48,9 @@ export default function LibraryForm(props: LibraryFormProps) {
     const form = useForm<z.infer<typeof formSchema>>({
         defaultValues: {
             active: (typeof props.library.active === "boolean") ? props.library.active : true,
-            name: props.library.name,
+            name: props.library.name ? props.library.name : "",
             notes: props.library.notes ? props.library.notes : "",
-            scope: props.library.scope,
+            scope: props.library.scope ? props.library.scope : "",
 
         },
         mode: "onBlur",
@@ -59,6 +59,7 @@ export default function LibraryForm(props: LibraryFormProps) {
     const router = useRouter();
 
     function onSubmit(values: z.infer<typeof formSchema>) {
+        console.log("VALUES", JSON.stringify(values));
         const result: Library = {
             id: props.library.id,
             active: (typeof values.active === "undefined") ? null : values.active,
@@ -188,7 +189,7 @@ export default function LibraryForm(props: LibraryFormProps) {
 
 const formSchema = z.object({
     active: z.boolean().optional(),
-    id: z.number(),
+    //id: z.number(),
     name: z.string()
         .nonempty(),
     notes: z.string(),

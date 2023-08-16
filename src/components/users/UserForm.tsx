@@ -60,6 +60,7 @@ export default function UserForm(props: UserFormProps) {
     const router = useRouter();
 
     function onSubmit(values: z.infer<typeof formSchema>) {
+        console.log("VALUES", JSON.stringify(values));
         const result: User = {
             id: props.user.id,
             active: (typeof values.active === "undefined") ? null : values.active,
@@ -69,6 +70,7 @@ export default function UserForm(props: UserFormProps) {
             scope: values.scope,
             username: values.username,
         }
+        console.log("ONSUBMIT", JSON.stringify(result));
         props.handleSave(result);
         router.push("/users");
     }
@@ -160,7 +162,7 @@ export default function UserForm(props: UserFormProps) {
                                 <FormItem>
                                     <FormLabel>Password:</FormLabel>
                                     <FormControl>
-                                        <Input {...field} />
+                                        <Input type="password" {...field} />
                                     </FormControl>
                                     <FormDescription>
                                         Sign in password of this User (set this ONLY on new Users or if you wish to change the password for an existing User).
@@ -211,8 +213,11 @@ export default function UserForm(props: UserFormProps) {
 const formSchema = z.object({
     active: z.boolean().optional(),
     google_books_api_key: z.string().optional(),
-    name: z.string(),
+    name: z.string()
+        .nonempty(),
     password: z.string().optional(), // TODO: required on insert, optional on update
-    scope: z.string(), // TODO: format validity, allowed scope?
-    username: z.string(), // TODO: uniqueness check
+    scope: z.string()
+        .nonempty(), // TODO: format validity, allowed scope?
+    username: z.string()
+        .nonempty(), // TODO: uniqueness check
 });
