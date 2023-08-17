@@ -220,4 +220,11 @@ const formSchema = z.object({
         .nonempty(), // TODO: format validity, allowed scope?
     username: z.string()
         .nonempty(), // TODO: uniqueness check
-});
+})
+    .refine(async (user) => {
+        console.log("GET RESPONSE", JSON.stringify(user));
+        const response = await fetch(`/api/users/exact/${user.username}`);
+        console.log("GOT RESPONSE", JSON.stringify(response));
+        return true;
+    })
+;
