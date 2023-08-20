@@ -1,4 +1,4 @@
-"use client"
+"use server"
 
 // app/users/[userId]/page.tsx
 
@@ -12,100 +12,104 @@
 // External Modules ----------------------------------------------------------
 
 import {User, Prisma} from "@prisma/client";
-import {useRouter} from "next/navigation";
-import {useSession} from "next-auth/react";
-import {useEffect, useState, useTransition} from "react";
+import {getServerSession} from "next-auth/next";
 
 // Internal Modules ----------------------------------------------------------
 
 import * as UserActions from "@/actions/UserActionsShim";
+import {authOptions} from "@/app/api/auth/[...nextauth]/route";
 import UserForm from "@/components/users/UserForm";
-import NotSignedIn from "@/components/shared/NotSignedIn";
 import NotAuthorized from "@/components/shared/NotAuthorized";
+import NotFound from "@/components/shared/NotFound";
+import NotSignedIn from "@/components/shared/NotSignedIn";
 import {authorizedSuperuser} from "@/util/Authorizations";
 
 // Public Objects ------------------------------------------------------------
 
-export default function UserPage({params}: {params: {userId: string}}) {
+export default async function UserPage({params}: {params: {userId: string}}) {
 
-    const router = useRouter();
-    const [user, setUser] =
-        useState<User | null>(null);
-    const [isPending, startTransition] = useTransition();
-
-    // Set up the User that will be passed to UserForm
-    useEffect(() => {
-        const requestedId = Number(params.userId);
-        //console.log("UserPage.requested", requestedId);
-        if (requestedId > 0) {
-            startTransition(async () => {
-                const result = await UserActions.find(requestedId);
-                //console.log("UserPage.returned", JSON.stringify(result));
-                setUser(result);
-            });
-        } else {
-            const newUser: User = {
-                id: -1,
-                active: true,
-                google_books_api_key: "",
-                name: "",
-                password: "",
-                scope: "",
-                username: "",
-
-            }
-            //console.log("UserPage.new", JSON.stringify(newUser));
-            setUser(newUser);
-        }
-    }, [params.userId]);
-
-    // Validate access to this function
-    const {data: session} = useSession();
+    // Validate access to this page
+    const session = await getServerSession(authOptions);
     if (!session || !session.user) {
         return <NotSignedIn/>;
     } else if (!authorizedSuperuser(session.user)) {
         return <NotAuthorized/>;
     }
 
-    // Handle the Save action
-    const handleSave = async (saved: User) => {
-        //console.log("UserPage.saving", JSON.stringify(saved));
-        if (saved.id < 0) {
-            startTransition(async () => {
-                const input: Prisma.UserCreateInput = {
-                    // Omit id
-                    active: saved.active,
-                    google_books_api_key: saved.google_books_api_key,
-                    name: saved.name,
-                    password: saved.password,
-                    scope: saved.scope,
-                    username: saved.username,
-                }
-                await UserActions.insert(input);
-            });
-        } else {
-            startTransition(async () => {
-                const input: Prisma.UserUpdateInput = {
-                    ...saved,
-                }
-                await UserActions.update(saved.id, input);
-            });
+    // Retrieve the requested User or create a template for a new User
+    const userId = Number(params.userId);
+    let user: User;
+    if (userId < 0) {
+        user = {
+            id: -1,
+            active: true,
+            google_books_api_key: "",
+            name: "",
+            password: "",
+            scope: "",
+            username: "",
         }
-        //console.log("UserPage.pushing");
-        router.push("/users");
+    } else {
+        try {
+            user = await UserActions.find(userId);
+        } catch (error) {
+            if (error instanceof Error) {
+                return <NotFound message={error.message}/>
+            } else {
+                return <NotFound/>
+            }
+        }
     }
 
-    //console.log("UserPage.rendered", (user) ? JSON.stringify(user) : "SKIPPED");
+    // Handle an Insert action
+/*
+    const handleInsert = async (saved: User) => {
+        "use server"
+        const input: Prisma.UserCreateInput = {
+            // Omit id
+            active: saved.active,
+            google_books_api_key: saved.google_books_api_key,
+            name: saved.name,
+            password: saved.password,
+            scope: saved.scope,
+            username: saved.username,
+        }
+        try {
+            // TODO - depends on caller to navigate (LAME!)
+            await UserActions.insert(input);
+        } catch (error) {
+            // TODO: - something more graceful would be better
+            alert("ERROR ON INSERT: " + JSON.stringify(error));
+        }
+    }
+*/
+
+    // Handle an Update action
+/*
+    const handleUpdate = async (saved: User) => {
+        "use server"
+        const input: Prisma.UserUpdateInput = {
+            ...saved,
+        }
+        try {
+            // TODO - depends on caller to navigate (LAME!)
+            await UserActions.update(saved.id, input);
+        } catch (error) {
+            // TODO: - something more graceful would be better
+            alert("ERROR ON UPDATE: " + JSON.stringify(error));
+        }
+    }
+*/
+
+    //console.log("UserPage.rendered", JSON.stringify(user));
     return (
         <div className="container mx-auto py-6" suppressHydrationWarning>
-            {(user) ? (
-                <UserForm
-                    handleSave={handleSave}
-                    user={user}
-                />
-            ) : (
-                <span>Loading User ...</span>
-            )}
+            <UserForm
+                destination="/users"
+//                handleInsert={handleInsert}
+//                handleUpdate={handleUpdate}
+                user={user}
+            />
         </div>
     )
 }

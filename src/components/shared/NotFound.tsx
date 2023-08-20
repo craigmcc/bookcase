@@ -1,10 +1,10 @@
 "use client"
 
-// components/shared/NotSelected.tsx
+// components/shared/NotFound.tsx
 
 /**
- * Display a dialog indicating that a user has not yet selected a Library
- * to be worked on.  Redirects the user to the "/select" page.
+ * Display a dialog indicating that the information being requested was not found.
+ * Redirects the user to the "/" page.
  *
  * @packageDocumentation
  */
@@ -27,20 +27,30 @@ import {
 
 // Public Objects ------------------------------------------------------------
 
-export default function NotSelected() {
+export type NotFoundProps = {
+    // Optional message to be displayed [generic "not found" message]
+    message?: string;
+}
+
+export default function NotFound(props: NotFoundProps) {
     return (
         <AlertDialog open={true}>
             <AlertDialogContent>
                 <AlertDialogHeader>
-                    <AlertDialogTitle>No Selected Library</AlertDialogTitle>
+                    <AlertDialogTitle>Requested Information Not Found</AlertDialogTitle>
                     <AlertDialogDescription>
-                        You must have selected a Library to use this function.
+                        {props.message ? (
+                            <p>{props.message}</p>
+                        ) : (
+                            <p>The information you have requested cannot be found.</p>
+                        )}
+                        <p>Check the URL that you used to access this page.</p>
                     </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
                     <AlertDialogAction asChild>
-                        <Link href="/select">
-                            Select Library
+                        <Link href="/">
+                            OK
                         </Link>
                     </AlertDialogAction>
                 </AlertDialogFooter>
@@ -48,4 +58,3 @@ export default function NotSelected() {
         </AlertDialog>
     )
 }
-
