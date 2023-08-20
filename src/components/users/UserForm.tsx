@@ -14,10 +14,11 @@ import {useRouter} from "next/navigation";
 import {useForm} from "react-hook-form";
 import * as z from "zod";
 import {zodResolver} from "@hookform/resolvers/zod";
-import {User} from "@prisma/client";
+import {Prisma, User} from "@prisma/client";
 
 // Internal Modules ----------------------------------------------------------
 
+import * as UserActions from "@/actions/UserActionsShim";
 import {BackButton} from "@/components/shared/BackButton";
 import {SaveButton} from "@/components/shared/SaveButton";
 import {Checkbox} from "@/components/ui/checkbox";
@@ -35,16 +36,15 @@ import {Input} from "@/components/ui/input";
 // Public Objects ------------------------------------------------------------
 
 type UserFormProps = {
-    // Handler to save the updated result
-    handleSave: (user: User) => void,
-    // User to be edited (id < 0 means adding)
+    // Navigation destination after successful save operation.
+    destination?: string,
+    // User to be edited
     user: User;
 }
 
 export default function UserForm(props: UserFormProps) {
 
     //console.log("UserForm.entry", JSON.stringify(props.user));
-
     const form = useForm<z.infer<typeof formSchema>>({
         defaultValues: {
             active: (typeof props.user.active === "boolean") ? props.user.active : true,
@@ -59,20 +59,35 @@ export default function UserForm(props: UserFormProps) {
     });
     const router = useRouter();
 
-    function onSubmit(values: z.infer<typeof formSchema>) {
-        console.log("VALUES", JSON.stringify(values));
-        const result: User = {
-            id: props.user.id,
-            active: (typeof values.active === "undefined") ? null : values.active,
-            google_books_api_key: values.google_books_api_key ? values.google_books_api_key : null,
-            name: values.name,
-            password: values.password ? values.password : "",
-            scope: values.scope,
-            username: values.username,
+    async function onSubmit(values: z.infer<typeof formSchema>) {
+        //console.log("VALUES", JSON.stringify(values));
+        if (props.user.id < 0) {
+            const input: Prisma.UserCreateInput = {
+                ...values,
+                password: values.password ? values.password : "", // Can not happen
+            }
+            //console.log("INPUT", JSON.stringify(input));
+            try {
+                await UserActions.insert(input);
+                router.push(props.destination ? props.destination : "/users");
+            } catch (error) {
+                // TODO: - something more graceful would be better
+                alert("ERROR ON INSERT: " + JSON.stringify(error));
+            }
+        } else {
+            const input: Prisma.UserUpdateInput = {
+                ...values,
+            }
+            //console.log("INPUT", JSON.stringify(input));
+            try {
+                await UserActions.update(props.user.id, input);
+                router.push(props.destination ? props.destination : "/users");
+            } catch (error) {
+                // TODO: something more graceful would be better
+                alert("ERROR ON UPDATE: " + JSON.stringify(error));
+            }
         }
-        console.log("ONSUBMIT", JSON.stringify(result));
-        props.handleSave(result);
-        router.push("/users");
+        router.push(props.destination ? props.destination : "/users");
     }
 
     const adding = (props.user.id < 0);
