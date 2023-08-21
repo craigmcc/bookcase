@@ -3,7 +3,7 @@
 // app/auth/signin/page.tsx
 
 /**
- * Styled sign In page for next-auth.
+ * Styled sign in page for next-auth.
  *
  * @packageDocumentation
  */
@@ -13,8 +13,8 @@
 import {redirect, useSearchParams} from "next/navigation";
 import {/*getCsrfToken,*/ signIn} from "next-auth/react";
 import {useForm} from "react-hook-form";
-import * as z from "zod";
-import {zodResolver} from "@hookform/resolvers/zod";
+import * as Yup from "yup";
+import {yupResolver} from "@hookform/resolvers/yup";
 
 // Internal Modules ----------------------------------------------------------
 
@@ -34,13 +34,13 @@ import {Input} from "@/components/ui/input";
 
 export default function SignIn() {
 
-    const form = useForm<z.infer<typeof formSchema>>({
+    const form = useForm<Yup.InferType<typeof formSchema>>({
         defaultValues: {
             password: "",
             username: "",
         },
         mode: "onBlur",
-        resolver: zodResolver(formSchema),
+        resolver: yupResolver(formSchema),
     });
 
     const searchParams = useSearchParams();
@@ -51,7 +51,7 @@ export default function SignIn() {
     }
 
 
-    async function onSubmit(values: z.infer<typeof formSchema>) {
+    async function onSubmit(values: Yup.InferType<typeof formSchema>) {
         const result = await signIn<"credentials">("credentials", {
             callbackUrl: "/select",
             password: values.password,
@@ -121,7 +121,9 @@ export default function SignIn() {
 
 // Private Objects -----------------------------------------------------------
 
-const formSchema = z.object({
-    username: z.string().nonempty(),
-    password: z.string().nonempty(),
+const formSchema = Yup.object().shape({
+    username: Yup.string()
+        .required("Username is required"),
+    password: Yup.string()
+        .required("Password is required"),
 });
