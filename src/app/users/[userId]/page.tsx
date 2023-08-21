@@ -11,7 +11,7 @@
 
 // External Modules ----------------------------------------------------------
 
-import {User, Prisma} from "@prisma/client";
+import {User} from "@prisma/client";
 import {getServerSession} from "next-auth/next";
 
 // Internal Modules ----------------------------------------------------------
@@ -36,7 +36,7 @@ export default async function UserPage({params}: {params: {userId: string}}) {
         return <NotAuthorized/>;
     }
 
-    // Retrieve the requested User or create a template for a new User
+    // Retrieve the requested User or create a template for a new one
     const userId = Number(params.userId);
     let user: User;
     if (userId < 0) {
@@ -61,53 +61,10 @@ export default async function UserPage({params}: {params: {userId: string}}) {
         }
     }
 
-    // Handle an Insert action
-/*
-    const handleInsert = async (saved: User) => {
-        "use server"
-        const input: Prisma.UserCreateInput = {
-            // Omit id
-            active: saved.active,
-            google_books_api_key: saved.google_books_api_key,
-            name: saved.name,
-            password: saved.password,
-            scope: saved.scope,
-            username: saved.username,
-        }
-        try {
-            // TODO - depends on caller to navigate (LAME!)
-            await UserActions.insert(input);
-        } catch (error) {
-            // TODO: - something more graceful would be better
-            alert("ERROR ON INSERT: " + JSON.stringify(error));
-        }
-    }
-*/
-
-    // Handle an Update action
-/*
-    const handleUpdate = async (saved: User) => {
-        "use server"
-        const input: Prisma.UserUpdateInput = {
-            ...saved,
-        }
-        try {
-            // TODO - depends on caller to navigate (LAME!)
-            await UserActions.update(saved.id, input);
-        } catch (error) {
-            // TODO: - something more graceful would be better
-            alert("ERROR ON UPDATE: " + JSON.stringify(error));
-        }
-    }
-*/
-
     //console.log("UserPage.rendered", JSON.stringify(user));
     return (
         <div className="container mx-auto py-6" suppressHydrationWarning>
             <UserForm
-                destination="/users"
-//                handleInsert={handleInsert}
-//                handleUpdate={handleUpdate}
                 user={user}
             />
         </div>

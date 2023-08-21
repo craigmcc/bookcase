@@ -12,12 +12,13 @@
 
 import {useRouter} from "next/navigation";
 import {useForm} from "react-hook-form";
-import * as z from "zod";
-import {zodResolver} from "@hookform/resolvers/zod";
-import {Library} from "@prisma/client";
+import * as Yup from "yup";
+import {yupResolver} from "@hookform/resolvers/yup";
+import {Prisma, Library} from "@prisma/client";
 
 // Internal Modules ----------------------------------------------------------
 
+import * as LibraryActions from "@/actions/LibraryActionsShim";
 import {BackButton} from "@/components/shared/BackButton";
 import {SaveButton} from "@/components/shared/SaveButton";
 import {Checkbox} from "@/components/ui/checkbox";
@@ -35,8 +36,8 @@ import {Input} from "@/components/ui/input";
 // Public Objects ------------------------------------------------------------
 
 type LibraryFormProps = {
-    // Handler to save the updated result
-    handleSave: (library: Library) => void,
+    // Navigation destination after successful save operation [/libraries]
+    destination?: string,
     // Library to be edited (id < 0 means adding)
     library: Library;
 }
@@ -44,9 +45,9 @@ type LibraryFormProps = {
 export default function LibraryForm(props: LibraryFormProps) {
 
     //console.log("LibraryForm.entry", JSON.stringify(props.library));
-
-    const form = useForm<z.infer<typeof formSchema>>({
+    const form = useForm<Yup.InferType<typeof formSchema>>({
         defaultValues: {
+            id: props.library.id,
             active: (typeof props.library.active === "boolean") ? props.library.active : true,
             name: props.library.name ? props.library.name : "",
             notes: props.library.notes ? props.library.notes : "",
@@ -54,26 +55,42 @@ export default function LibraryForm(props: LibraryFormProps) {
 
         },
         mode: "onBlur",
-        resolver: zodResolver(formSchema),
+        resolver: yupResolver(formSchema),
     });
     const router = useRouter();
 
-    function onSubmit(values: z.infer<typeof formSchema>) {
-        console.log("VALUES", JSON.stringify(values));
-        const result: Library = {
-            id: props.library.id,
-            active: (typeof values.active === "undefined") ? null : values.active,
-            name: values.name,
-            notes: values.notes === "" ? null : values.notes,
-            scope: values.scope,
+    async function onSubmit(values: Yup.InferType<typeof formSchema>) {
+        //console.log("VALUES", JSON.stringify(values));
+        if (values.id && (values.id < 0)) {
+            const input: Prisma.LibraryCreateInput = {
+                ...values,
+            }
+            //console.log("INSERT INPUT", JSON.stringify(input));
+            try {
+                await LibraryActions.insert(input);
+                router.push(props.destination ? props.destination : "/libraries");
+            } catch (error) {
+                // TODO: something more graceful would be better
+                alert("ERROR ON INSERT: " + JSON.stringify(error));
+            }
+        } else {
+            const input: Prisma.LibraryUpdateInput = {
+                ...values,
+            }
+            // console.log("UPDATE INPUT", JSON.stringify(input));
+            try {
+                await LibraryActions.update(props.library.id, input);
+                router.push(props.destination ? props.destination : "/libraries");
+            } catch (error) {
+                // TODO: something more graceful would be better
+                alert("ERROR ON UPDATE: " + JSON.stringify(error));
+            }
         }
-        console.log("ONSUBMIT", JSON.stringify(result));
-        props.handleSave(result);
-        router.push("/libraries");
     }
 
     const adding = (props.library.id < 0);
 
+    //console.log("LibraryForm.rendered", JSON.stringify(props.library));
     return (
         <>
 
@@ -187,33 +204,32 @@ export default function LibraryForm(props: LibraryFormProps) {
 
 // Private Objects -----------------------------------------------------------
 
-const formSchema = z.object({
-    active: z.boolean().optional(),
-    //id: z.number(),
-    name: z.string()
-        .nonempty(),
-    notes: z.string(),
-    scope: z.string() // TODO: uniqueness check
-        .nonempty()
-        .refine((scope) => {
-            return scope.match(/^[a-zA-Z0-9]+$/);
-        },  {
-            message: "Scope must contain only letters and digits",
-        }),
-}); // Remove semicolon when uncommenting the below
-/* TODO - seems to cause save action to never work.
-    .refine(async (library) => {
-        console.log("GET RESPONSE", JSON.stringify(library));
-        const response = await fetch(`/api/libraries/exact/${library.name}`);
-        console.log("GOT RESPONSE", JSON.stringify(response));
-        if (response.ok) {
-            const result = await response.json();
-            return (library.id === result.id);
-        } else {
-            return true; // Definitely unique
-        }
-    }, {
-        message: "That name is already in use",
-        path: [ "name" ],
-    });
-*/
+const SCOPE_REGEX = /^[a-zA-Z0-9]+$/;
+
+const formSchema = Yup.object().shape({
+    id: Yup.number()
+        .required(),
+    active: Yup.boolean()
+        .default(true),
+    name: Yup.string()
+        .required("Name is required")
+        .test("unique-name",
+            "That name is already in use",
+            async function (this) {
+                const library = this.parent as Library;
+                //console.log("unique-name on  " + JSON.stringify(library));
+                try {
+                    const result = await LibraryActions.exact(library.name);
+                    //console.log("unique-name got " + JSON.stringify(result));
+                    return (result.id === library.id);
+                } catch (error) {
+                    //console.log("unique-username definitely unique");
+                    return true;            // Definitely unique
+                }
+            }),
+    notes: Yup.string()
+        .defined(),
+    scope: Yup.string()                 // TODO - uniqueness check
+        .required("Scope is required")
+        .matches(SCOPE_REGEX, "Scope must contain only letters and digits"),
+});
