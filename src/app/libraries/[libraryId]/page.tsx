@@ -18,7 +18,7 @@ import {getServerSession} from "next-auth/next";
 
 import * as LibraryActions from "@/actions/LibraryActionsShim";
 import {authOptions} from "@/app/api/auth/[...nextauth]/route";
-import LibraryForm from "@/components/libraries/LibraryForm";
+import LibraryCard from "@/components/libraries/LibraryCard";
 import NotAuthorized from "@/components/shared/NotAuthorized";
 import NotFound from"@/components/shared/NotFound";
 import NotSignedIn from "@/components/shared/NotSignedIn";
@@ -62,7 +62,7 @@ export default async function LibraryPage({params}: {params: {libraryId: string}
     //console.log("LibraryPage.rendered", JSON.stringify(library));
     return (
         <div className="container mx-auto py-6" suppressHydrationWarning>
-            <LibraryForm
+            <LibraryCard
                 library={library}
             />
         </div>

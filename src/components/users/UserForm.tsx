@@ -38,6 +38,8 @@ import {Input} from "@/components/ui/input";
 type UserFormProps = {
     // Navigation destination after successful save operation [/users]
     destination?: string,
+    // Show the back button and header title? [true]
+    showHeader?: boolean;
     // User to be edited (id < 0) means adding
     user: User;
 }
@@ -91,31 +93,34 @@ export default function UserForm(props: UserFormProps) {
     }
 
     const adding = (props.user.id < 0);
+    const showHeader = (props.showHeader !== undefined) ? props.showHeader : true;
 
     //console.log("UserForm.rendered", JSON.stringify(props.user));
     return (
         <>
 
-            <div className="grid grid-cols-3">
-                <div>
-                    <BackButton href="/users"/>
+            {(showHeader) ? (
+                <div className="grid grid-cols-3">
+                    <div>
+                        <BackButton href="/users"/>
+                    </div>
+                    <div className="text-center">
+                        <strong>
+                            {(adding)? (
+                                <span>Add New</span>
+                            ) : (
+                                <span>Edit Existing</span>
+                            )}
+                            &nbsp;User
+                        </strong>
+                    </div>
+                    <div/>
                 </div>
-                <div className="text-center">
-                    <strong>
-                        {(adding)? (
-                            <span>Add New</span>
-                        ) : (
-                            <span>Edit Existing</span>
-                        )}
-                        &nbsp;User
-                    </strong>
-                </div>
-                <div/>
-            </div>
+            ) : null }
 
             <Form {...form}>
                 <form
-                    className="container mx-auto py-6 space-y-6"
+                    className="container mx-auto space-y-4"
                     onSubmit={form.handleSubmit(onSubmit)}
                 >
 
@@ -191,13 +196,13 @@ export default function UserForm(props: UserFormProps) {
 
                     {/* TODO: more stuff for Library-specific scopes */}
 
-                    <div className="grid grid-cols-2 space-x-2">
+                    <div className="grid grid-cols-2 space-x-4">
 
                         <FormField
                             control={form.control}
                             name="active"
                             render={({ field }) => (
-                                <FormItem>
+                                <FormItem className="flex items-center">
                                     <FormControl>
                                         <Checkbox
                                             checked={field.value}

@@ -18,7 +18,7 @@ import {getServerSession} from "next-auth/next";
 
 import * as UserActions from "@/actions/UserActionsShim";
 import {authOptions} from "@/app/api/auth/[...nextauth]/route";
-import UserForm from "@/components/users/UserForm";
+import UserCard from "@/components/users/UserCard";
 import NotAuthorized from "@/components/shared/NotAuthorized";
 import NotFound from "@/components/shared/NotFound";
 import NotSignedIn from "@/components/shared/NotSignedIn";
@@ -64,7 +64,7 @@ export default async function UserPage({params}: {params: {userId: string}}) {
     //console.log("UserPage.rendered", JSON.stringify(user));
     return (
         <div className="container mx-auto py-6" suppressHydrationWarning>
-            <UserForm
+            <UserCard
                 user={user}
             />
         </div>

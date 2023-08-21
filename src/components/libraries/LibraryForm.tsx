@@ -40,6 +40,8 @@ type LibraryFormProps = {
     destination?: string,
     // Library to be edited (id < 0 means adding)
     library: Library;
+    // Show the back button and header title? [true]
+    showHeader?: boolean;
 }
 
 export default function LibraryForm(props: LibraryFormProps) {
@@ -89,31 +91,34 @@ export default function LibraryForm(props: LibraryFormProps) {
     }
 
     const adding = (props.library.id < 0);
+    const showHeader = (props.showHeader !== undefined) ? props.showHeader : true;
 
     //console.log("LibraryForm.rendered", JSON.stringify(props.library));
     return (
         <>
 
-            <div className="grid grid-cols-3">
-                <div>
-                    <BackButton href="/libraries"/>
+            {(showHeader) ? (
+                <div className="grid grid-cols-3">
+                    <div>
+                        <BackButton href="/libraries"/>
+                    </div>
+                    <div className="text-center">
+                        <strong>
+                            {(adding)? (
+                                <span>Add New</span>
+                            ) : (
+                                <span>Edit Existing</span>
+                            )}
+                            &nbsp;Library
+                        </strong>
+                    </div>
+                    <div/>
                 </div>
-                <div className="text-center">
-                    <strong>
-                        {(adding)? (
-                            <span>Add New</span>
-                        ) : (
-                            <span>Edit Existing</span>
-                        )}
-                        &nbsp;Library
-                    </strong>
-                </div>
-                <div/>
-            </div>
+            ) : null }
 
             <Form {...form}>
                 <form
-                    className="container mx-auto py-6 space-y-6"
+                    className="container mx-auto space-y-4"
                     onSubmit={form.handleSubmit(onSubmit)}
                 >
 
@@ -169,13 +174,13 @@ export default function LibraryForm(props: LibraryFormProps) {
                         )}
                     />
 
-                    <div className="grid grid-cols-2 space-x-2">
+                    <div className="grid grid-cols-2 space-x-4">
 
                         <FormField
                             control={form.control}
                             name="active"
                             render={({ field }) => (
-                                <FormItem>
+                                <FormItem className="flex items-center">
                                     <FormControl>
                                         <Checkbox
                                             checked={field.value}
