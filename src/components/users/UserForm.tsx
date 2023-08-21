@@ -47,6 +47,7 @@ export default function UserForm(props: UserFormProps) {
     //console.log("UserForm.entry", JSON.stringify(props.user));
     const form = useForm<z.infer<typeof formSchema>>({
         defaultValues: {
+            id: props.user.id,
             active: (typeof props.user.active === "boolean") ? props.user.active : true,
             google_books_api_key: props.user.google_books_api_key ? props.user.google_books_api_key : "",
             name: props.user.name ? props.user.name : "",
@@ -61,12 +62,12 @@ export default function UserForm(props: UserFormProps) {
 
     async function onSubmit(values: z.infer<typeof formSchema>) {
         //console.log("VALUES", JSON.stringify(values));
-        if (props.user.id < 0) {
+        if (values.id < 0) {
             const input: Prisma.UserCreateInput = {
                 ...values,
                 password: values.password ? values.password : "", // Can not happen
             }
-            //console.log("INPUT", JSON.stringify(input));
+            console.log("INSERT INPUT", JSON.stringify(input));
             try {
                 await UserActions.insert(input);
                 router.push(props.destination ? props.destination : "/users");
@@ -78,7 +79,7 @@ export default function UserForm(props: UserFormProps) {
             const input: Prisma.UserUpdateInput = {
                 ...values,
             }
-            //console.log("INPUT", JSON.stringify(input));
+            console.log("UPDATE INPUT", JSON.stringify(input));
             try {
                 await UserActions.update(props.user.id, input);
                 router.push(props.destination ? props.destination : "/users");
@@ -87,7 +88,6 @@ export default function UserForm(props: UserFormProps) {
                 alert("ERROR ON UPDATE: " + JSON.stringify(error));
             }
         }
-        router.push(props.destination ? props.destination : "/users");
     }
 
     const adding = (props.user.id < 0);
@@ -226,6 +226,7 @@ export default function UserForm(props: UserFormProps) {
 // Private Objects -----------------------------------------------------------
 
 const formSchema = z.object({
+    id: z.number(),
     active: z.boolean().optional(),
     google_books_api_key: z.string().optional(),
     name: z.string()
@@ -236,10 +237,34 @@ const formSchema = z.object({
     username: z.string()
         .nonempty(), // TODO: uniqueness check
 })
-    .refine(async (user) => {
-        console.log("GET RESPONSE", JSON.stringify(user));
-        const response = await fetch(`/api/users/exact/${user.username}`);
-        console.log("GOT RESPONSE", JSON.stringify(response));
-        return true;
+    // Verify username is not already in use
+    .superRefine(async (user, context) => {
+        console.log("GET USERNAME REFINE RESPONSE", JSON.stringify(user));
+        try {
+            const response = await UserActions.exact(user.username);
+            console.log("GOT USERNAME REFINE RESPONSE", JSON.stringify(response));
+            if (response.id !== user.id) {
+                context.addIssue({
+                    code: z.ZodIssueCode.custom,
+                    message: `Username '${user.username}' is already in use`,
+                    path: ["username"],
+                });
+            }
+        } catch (error) {
+            console.log("GOT USERNAME REFINE RESPONSE", "Definitely Unique");
+        }
+    })
+    // Verify password is present for a new User
+    .superRefine((user, context) => {
+        if (user.id < 0) {
+            console.log("PASSWORD CHECK REFINE", JSON.stringify(user));
+            if (!user.password || (user.password.length < 1)) {
+                context.addIssue({
+                    code: z.ZodIssueCode.custom,
+                    message: `Password is required for  new User`,
+                    path: ["password"],
+                });
+            }
+        }
     })
 ;

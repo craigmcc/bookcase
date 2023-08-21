@@ -299,6 +299,7 @@ export const insert = async (libraryId: number, story: Prisma.StoryUncheckedCrea
     }
     const args: Prisma.StoryUncheckedCreateInput = {
         ...story,
+        id: undefined,                  // Just in case
         libraryId: libraryId,           // No cheating
     }
     try {

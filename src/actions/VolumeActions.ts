@@ -312,6 +312,7 @@ export const insert = async (libraryId: number, volume: Prisma.VolumeUncheckedCr
     }
     const args: Prisma.VolumeUncheckedCreateInput = {
         ...volume,
+        id: undefined,                  // Just in case
         libraryId: libraryId,           // No cheating
     }
     try {

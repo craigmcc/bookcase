@@ -161,6 +161,7 @@ export const insert = async (user: Prisma.UserCreateInput): Promise<UserPlus> =>
             password: await hashPassword(user.password),
         },
     }
+    delete args.data.id;                // Just in case
     try {
         const result = await prisma.user.create(args);
         result.password = "";

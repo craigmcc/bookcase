@@ -183,6 +183,8 @@ export const insert = async (library: Prisma.LibraryCreateInput): Promise<Librar
         )
     }
     try {
+        // @ts-ignore
+        delete library.id;
         const result =
             await prisma.library.create({ data: library });
         return result as LibraryPlus;

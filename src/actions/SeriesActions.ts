@@ -300,6 +300,7 @@ export const insert = async (libraryId: number, series: Prisma.SeriesUncheckedCr
     }
     const args: Prisma.SeriesUncheckedCreateInput = {
         ...series,
+        id: undefined,                  // Just in case
         libraryId: libraryId,           // No cheating
     }
     try {
