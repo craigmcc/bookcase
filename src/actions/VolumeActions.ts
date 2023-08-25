@@ -10,11 +10,7 @@
 
 // External Modules ----------------------------------------------------------
 
-import {
-    Prisma,
-    Volume,
-    VolumesStories,
-} from "@prisma/client";
+import {Prisma} from "@prisma/client";
 
 // Internal Modules ----------------------------------------------------------
 
@@ -22,68 +18,16 @@ import * as AuthorActions from "./AuthorActions";
 import * as LibraryActions from "./LibraryActions";
 import * as StoryActions from "./StoryActions";
 import prisma from "../prisma";
+import {
+    VolumeAllOptions,
+    VolumeFindOptions,
+    VolumeIncludeOptions,
+    VolumeMatchOptions,
+    VolumePlus,
+} from "@/types/models/Volume";
 import {PaginationOptions} from "@/types/types";
 import {BadRequest, NotFound, NotUnique, ServerError} from "@/util/HttpErrors";
 import {validateVolumeLocation, validateVolumeType} from "@/util/ApplicationValidators";
-
-// Public Types --------------------------------------------------------------
-
-/**
- * A base Volume with optional nested parent and children.
- */
-export type VolumePlus = Volume & Prisma.VolumeGetPayload<{
-    include: {
-        authorsVolumes: true,
-        library: true,
-        volumesStories: true,
-    }
-}>;
-
-// AuthorsVolumesPlus is defined in AuthorActions.
-
-export type VolumesStoriesPlus = VolumesStories & Prisma.VolumesStoriesGetPayload<{
-    include: {
-        story: true,
-        volume: true,
-    }
-}>;
-
-/**
- * The type for options of an "all" function for this model.
- */
-export type AllOptions = IncludeOptions & MatchOptions & PaginationOptions;
-
-/**
- * The type for options of a "find" (or related single result) function
- * for this model.
- */
-export type FindOptions = IncludeOptions;
-
-// Private Types -------------------------------------------------------------
-
-/**
- * The type for options that select which related or parent models should be
- * included in a response.
- */
-type IncludeOptions = {
-    // Include related Authors?
-    withAuthors?: boolean;
-    // Include parent Library?
-    withLibrary?: boolean;
-    // Include related Stories?
-    withStories?: boolean;
-}
-
-/**
- * The type for criteria that select which Volume objects should be included
- * in the response.
- */
-type MatchOptions = {
-    // Whether to limit this response to Volumes with matching active values.
-    active?: boolean;
-    // The name (wildcard match) of the Volumes that should be returned.
-    name?: string;
-}
 
 // Public Actions ------------------------------------------------------------
 
@@ -95,7 +39,7 @@ type MatchOptions = {
  *
  * @throws ServerError                  If a low level error is thrown
  */
-export const all = async (libraryId: number, options?: AllOptions): Promise<VolumePlus[]> => {
+export const all = async (libraryId: number, options?: VolumeAllOptions): Promise<VolumePlus[]> => {
     const args: Prisma.VolumeFindManyArgs = {
         // cursor???
         // distinct???
@@ -210,7 +154,7 @@ export const authorDisconnect =
  * @throws NotFound                     If no such Volume is found
  * @throws ServerError                  If a low level error is thrown
  */
-export const exact = async (libraryId: number, name: string, options?: FindOptions): Promise<VolumePlus> => {
+export const exact = async (libraryId: number, name: string, options?: VolumeFindOptions): Promise<VolumePlus> => {
     try {
         const result = await prisma.volume.findUnique({
             include: include(options),
@@ -251,7 +195,7 @@ export const exact = async (libraryId: number, name: string, options?: FindOptio
  * @throws NotFound                     If no such Volume is found
  * @throws ServerError                  If a low level error is thrown
  */
-export const find = async (libraryId: number, volumeId: number, options?: FindOptions): Promise<VolumePlus> => {
+export const find = async (libraryId: number, volumeId: number, options?: VolumeFindOptions): Promise<VolumePlus> => {
     try {
         const result = await prisma.volume.findUnique({
             include: include(options),
@@ -363,7 +307,7 @@ export const remove = async (libraryId: number, volumeId: number): Promise<Volum
  * @throws NotUnique                    If a unique key violation is attempted
  * @throws ServerError                  If a low level error is thrown
  */
-export const update = async (libraryId: number, volumeId: number, volume: Prisma.VolumeUncheckedUpdateInput): Promise<VolumePlus> => {
+export const update = async (libraryId: number, volumeId: number, volume: Prisma.VolumeUpdateInput): Promise<VolumePlus> => {
     await find(libraryId, volumeId); // May throw NotFound
     if (!validateVolumeLocation((typeof volume.location === "string") ? volume.location : null)) {
         throw new BadRequest(
@@ -384,13 +328,14 @@ export const update = async (libraryId: number, volumeId: number, volume: Prisma
             "VolumeActions.update",
         );
     }
+    const data: Prisma.VolumeUncheckedUpdateInput = {
+        ...volume,
+        id: volumeId,                   // No cheating
+        libraryId: libraryId,           // No cheating
+    };
     try {
         const result = await prisma.volume.update({
-            data: {
-                ...volume,
-                id: volumeId,           // No cheating
-                libraryId: libraryId,   // No cheating`
-            },
+            data: data,
             where: { id: volumeId },
         });
         return result as VolumePlus;
@@ -489,7 +434,7 @@ export const storyDisconnect =
  * Calculate and return the "include" options from the specified query
  * options, if they were specified.
  */
-export const include = (options?: IncludeOptions): Prisma.VolumeInclude | undefined => {
+export const include = (options?: VolumeIncludeOptions): Prisma.VolumeInclude | undefined => {
     if (!options) {
         return undefined;
     }
@@ -606,7 +551,7 @@ export const uniqueName = async(libraryId: number, volumeId: number | null, name
  * Calculate and return the "where" options from the specified query
  * options, if any were specified.
  */
-export const where = (libraryId: number, options?: MatchOptions): Prisma.VolumeWhereInput | undefined => {
+export const where = (libraryId: number, options?: VolumeMatchOptions): Prisma.VolumeWhereInput | undefined => {
     const where: Prisma.VolumeWhereInput = {
         libraryId: libraryId,
     }

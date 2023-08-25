@@ -10,10 +10,7 @@
 
 // External Modules ----------------------------------------------------------
 
-import {
-    Prisma,
-    User,
-} from "@prisma/client";
+import {Prisma} from "@prisma/client";
 
 // Internal Modules ----------------------------------------------------------
 

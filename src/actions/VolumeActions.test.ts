@@ -23,6 +23,7 @@ import * as StoryActions from "./StoryActions";
 import * as VolumeActions from "./VolumeActions";
 import ActionsUtils from "@/test/ActionsUtils";
 import * as SeedData from "@/test/SeedData";
+import {VolumesStoriesPlus} from "@/types/models/Volume";
 import {NotFound, NotUnique} from "@/util/HttpErrors";
 
 const UTILS = new ActionsUtils();
@@ -611,7 +612,7 @@ describe("VolumeActions Functional Tests", () => {
                     withStories: true,
                 });
             expect(OUTPUT.volumesStories).to.exist;
-            const VOLUMES_STORIES = OUTPUT.volumesStories as VolumeActions.VolumesStoriesPlus[];
+            const VOLUMES_STORIES = OUTPUT.volumesStories as VolumesStoriesPlus[];
             expect(VOLUMES_STORIES.length).to.equal(1);
             expect(VOLUMES_STORIES[0].storyId).to.equal(STORY.id);
             expect(VOLUMES_STORIES[0].story).to.exist;
