@@ -28,6 +28,7 @@ import {
 } from "@/types/models/Author";
 import {PaginationOptions} from "@/types/types";
 import {NotFound, NotUnique, ServerError} from "@/util/HttpErrors";
+import logger from "@/util/ServerLogger";
 
 // Public Types --------------------------------------------------------------
 
@@ -42,6 +43,11 @@ import {NotFound, NotUnique, ServerError} from "@/util/HttpErrors";
  * @throws ServerError                  If a low level error is thrown
  */
 export const all = async (libraryId: number, options?: AuthorAllOptions): Promise<AuthorPlus[]> => {
+    logger.info({
+        context: "AuthorActions.all",
+        libraryId: libraryId,
+        options: options,
+    });
     const args: Prisma.AuthorFindManyArgs = {
         // cursor???
         // distinct???
@@ -77,6 +83,13 @@ export const all = async (libraryId: number, options?: AuthorAllOptions): Promis
 export const exact =
     async (libraryId: number, firstName: string, lastName: string, options?: AuthorFindOptions): Promise<AuthorPlus> =>
     {
+        logger.info({
+            context: "AuthorActions.exact",
+            libraryId: libraryId,
+            firstName: firstName,
+            lastName: lastName,
+            options: options,
+        });
         try {
             const result = await prisma.author.findUnique({
                 include: include(options),
@@ -119,6 +132,12 @@ export const exact =
  */
 export const find = async (libraryId: number, authorId: number, options?: AuthorFindOptions): Promise<AuthorPlus> => {
     try {
+        logger.info({
+            context: "AuthorActions.find",
+            libraryId: libraryId,
+            authorId: authorId,
+            options: options,
+        });
         const result = await prisma.author.findUnique({
             include: include(options),
             where: {
@@ -157,6 +176,11 @@ export const find = async (libraryId: number, authorId: number, options?: Author
  * @throws ServerError                  If some other error occurs
  */
 export const insert = async (libraryId: number, author: Prisma.AuthorUncheckedCreateInput): Promise<AuthorPlus> => {
+    logger.info({
+        context: "AuthorActions.insert",
+        libraryId: libraryId,
+        author: author,
+    });
     await LibraryActions.find(libraryId);
     if (!await uniqueName(libraryId, null, author.firstName, author.lastName)) {
         throw new NotUnique(
@@ -192,6 +216,11 @@ export const insert = async (libraryId: number, author: Prisma.AuthorUncheckedCr
  * @throws ServerError                  If a low level error is thrown
  */
 export const remove = async (libraryId: number, authorId: number): Promise<AuthorPlus> => {
+    logger.info({
+        context: "AuthorActions.remove",
+        libraryId: libraryId,
+        authorId: authorId,
+    });
     const author = await find(libraryId, authorId);
     try {
         await prisma.author.delete({
@@ -220,6 +249,13 @@ export const remove = async (libraryId: number, authorId: number): Promise<Autho
 export const seriesConnect =
     async (libraryId: number, authorId: number, seriesId: number, principal?: boolean): Promise<AuthorPlus> =>
     {
+        logger.info({
+            context: "AuthorActions.seriesConnect",
+            libraryId: libraryId,
+            authorId: authorId,
+            seriesId: seriesId,
+            principal: principal,
+        });
         const author = await find(libraryId, authorId);
         await SeriesActions.find(libraryId, seriesId);
         try {
@@ -260,6 +296,12 @@ export const seriesConnect =
 export const seriesDisconnect =
     async (libraryId: number, authorId: number, seriesId: number): Promise<AuthorPlus> =>
     {
+        logger.info({
+            context: "AuthorActions.seriesDisconnect",
+            libraryId: libraryId,
+            authorId: authorId,
+            seriesId: seriesId,
+        });
         const author = await find(libraryId, authorId);
         await SeriesActions.find(libraryId, seriesId);
         try {
@@ -303,6 +345,13 @@ export const seriesDisconnect =
 export const storyConnect =
     async (libraryId: number, authorId: number, storyId: number, principal?: boolean): Promise<AuthorPlus> =>
     {
+        logger.info({
+            context: "AuthorActions.storyConnect",
+            libraryId: libraryId,
+            authorId: authorId,
+            storyId: storyId,
+            principal: principal,
+        });
         const author = await find(libraryId, authorId);
         await StoryActions.find(libraryId, storyId);
         try {
@@ -343,6 +392,12 @@ export const storyConnect =
 export const storyDisconnect =
     async (libraryId: number, authorId: number, storyId: number): Promise<AuthorPlus> =>
     {
+        logger.info({
+            context: "AuthorActions.storyDisconnect",
+            libraryId: libraryId,
+            authorId: authorId,
+            storyId: storyId,
+        });
         const author = await find(libraryId, authorId);
         await StoryActions.find(libraryId, storyId);
         try {
@@ -384,6 +439,12 @@ export const storyDisconnect =
  * @throws ServerError                  If a low level error is thrown
  */
 export const update = async (libraryId: number, authorId: number, author: Prisma.AuthorUncheckedUpdateInput): Promise<AuthorPlus> => {
+    logger.info({
+        context: "AuthorActions.update",
+        libraryId: libraryId,
+        authorId: authorId,
+        author: author,
+    });
     await find(libraryId, authorId); // May throw NotFound
     if (author.firstName && (typeof author.firstName === "string") &&
         author.lastName && (typeof author.lastName === "string") &&
@@ -425,6 +486,13 @@ export const update = async (libraryId: number, authorId: number, author: Prisma
 export const volumeConnect =
     async (libraryId: number, authorId: number, volumeId: number, principal?: boolean): Promise<AuthorPlus> =>
     {
+        logger.info({
+            context: "AuthorActions.volumeConnect",
+            libraryId: libraryId,
+            authorId: authorId,
+            volumeId: volumeId,
+            principal: principal,
+        });
         const author = await find(libraryId, authorId);
         await VolumeActions.find(libraryId, volumeId);
         try {
@@ -465,6 +533,12 @@ export const volumeConnect =
 export const volumeDisconnect =
     async (libraryId: number, authorId: number, volumeId: number): Promise<AuthorPlus> =>
     {
+        logger.info({
+            context: "AuthorActions.volumeDisconnect",
+            libraryId: libraryId,
+            authorId: authorId,
+            volumeId: volumeId,
+        });
         const author = await find(libraryId, authorId);
         await VolumeActions.find(libraryId, volumeId);
         try {

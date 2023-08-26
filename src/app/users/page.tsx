@@ -13,7 +13,7 @@
 // External Modules ----------------------------------------------------------
 
 import {useSession} from "next-auth/react";
-import {useEffect, useState, useTransition} from "react";
+import {useEffect, useState} from "react";
 
 // Internal Modules ----------------------------------------------------------
 
@@ -32,7 +32,6 @@ export default function UsersPage() {
     const [active, setActive] = useState<boolean>(false);
     const [users, setUsers] = useState<UserPlus[]>([]);
     const [search, setSearch] = useState<string>("");
-    const [isPending, startTransition] = useTransition();
 
     // Select the Users that match the specified filter criteria
     useEffect(() => {
@@ -42,7 +41,7 @@ export default function UsersPage() {
                     search: search,
                 });
         */
-        startTransition(async ()  => {
+        async function fetchUsers() {
             const options: UserAllOptions = {
                 active: (active) ? true : undefined,
                 username: (search.length > 0) ? search : undefined,
@@ -50,7 +49,10 @@ export default function UsersPage() {
             const results = await UserActions.all(options);
             //console.log("UsersPage.fetched", JSON.stringify(results));
             setUsers(results);
-        });
+        }
+
+        fetchUsers();
+
     }, [active, search])
 
     // Validate access to this function

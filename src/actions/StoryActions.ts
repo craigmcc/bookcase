@@ -28,6 +28,7 @@ import {
 } from "@/types/models/Story";
 import {PaginationOptions} from "@/types/types";
 import {NotFound, NotUnique, ServerError} from "@/util/HttpErrors";
+import logger from "@/util/ServerLogger";
 
 // Public Actions ------------------------------------------------------------
 
@@ -40,6 +41,11 @@ import {NotFound, NotUnique, ServerError} from "@/util/HttpErrors";
  * @throws ServerError                  If a low level error is thrown
  */
 export const all = async (libraryId: number, options?: StoryAllOptions): Promise<StoryPlus[]> => {
+    logger.info({
+        context: "StoryActions.all",
+        libraryId: libraryId,
+        options: options,
+    });
     const args: Prisma.StoryFindManyArgs = {
         // cursor???
         // distinct???
@@ -76,6 +82,13 @@ export const all = async (libraryId: number, options?: StoryAllOptions): Promise
 export const authorConnect =
     async (libraryId: number, storyId: number, authorId: number, principal?: boolean): Promise<StoryPlus> =>
     {
+        logger.info({
+            context: "StoryActions.authorConnect",
+            libraryId: libraryId,
+            storyId: storyId,
+            authorId: authorId,
+            principal: principal,
+        });
         const story = await find(libraryId, storyId);
         await AuthorActions.find(libraryId, authorId);
         try {
@@ -116,6 +129,12 @@ export const authorConnect =
 export const authorDisconnect =
     async (libraryId: number, storyId: number, authorId: number): Promise<StoryPlus> =>
     {
+        logger.info({
+            context: "StoryActions.authorDisconnect",
+            libraryId: libraryId,
+            storyId: storyId,
+            authorId: authorId,
+        });
         const story = await find(libraryId, storyId);
         await AuthorActions.find(libraryId, authorId);
         try {
@@ -156,6 +175,12 @@ export const authorDisconnect =
  */
 export const exact = async (libraryId: number, name: string, options?: StoryFindOptions): Promise<StoryPlus> => {
     try {
+        logger.info({
+            context: "StoryActions.exact",
+            libraryId: libraryId,
+            name: name,
+            options: options,
+        });
         const result = await prisma.story.findUnique({
             include: include(options),
             where: {
@@ -197,6 +222,12 @@ export const exact = async (libraryId: number, name: string, options?: StoryFind
  */
 export const find = async (libraryId: number, storyId: number, options?: StoryFindOptions): Promise<StoryPlus> => {
     try {
+        logger.info({
+            context: "StoryActions.find",
+            libraryId: libraryId,
+            storyId: storyId,
+            options: options,
+        });
         const result = await prisma.story.findUnique({
             include: include(options),
             where: {
@@ -235,6 +266,11 @@ export const find = async (libraryId: number, storyId: number, options?: StoryFi
  * @throws ServerError                  If some other error occurs
  */
 export const insert = async (libraryId: number, story: Prisma.StoryUncheckedCreateInput): Promise<StoryPlus> => {
+    logger.info({
+        context: "StoryActions.insert",
+        libraryId: libraryId,
+        story: story,
+    });
     await LibraryActions.find(libraryId);
     if (!await uniqueName(libraryId, null, story.name)) {
         throw new NotUnique(
@@ -271,6 +307,11 @@ export const insert = async (libraryId: number, story: Prisma.StoryUncheckedCrea
  */
 export const remove = async (libraryId: number, storyId: number): Promise<StoryPlus> => {
     try {
+        logger.info({
+            context: "StoryActions.remove",
+            libraryId: libraryId,
+            storyId: storyId,
+        });
         const story = await find(libraryId, storyId);
         await prisma.story.delete({
             where: { id: storyId },
@@ -299,6 +340,12 @@ export const remove = async (libraryId: number, storyId: number): Promise<StoryP
 export const seriesConnect =
     async (libraryId: number, storyId: number, seriesId: number, ordinal?: number): Promise<StoryPlus> =>
     {
+        logger.info({
+            context: "StoryActions.seriesConnect",
+            libraryId: libraryId,
+            storyId: storyId,
+            ordinal: ordinal,
+        })
         const story = await find(libraryId, storyId);
         await SeriesActions.find(libraryId, seriesId);
         try {
@@ -339,6 +386,12 @@ export const seriesConnect =
 export const seriesDisconnect =
     async (libraryId: number, storyId: number, seriesId: number): Promise<StoryPlus> =>
     {
+        logger.info({
+            context: "StoryActions.seriesDisconnect",
+            libraryId: libraryId,
+            storyId: storyId,
+            seriesId: seriesId,
+        });
         const story = await find(libraryId, storyId);
         await SeriesActions.find(libraryId, seriesId);
         try {
@@ -379,6 +432,12 @@ export const seriesDisconnect =
  * @throws ServerError                  If a low level error is thrown
  */
 export const update = async (libraryId: number, storyId: number, story: Prisma.StoryUncheckedUpdateInput): Promise<StoryPlus> => {
+    logger.info({
+        context: "StoryActions.update",
+        libraryId: libraryId,
+        storyId: storyId,
+        story: story,
+    });
     await find(libraryId, storyId); // May throw NotFound
     if (story.name && (typeof story.name === "string") &&
         (!await uniqueName(libraryId, storyId, story.name))) {
@@ -419,6 +478,12 @@ export const update = async (libraryId: number, storyId: number, story: Prisma.S
 export const volumeConnect =
     async (libraryId: number, storyId: number, volumeId: number): Promise<StoryPlus> =>
     {
+        logger.info({
+            context: "StoryActions.volumeConnect",
+            libraryId: libraryId,
+            storyId: storyId,
+            volumeId: volumeId,
+        });
         const story = await find(libraryId, storyId);
         await VolumeActions.find(libraryId, volumeId);
         try {
@@ -458,6 +523,12 @@ export const volumeConnect =
 export const volumeDisconnect =
     async (libraryId: number, storyId: number, volumeId: number): Promise<StoryPlus> =>
     {
+        logger.info({
+            context: "StoryActions.volumeDisconnect",
+            libraryId: libraryId,
+            storyId: storyId,
+            volumeId: volumeId,
+        });
         const story = await find(libraryId, storyId);
         await VolumeActions.find(libraryId, volumeId);
         try {

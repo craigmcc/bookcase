@@ -25,6 +25,7 @@ import {
 } from "@/types/models/User";
 import {PaginationOptions} from "@/types/types";
 import {BadRequest, NotFound, NotUnique, ServerError} from "@/util/HttpErrors";
+import logger from "@/util/ServerLogger";
 
 // Public Actions ------------------------------------------------------------
 
@@ -36,6 +37,10 @@ import {BadRequest, NotFound, NotUnique, ServerError} from "@/util/HttpErrors";
  * @throws ServerError                  If a low level error is thrown
  */
 export const all = async (options?: UserAllOptions): Promise<UserPlus[]> => {
+    logger.info({
+        context: "UserActions.all",
+        options: options,
+    });
     const args: Prisma.UserFindManyArgs = {
         // cursor???
         // distinct???
@@ -71,6 +76,11 @@ export const all = async (options?: UserAllOptions): Promise<UserPlus[]> => {
  */
 export const exact = async (username: string, options?: UserFindOptions): Promise<UserPlus> => {
     try {
+        logger.info({
+            context: "UserActions.exact",
+            username: username,
+            options: options,
+        });
         const result = await prisma.user.findUnique({
             include: include(options),
             where: {
@@ -109,6 +119,11 @@ export const exact = async (username: string, options?: UserFindOptions): Promis
  */
 export const find = async (userId: number, options?: UserFindOptions): Promise<UserPlus> => {
     try {
+        logger.info({
+            context: "UserActions.find",
+            userId: userId,
+            options: options,
+        });
         const result = await prisma.user.findUnique({
             include: include(options),
             where: {
@@ -146,6 +161,13 @@ export const find = async (userId: number, options?: UserFindOptions): Promise<U
  * @throws ServerError                  If some other error occurs
  */
 export const insert = async (user: Prisma.UserCreateInput): Promise<UserPlus> => {
+    logger.info({
+        context: "UserActions.insert",
+        user: {
+            ...user,
+            password: "*REDACTED*",
+        }
+    });
     if (!await uniqueUsername(null, user.username)) {
         throw new NotUnique(
             `username: User username '${user.username}' is already in use`,
@@ -180,6 +202,10 @@ export const insert = async (user: Prisma.UserCreateInput): Promise<UserPlus> =>
  * @throws ServerError                  If a low level error is thrown
  */
 export const remove = async (userId: number): Promise<UserPlus> => {
+    logger.info({
+        context: "UserActions.remove",
+        userId: userId,
+    });
     await find(userId); // May throw NotFound
     try {
         const result = await prisma.user.delete({
@@ -209,6 +235,14 @@ export const remove = async (userId: number): Promise<UserPlus> => {
  * @throws ServerError                  If some other error is thrown
  */
 export const update = async (userId: number, user: Prisma.UserUpdateInput): Promise<UserPlus> => {
+    logger.info({
+        context: "UserActions.update",
+        userId: userId,
+        user: {
+            ...user,
+            password: (user.password) ? "*REDACTED*" : undefined,
+        }
+    })
     const original = await find(userId); // May throw NotFound
     if (user.username && (typeof user.username === "string") && (!await uniqueUsername(userId, user.username))) {
         throw new NotUnique(

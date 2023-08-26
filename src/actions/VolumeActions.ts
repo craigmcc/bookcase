@@ -26,8 +26,9 @@ import {
     VolumePlus,
 } from "@/types/models/Volume";
 import {PaginationOptions} from "@/types/types";
-import {BadRequest, NotFound, NotUnique, ServerError} from "@/util/HttpErrors";
 import {validateVolumeLocation, validateVolumeType} from "@/util/ApplicationValidators";
+import {BadRequest, NotFound, NotUnique, ServerError} from "@/util/HttpErrors";
+import logger from "@/util/ServerLogger";
 
 // Public Actions ------------------------------------------------------------
 
@@ -40,6 +41,11 @@ import {validateVolumeLocation, validateVolumeType} from "@/util/ApplicationVali
  * @throws ServerError                  If a low level error is thrown
  */
 export const all = async (libraryId: number, options?: VolumeAllOptions): Promise<VolumePlus[]> => {
+    logger.info({
+        context: "VolumeActions.all",
+        libraryId: libraryId,
+        options: options,
+    });
     const args: Prisma.VolumeFindManyArgs = {
         // cursor???
         // distinct???
@@ -76,6 +82,13 @@ export const all = async (libraryId: number, options?: VolumeAllOptions): Promis
 export const authorConnect =
     async (libraryId: number, volumeId: number, authorId: number, principal?: boolean): Promise<VolumePlus> =>
     {
+        logger.info({
+            context: "VolumeActions.authorConnect",
+            libraryId: libraryId,
+            volumeId: volumeId,
+            authorId: authorId,
+            principal: principal,
+        });
         const story = await find(libraryId, volumeId);
         await AuthorActions.find(libraryId, authorId);
         try {
@@ -116,6 +129,12 @@ export const authorConnect =
 export const authorDisconnect =
     async (libraryId: number, volumeId: number, authorId: number): Promise<VolumePlus> =>
     {
+        logger.info({
+            context: "VolumeActions.authorDisconnect",
+            libraryId: libraryId,
+            volumeId: volumeId,
+            authorId: authorId,
+        });
         const story = await find(libraryId, volumeId);
         await AuthorActions.find(libraryId, authorId);
         try {
@@ -156,6 +175,12 @@ export const authorDisconnect =
  */
 export const exact = async (libraryId: number, name: string, options?: VolumeFindOptions): Promise<VolumePlus> => {
     try {
+        logger.info({
+            context: "VolumeActions.exact",
+            libraryId: libraryId,
+            name: name,
+            options: options,
+        });
         const result = await prisma.volume.findUnique({
             include: include(options),
             where: {
@@ -197,6 +222,12 @@ export const exact = async (libraryId: number, name: string, options?: VolumeFin
  */
 export const find = async (libraryId: number, volumeId: number, options?: VolumeFindOptions): Promise<VolumePlus> => {
     try {
+        logger.info({
+            context: "VolumeActions.find",
+            libraryId: libraryId,
+            volumeId: volumeId,
+            options: options,
+        });
         const result = await prisma.volume.findUnique({
             include: include(options),
             where: {
@@ -235,6 +266,11 @@ export const find = async (libraryId: number, volumeId: number, options?: Volume
  * @throws ServerError                  If some other error occurs
  */
 export const insert = async (libraryId: number, volume: Prisma.VolumeUncheckedCreateInput): Promise<VolumePlus> => {
+    logger.info({
+        context: "VolumeActions.insert",
+        libraryId: libraryId,
+        volume: volume,
+    });
     await LibraryActions.find(libraryId);
     if (!validateVolumeLocation(volume.location)) {
         throw new BadRequest(
@@ -283,6 +319,11 @@ export const insert = async (libraryId: number, volume: Prisma.VolumeUncheckedCr
  */
 export const remove = async (libraryId: number, volumeId: number): Promise<VolumePlus> => {
     try {
+        logger.info({
+            context: "VolumeActions.remove",
+            libraryId: libraryId,
+            volumeId: volumeId,
+        });
         const story = await find(libraryId, volumeId);
         await prisma.volume.delete({
             where: { id: volumeId },
@@ -308,6 +349,12 @@ export const remove = async (libraryId: number, volumeId: number): Promise<Volum
  * @throws ServerError                  If a low level error is thrown
  */
 export const update = async (libraryId: number, volumeId: number, volume: Prisma.VolumeUpdateInput): Promise<VolumePlus> => {
+    logger.info({
+        context: "VolumeActions.update",
+        libraryId: libraryId,
+        volumeId: volumeId,
+        volume: volume,
+    });
     await find(libraryId, volumeId); // May throw NotFound
     if (!validateVolumeLocation((typeof volume.location === "string") ? volume.location : null)) {
         throw new BadRequest(
@@ -361,6 +408,12 @@ export const update = async (libraryId: number, volumeId: number, volume: Prisma
 export const storyConnect =
     async (libraryId: number, volumeId: number, storyId: number): Promise<VolumePlus> =>
     {
+        logger.info({
+            context: "VolumeActions.storyConnect",
+            libraryId: libraryId,
+            volumeId: volumeId,
+            storyId: storyId,
+        });
         const volume = await find(libraryId, volumeId);
         await StoryActions.find(libraryId, storyId);
         try {
@@ -400,6 +453,12 @@ export const storyConnect =
 export const storyDisconnect =
     async (libraryId: number, volumeId: number, storyId: number): Promise<VolumePlus> =>
     {
+        logger.info({
+            context: "VolumeActions.storyDisconnect",
+            libraryId: libraryId,
+            volumeId: volumeId,
+            storyId: storyId,
+        });
         const volume = await find(libraryId, volumeId);
         await StoryActions.find(libraryId, storyId);
         try {

@@ -119,7 +119,7 @@ export const exact = async (name: string, options?: LibraryFindOptions): Promise
 export const find = async (libraryId: number, options?: LibraryFindOptions): Promise<LibraryPlus> => {
     try {
         logger.info({
-            context: "LoggerActions.find",
+            context: "LibraryActions.find",
             libraryId: libraryId,
             options: options,
         });
@@ -206,7 +206,7 @@ export const insert = async (library: Prisma.LibraryCreateInput): Promise<Librar
  */
 export const remove = async (libraryId: number): Promise<LibraryPlus> => {
     logger.info({
-        context: "LibraryAction.remove",
+        context: "LibraryActions.remove",
         libraryId: libraryId,
     });
     await find(libraryId); // May throw NotFound
