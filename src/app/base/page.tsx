@@ -19,6 +19,7 @@ import {useContext} from "react";
 import {LibraryContext} from "@/components/layout/LibraryContext";
 import NotSelected from "@/components/shared/NotSelected";
 import NotSignedIn from "@/components/shared/NotSignedIn";
+import VolumeItems from "@/components/volumes/VolumeItems"
 
 
 // Public Objects ------------------------------------------------------------
@@ -38,9 +39,19 @@ export default function BasePage() {
 
     // Render the requested content
     return (
-        <div className="container mx-auto py-10">
-            <span>Base page for Library <strong>{libraryContext.library.name}</strong></span>
-        </div>
+        <>
+            <div className="container mx-auto py-10">
+                <span>Base page for Library <strong>{libraryContext.library.name}</strong></span>
+            </div>
+            <div className="container grid grid-cols-4 gap-4">
+                <div/>
+                <div/>
+                <div/>
+                <div>
+                    <VolumeItems library={libraryContext.library}/>
+                </div>
+            </div>
+        </>
     )
 
 }
