@@ -11,7 +11,7 @@
 
 // External Modules ----------------------------------------------------------
 
-import {useEffect, useState, useTransition} from "react";
+import {useEffect, useState} from "react";
 import {Library} from "@prisma/client";
 
 // Internal Modules ----------------------------------------------------------
@@ -45,24 +45,25 @@ type StoryItemsProps = {
 
 export default function StoryItems(props: StoryItemsProps) {
 
-    const [active, setActive] = useState<boolean>(true);
+    const [active, setActive] = useState<boolean>(false);
     const [search, setSearch] = useState<string>("");
     const [stories, setStories] = useState<StoryPlus[]>([]);
-    const [isPending, startTransition] = useTransition();
 
     // Select the Stories that match the specified filter criteria
     useEffect(() => {
 
-        startTransition(async () => {
+        async function fetchStories() {
             const options: StoryAllOptions = {
                 active: (active) ? true : undefined,
                 name: (search.length > 0) ? search : undefined,
             }
             const results = await StoryActions.all(props.library.id, options);
             setStories(results);
-        });
+        }
 
-    }, [active, search]);
+        fetchStories();
+
+    }, [active, search, props.library]);
 
     // No access validation needed, since this is not a page
 

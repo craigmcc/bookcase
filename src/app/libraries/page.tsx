@@ -13,7 +13,7 @@
 // External Modules ----------------------------------------------------------
 
 import {useSession} from "next-auth/react";
-import {useEffect, useState, useTransition} from "react";
+import {useEffect, useState} from "react";
 
 // Internal Modules ----------------------------------------------------------
 
@@ -32,17 +32,11 @@ export default function LibrariesPage() {
     const [active, setActive] = useState<boolean>(false);
     const [libraries, setLibraries] = useState<LibraryPlus[]>([]);
     const [search, setSearch] = useState<string>("");
-    const [isPending, startTransition] = useTransition();
 
     // Select the Libraries that match the specified filter criteria
     useEffect(() => {
-/*
-        console.log("LibrariesPage.useEffect", {
-            active: active,
-            search: search,
-        });
-*/
-        startTransition(async ()  => {
+
+        async function fetchLibraries()  {
             const options: LibraryAllOptions = {
                 active: (active) ? true : undefined,
                 name: (search.length > 0) ? search : undefined,
@@ -50,7 +44,10 @@ export default function LibrariesPage() {
             const results = await LibraryActions.all(options);
             //console.log("LibrariesPage.fetched", JSON.stringify(results));
             setLibraries(results);
-        });
+        }
+
+        fetchLibraries();
+
     }, [active, search])
 
     // Validate access to this function

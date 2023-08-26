@@ -45,7 +45,7 @@ type AuthorItemsProps = {
 
 export default function AuthorItems(props: AuthorItemsProps) {
 
-    const [active, setActive] = useState<boolean>(true);
+    const [active, setActive] = useState<boolean>(false);
     const [search, setSearch] = useState<string>("");
     const [stories, setAuthors] = useState<AuthorPlus[]>([]);
     const [isPending, startTransition] = useTransition();
@@ -53,16 +53,18 @@ export default function AuthorItems(props: AuthorItemsProps) {
     // Select the Authors that match the specified filter criteria
     useEffect(() => {
 
-        startTransition(async () => {
+        async function fetchAuthors() {
             const options: AuthorAllOptions = {
                 active: (active) ? true : undefined,
                 name: (search.length > 0) ? search : undefined,
             }
             const results = await AuthorActions.all(props.library.id, options);
             setAuthors(results);
-        });
+        }
 
-    }, [active, search]);
+        fetchAuthors();
+
+    }, [active, search, props.library]);
 
     // No access validation needed, since this is not a page
 

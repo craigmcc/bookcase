@@ -11,7 +11,7 @@
 
 // External Modules ----------------------------------------------------------
 
-import {useEffect, useState, useTransition} from "react";
+import {useEffect, useState} from "react";
 import {Library} from "@prisma/client";
 
 // Internal Modules ----------------------------------------------------------
@@ -45,24 +45,25 @@ type SeriesItemsProps = {
 
 export default function SeriesItems(props: SeriesItemsProps) {
 
-    const [active, setActive] = useState<boolean>(true);
+    const [active, setActive] = useState<boolean>(false);
     const [search, setSearch] = useState<string>("");
     const [serieses, setSerieses] = useState<SeriesPlus[]>([]);
-    const [isPending, startTransition] = useTransition();
 
     // Select the Series that match the specified filter criteria
     useEffect(() => {
 
-        startTransition(async () => {
+        async function fetchSeries() {
             const options: SeriesAllOptions = {
                 active: (active) ? true : undefined,
                 name: (search.length > 0) ? search : undefined,
             }
             const results = await SeriesActions.all(props.library.id, options);
             setSerieses(results);
-        });
+        }
 
-    }, [active, search]);
+        fetchSeries();
+
+    }, [active, search, props.library]);
 
     // No access validation needed, since this is not a page
 
