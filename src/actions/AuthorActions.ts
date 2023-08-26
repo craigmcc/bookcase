@@ -10,6 +10,7 @@
 
 // External Modules ----------------------------------------------------------
 
+/*
 import {
     Author,
     AuthorsSeries,
@@ -17,100 +18,27 @@ import {
     AuthorsVolumes,
     Prisma,
 } from "@prisma/client";
+*/
+import {Prisma} from "@prisma/client";
 
 // Internal Modules ----------------------------------------------------------
 
+import prisma from "@/prisma";
 import * as LibraryActions from "./LibraryActions";
 import * as SeriesActions from "./SeriesActions";
 import * as StoryActions from "./StoryActions";
 import * as VolumeActions from "./VolumeActions";
-import prisma from "../prisma";
+import {
+    AuthorAllOptions,
+    AuthorFindOptions,
+    AuthorIncludeOptions,
+    AuthorMatchOptions,
+    AuthorPlus,
+} from "@/types/models/Author";
 import {PaginationOptions} from "@/types/types";
 import {NotFound, NotUnique, ServerError} from "@/util/HttpErrors";
 
 // Public Types --------------------------------------------------------------
-
-/**
- * A base Author with optional nested parent and children.
- */
-export type AuthorPlus = Author & Prisma.AuthorGetPayload<{
-    include: {
-        authorsSeries: true,
-        authorsStories: true,
-        library: true,
-        authorsVolumes: true,
-    }
-}>;
-
-/**
- * Explicit many-to-many relationship between Authors and Series.
- */
-export type AuthorsSeriesPlus = AuthorsSeries & Prisma.AuthorsSeriesGetPayload<{
-    include: {
-        author: true,
-        series: true,
-    }
-}>;
-
-/**
- * Explicit many-to-many relationship between Authors and Stories.
- */
-export type AuthorsStoriesPlus = AuthorsStories & Prisma.AuthorsStoriesGetPayload<{
-    include: {
-        author: true,
-        story: true,
-    }
-}>;
-
-/**
- * Explicit many-to-many relationship between Authors and Volumes.
- */
-export type AuthorsVolumesPlus = AuthorsVolumes & Prisma.AuthorsVolumesGetPayload<{
-    include: {
-        author: true,
-        volume: true,
-    }
-}>;
-
-/**
- * The type for options of an "all" function for this model.
- */
-export type AllOptions = IncludeOptions & MatchOptions & PaginationOptions;
-
-/**
- * The type for options of a "find" (or related single result) function
- * for this model.
- */
-export type FindOptions = IncludeOptions;
-
-// Private Types -------------------------------------------------------------
-
-/**
- * The type for options that select which related or parent models should be
- * included in a response.
- */
-type IncludeOptions = {
-    // Include parent Library?
-    withLibrary?: boolean;
-    // Include related Series?
-    withSeries?: boolean;
-    // Include related Stories?
-    withStories?: boolean;
-    // Include related Volumes?
-    withVolumes?: boolean;
-}
-
-/**
- * The type for criteria that select which Author objects should be included
- * in the response.
- */
-type MatchOptions = {
-    // Whether to limit this response to Authors with matching active values.
-    active?: boolean;
-    // The name (wildcard match against firstName and lastName) of the
-    // Authors that should be returned.
-    name?: string;
-}
 
 // Public Actions ------------------------------------------------------------
 
@@ -122,7 +50,7 @@ type MatchOptions = {
  *
  * @throws ServerError                  If a low level error is thrown
  */
-export const all = async (libraryId: number, options?: AllOptions): Promise<AuthorPlus[]> => {
+export const all = async (libraryId: number, options?: AuthorAllOptions): Promise<AuthorPlus[]> => {
     const args: Prisma.AuthorFindManyArgs = {
         // cursor???
         // distinct???
@@ -156,7 +84,7 @@ export const all = async (libraryId: number, options?: AllOptions): Promise<Auth
  * @throws ServerError                  If a low level error is thrown
  */
 export const exact =
-    async (libraryId: number, firstName: string, lastName: string, options?: FindOptions): Promise<AuthorPlus> =>
+    async (libraryId: number, firstName: string, lastName: string, options?: AuthorFindOptions): Promise<AuthorPlus> =>
     {
         try {
             const result = await prisma.author.findUnique({
@@ -198,7 +126,7 @@ export const exact =
  * @throws NotFound                     If no such Author is found
  * @throws ServerError                  If a low level error is thrown
  */
-export const find = async (libraryId: number, authorId: number, options?: FindOptions): Promise<AuthorPlus> => {
+export const find = async (libraryId: number, authorId: number, options?: AuthorFindOptions): Promise<AuthorPlus> => {
     try {
         const result = await prisma.author.findUnique({
             include: include(options),
@@ -581,7 +509,7 @@ export const volumeDisconnect =
  * Calculate and return the "include" options from the specified query
  * options, if any were specified.
  */
-export const include = (options?: IncludeOptions): Prisma.AuthorInclude | undefined => {
+export const include = (options?: AuthorIncludeOptions): Prisma.AuthorInclude | undefined => {
     if (!options) {
         return undefined;
     }
@@ -710,7 +638,7 @@ export const uniqueName = async(libraryId: number, authorId: number | null, firs
  * Calculate and return the "where" options from the specified query
  * options, if any were specified.
  */
-export const where = (libraryId: number, options?: any): Prisma.AuthorWhereInput | undefined => {
+export const where = (libraryId: number, options?: AuthorMatchOptions): Prisma.AuthorWhereInput | undefined => {
     let where: Prisma.AuthorWhereInput = {
         libraryId: libraryId,
     };
