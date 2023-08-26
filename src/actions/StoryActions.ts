@@ -10,10 +10,7 @@
 
 // External Modules ----------------------------------------------------------
 
-import {
-    Prisma,
-    Story,
-} from "@prisma/client";
+import {Prisma} from "@prisma/client";
 
 // Internal Modules ----------------------------------------------------------
 
@@ -21,68 +18,16 @@ import * as AuthorActions from "./AuthorActions";
 import * as LibraryActions from "./LibraryActions";
 import * as SeriesActions from "./SeriesActions";
 import * as VolumeActions from "./VolumeActions";
-import prisma from "../prisma";
+import prisma from "@/prisma";
+import {
+    StoryAllOptions,
+    StoryFindOptions,
+    StoryIncludeOptions,
+    StoryMatchOptions,
+    StoryPlus,
+} from "@/types/models/Story";
 import {PaginationOptions} from "@/types/types";
 import {NotFound, NotUnique, ServerError} from "@/util/HttpErrors";
-
-// Public Types --------------------------------------------------------------
-
-/**
- * A base Story with optional nested parent and children.
- */
-export type StoryPlus = Story & Prisma.StoryGetPayload<{
-    include: {
-        authorsStories: true,
-        library: true,
-        seriesStories: true,
-        volumesStories: true,
-    }
-}>;
-
-// AuthorsStoriesPlus is defined in AuthorActions.
-
-// SeriesStoriesPlus is defined in SeriesActions.
-
-// VolumesStoriesPlus is defined in VolumeActions.
-
-/**
- * The type for options of an "all" function for this model.
- */
-export type AllOptions = IncludeOptions & MatchOptions & PaginationOptions;
-
-/**
- * The type for options of a "find" (or related single result) function
- * for this model.
- */
-export type FindOptions = IncludeOptions;
-
-// Private Types -------------------------------------------------------------
-
-/**
- * The type for options that select which related or parent models should be
- * included in a response.
- */
-type IncludeOptions = {
-    // Include related Authors?
-    withAuthors?: boolean;
-    // Include parent Library?
-    withLibrary?: boolean;
-    // Include related Series?
-    withSeries?: boolean;
-    // Include related Volumes?
-    withVolumes?: boolean;
-}
-
-/**
- * The type for criteria that select which Series objects should be included
- * in the response.
- */
-type MatchOptions = {
-    // Whether to limit this response to Stories with matching active values.
-    active?: boolean;
-    // The name (wildcard match) of the Stories that should be returned.
-    name?: string;
-}
 
 // Public Actions ------------------------------------------------------------
 
@@ -94,7 +39,7 @@ type MatchOptions = {
  *
  * @throws ServerError                  If a low level error is thrown
  */
-export const all = async (libraryId: number, options?: AllOptions): Promise<StoryPlus[]> => {
+export const all = async (libraryId: number, options?: StoryAllOptions): Promise<StoryPlus[]> => {
     const args: Prisma.StoryFindManyArgs = {
         // cursor???
         // distinct???
@@ -204,15 +149,15 @@ export const authorDisconnect =
  *
  * @param libraryId                     ID of the Library being queried
  * @param name                          Name of the requested Story
- * @param query                         Optional query parameters
+ * @param options                       Optional query parameters
  *
  * @throws NotFound                     If no such Story is found
  * @throws ServerError                  If a low level error is thrown
  */
-export const exact = async (libraryId: number, name: string, query?: any): Promise<StoryPlus> => {
+export const exact = async (libraryId: number, name: string, options?: StoryFindOptions): Promise<StoryPlus> => {
     try {
         const result = await prisma.story.findUnique({
-            include: include(query),
+            include: include(options),
             where: {
                 libraryId_name: {
                     libraryId: libraryId,
@@ -250,7 +195,7 @@ export const exact = async (libraryId: number, name: string, query?: any): Promi
  * @throws NotFound                     If no such Story is found
  * @throws ServerError                  If a low level error is thrown
  */
-export const find = async (libraryId: number, storyId: number, options?: FindOptions): Promise<StoryPlus> => {
+export const find = async (libraryId: number, storyId: number, options?: StoryFindOptions): Promise<StoryPlus> => {
     try {
         const result = await prisma.story.findUnique({
             include: include(options),
@@ -547,7 +492,7 @@ export const volumeDisconnect =
  * Calculate and return the "include" options from the specified query
  * options, if they were specified.
  */
-export const include = (options?: IncludeOptions): Prisma.StoryInclude | undefined => {
+export const include = (options?: StoryIncludeOptions): Prisma.StoryInclude | undefined => {
     if (!options) {
         return undefined;
     }
@@ -672,7 +617,7 @@ export const uniqueName = async(libraryId: number, storyId: number | null, name:
  * Calculate and return the "where" options from the specified query
  * options, if any were specified.
  */
-export const where = (libraryId: number, options?: MatchOptions): Prisma.StoryWhereInput | undefined => {
+export const where = (libraryId: number, options?: StoryMatchOptions): Prisma.StoryWhereInput | undefined => {
     const where: Prisma.StoryWhereInput = {
         libraryId: libraryId,
     }
