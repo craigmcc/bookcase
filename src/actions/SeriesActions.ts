@@ -20,72 +20,16 @@ import {
 
 import * as AuthorActions from "./AuthorActions";
 import * as LibraryActions from "./LibraryActions";
-//import * as StoryActions from "./StoryActions";
-import prisma from "../prisma";
+import prisma from "@/prisma";
+import {
+    SeriesAllOptions,
+    SeriesFindOptions,
+    SeriesIncludeOptions,
+    SeriesMatchOptions,
+    SeriesPlus,
+} from "@/types/models/Series";
 import {PaginationOptions} from "@/types/types";
 import {NotFound, NotUnique, ServerError} from "@/util/HttpErrors";
-
-// Public Types --------------------------------------------------------------
-
-/**
- * A base Series with optional nested parent and children.
- */
-export type SeriesPlus = Series & Prisma.SeriesGetPayload<{
-    include: {
-        authorsSeries: true,
-        library: true,
-        seriesStories: true,
-    }
-}>;
-
-// AuthorsSeriesPlus is defined in SeriesActions.
-
-/**
- * Explicit many-to-many relationship between Series and Stories.
- */
-export type SeriesStoriesPlus = SeriesStories & Prisma.SeriesStoriesGetPayload<{
-    include: {
-        series: true,
-        story: true,
-    }
-}>;
-
-/**
- * The type for options of an "all" function for this model.
- */
-export type AllOptions = IncludeOptions & MatchOptions & PaginationOptions;
-
-/**
- * The type for options of a "find" (or related single result) function
- * for this model.
- */
-export type FindOptions = IncludeOptions;
-
-// Private Types -------------------------------------------------------------
-
-/**
- * The type for options that select which related or parent models should be
- * included in a response.
- */
-type IncludeOptions = {
-    // Include related Authors?
-    withAuthors?: boolean;
-    // Include parent Library?
-    withLibrary?: boolean;
-    // Include related Stories?
-    withStories?: boolean;
-}
-
-/**
- * The type for criteria that select which Series objects should be included
- * in the response.
- */
-type MatchOptions = {
-    // Whether to limit this response to Series with matching active values.
-    active?: boolean;
-    // The name (wildcard match) of the Series that should be returned.
-    name?: string;
-}
 
 // Public Actions ------------------------------------------------------------
 
@@ -97,7 +41,7 @@ type MatchOptions = {
  *
  * @throws ServerError                  If a low level error is thrown
  */
-export const all = async (libraryId: number, options?: AllOptions): Promise<SeriesPlus[]> => {
+export const all = async (libraryId: number, options?: SeriesAllOptions): Promise<SeriesPlus[]> => {
     const args: Prisma.SeriesFindManyArgs = {
         // cursor???
         // distinct???
@@ -210,7 +154,7 @@ export const authorDisconnect =
  * @throws NotFound                     If no such Series is found
  * @throws ServerError                  If a low level error is thrown
  */
-export const exact = async (libraryId: number, name: string, options?: FindOptions): Promise<SeriesPlus> => {
+export const exact = async (libraryId: number, name: string, options?: SeriesFindOptions): Promise<SeriesPlus> => {
     try {
         const result = await prisma.series.findUnique({
             include: include(options),
@@ -251,7 +195,7 @@ export const exact = async (libraryId: number, name: string, options?: FindOptio
  * @throws NotFound                     If no such Series is found
  * @throws ServerError                  If a low level error is thrown
  */
-export const find = async (libraryId: number, seriesId: number, options?: FindOptions): Promise<SeriesPlus> => {
+export const find = async (libraryId: number, seriesId: number, options?: SeriesFindOptions): Promise<SeriesPlus> => {
     try {
         const result = await prisma.series.findUnique({
             include: include(options),
@@ -467,7 +411,7 @@ export const update = async (libraryId: number, seriesId: number, series: Prisma
  * Calculate and return the "include" options from the specified query
  * options, if any were specified.
  */
-export const include = (options?: IncludeOptions): Prisma.SeriesInclude | undefined => {
+export const include = (options?: SeriesIncludeOptions): Prisma.SeriesInclude | undefined => {
     if (!options) {
         return undefined;
     }
@@ -584,7 +528,7 @@ export const uniqueName = async(libraryId: number, seriesId: number | null, name
  * Calculate and return the "where" options from the specified query
  * options, if any were specified.
  */
-export const where = (libraryId: number, options?: MatchOptions): Prisma.SeriesWhereInput | undefined => {
+export const where = (libraryId: number, options?: SeriesMatchOptions): Prisma.SeriesWhereInput | undefined => {
     let where: Prisma.SeriesWhereInput = {
         libraryId: libraryId,
     };
