@@ -28,7 +28,7 @@ type SearchBarProps = {
     handleChange?: HandleString;
     // Handle value after "Enter" or "Tab" key is pressed [none]
     handleValue?: HandleString;
-    // Label for the search box [Search For:]
+    // Label for the search box [no label]
     label?: string;
     // Input control name [searchBar]
     name?: string;
@@ -42,7 +42,6 @@ type SearchBarProps = {
 
 export function SearchBar(props: SearchBarProps) {
 
-    const label = props.label ? props.label : "Search For:";
     const name = props.name ? props.name : "searchBar";
     const [value, setValue] =
         useState<string>(props.value ? props.value : "");
@@ -72,9 +71,11 @@ export function SearchBar(props: SearchBarProps) {
 
     return (
         <div className={props.className ? props.className : undefined}>
-            <label htmlFor={name}>
-                <span className="mr-2 text-sm font-medium">{label}</span>
-            </label>
+            {(props.label) ? (
+                <label htmlFor={name}>
+                    <span className="mr-2 text-sm font-medium">{props.label}</span>
+                </label>
+            ) : null }
             <input
                 autoFocus={props.autoFocus ? props.autoFocus : undefined}
                 className="text-sm"
