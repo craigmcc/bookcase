@@ -68,7 +68,7 @@ export const all = async (libraryId: number, options?: SeriesAllOptions): Promis
  * @param principal                     Is this Author a principal Author of this Series?
  */
 export const authorConnect =
-    async (libraryId: number, seriesId: number, authorId: number, principal: boolean): Promise<SeriesPlus> =>
+    async (libraryId: number, seriesId: number, authorId: number, principal?: boolean): Promise<SeriesPlus> =>
     {
         const series = await find(libraryId, seriesId);
         await AuthorActions.find(libraryId, authorId);

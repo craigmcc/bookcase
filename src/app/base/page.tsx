@@ -16,9 +16,12 @@ import {useContext} from "react";
 
 // Internal Modules ----------------------------------------------------------
 
+import AuthorItems from "@/components/authors/AuthorItems";
 import {LibraryContext} from "@/components/layout/LibraryContext";
+import SeriesItems from "@/components/series/SeriesItems";
 import NotSelected from "@/components/shared/NotSelected";
 import NotSignedIn from "@/components/shared/NotSignedIn";
+import StoryItems from "@/components/stories/StoryItems";
 import VolumeItems from "@/components/volumes/VolumeItems"
 
 
@@ -44,9 +47,15 @@ export default function BasePage() {
                 <span>Base page for Library <strong>{libraryContext.library.name}</strong></span>
             </div>
             <div className="container grid grid-cols-4 gap-4">
-                <div/>
-                <div/>
-                <div/>
+                <div>
+                    <AuthorItems library={libraryContext.library}/>
+                </div>
+                <div>
+                    <SeriesItems library={libraryContext.library}/>
+                </div>
+                <div>
+                    <StoryItems library={libraryContext.library}/>
+                </div>
                 <div>
                     <VolumeItems library={libraryContext.library}/>
                 </div>
