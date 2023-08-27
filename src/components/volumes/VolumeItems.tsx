@@ -71,17 +71,17 @@ export default function VolumeItems(props: VolumeItemsProps) {
         <Card className="border-solid">
             <CardHeader>
                 <CardTitle>Volumes</CardTitle>
-                <CardContent>
+                <CardContent className="p-1">
                     <Table className="container mx-auto">
                         <TableHeader>
                             <TableRow>
-                                <TableHead>Name</TableHead>
+                                <TableHead className="h-auto p-1">Name</TableHead>
                             </TableRow>
                         </TableHeader>
                         <TableBody>
                             {volumes.map((volume, index) => (
                                 <TableRow key={index}>
-                                    <TableCell>
+                                    <TableCell className="p-1">
                                         {volume.name}
                                     </TableCell>
                                 </TableRow>

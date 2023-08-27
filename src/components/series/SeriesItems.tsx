@@ -71,17 +71,17 @@ export default function SeriesItems(props: SeriesItemsProps) {
         <Card className="border-solid">
             <CardHeader>
                 <CardTitle>Series</CardTitle>
-                <CardContent>
+                <CardContent className="p-1">
                     <Table className="container mx-auto">
                         <TableHeader>
                             <TableRow>
-                                <TableHead>Name</TableHead>
+                                <TableHead className="h-auto p-1">Name</TableHead>
                             </TableRow>
                         </TableHeader>
                         <TableBody>
                             {serieses.map((series, index) => (
                                 <TableRow key={index}>
-                                    <TableCell>
+                                    <TableCell className="p-1">
                                         {series.name}
                                     </TableCell>
                                 </TableRow>

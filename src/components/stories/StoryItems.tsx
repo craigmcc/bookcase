@@ -71,17 +71,17 @@ export default function StoryItems(props: StoryItemsProps) {
         <Card className="border-solid">
             <CardHeader>
                 <CardTitle>Stories</CardTitle>
-                <CardContent>
+                <CardContent className="p-1">
                     <Table className="container mx-auto">
                         <TableHeader>
                             <TableRow>
-                                <TableHead>Name</TableHead>
+                                <TableHead className="h-auto p-1">Name</TableHead>
                             </TableRow>
                         </TableHeader>
                         <TableBody>
                             {stories.map((story, index) => (
                                 <TableRow key={index}>
-                                    <TableCell>
+                                    <TableCell className="p-1">
                                         {story.name}
                                     </TableCell>
                                 </TableRow>

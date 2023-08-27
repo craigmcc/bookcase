@@ -72,17 +72,17 @@ export default function AuthorItems(props: AuthorItemsProps) {
         <Card className="border-solid">
             <CardHeader>
                 <CardTitle>Authors</CardTitle>
-                <CardContent>
+                <CardContent className="p-1">
                     <Table className="container mx-auto">
                         <TableHeader>
                             <TableRow>
-                                <TableHead>Name</TableHead>
+                                <TableHead className="h-auto p-1">Name</TableHead>
                             </TableRow>
                         </TableHeader>
                         <TableBody>
                             {stories.map((author, index) => (
                                 <TableRow key={index}>
-                                    <TableCell>
+                                    <TableCell className="p-1">
                                         {author.firstName} {author.lastName}
                                     </TableCell>
                                 </TableRow>
