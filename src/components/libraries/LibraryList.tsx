@@ -3,19 +3,26 @@
 // components/libraries/LibraryList.tsx
 
 /**
- * Render the specified Libraries in a table.  Perform callbacks to the
- * parent component when any filter criteria are changed.
+ * Render the specified Libraries in a table, applying user specified
+ * filtering as required.
  *
  * @packageDocumentation
  */
 
 // External Modules ----------------------------------------------------------
 
-import {useState} from "react";
+import {useEffect, useState} from "react";
 
 // Internal Modules ----------------------------------------------------------
 
+import * as LibraryActions from "@/actions/LibraryActionsShim";
 import {Icons} from "@/components/layout/Icons";
+import {AddButton} from "@/components/shared/AddButton";
+import {BackButton} from "@/components/shared/BackButton";
+import {CheckBox} from "@/components/shared/CheckBox";
+import {EditButton} from "@/components/shared/EditButton";
+import {Pagination} from "@/components/shared/Pagination";
+import {SearchBar} from "@/components/shared/SearchBar";
 import {
     Table,
     TableBody,
@@ -24,58 +31,59 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table";
-import {AddButton} from "@/components/shared/AddButton";
-import {BackButton} from "@/components/shared/BackButton";
-import {CheckBox} from "@/components/shared/CheckBox";
-import {EditButton} from "@/components/shared/EditButton";
-import {Pagination} from "@/components/shared/Pagination";
-import {SearchBar} from "@/components/shared/SearchBar";
-import {LibraryPlus} from "@/types/models/Library";
+import {LibraryAllOptions, LibraryPlus} from "@/types/models/Library";
 import {HandleAction, HandleBoolean, HandleString} from "@/types/types";
 
 // Public Objects ------------------------------------------------------------
 
 type LibraryListProps = {
-    // Handle new value for the "active" filter
-    handleActive: HandleBoolean;
-    // Handle "next page" click
-    handleNext: HandleAction;
-    // Handle "previous page" click
-    handlePrevious: HandleAction;
-    // Handle new value for the "search" filter
-    handleSearch: HandleString;
-    // Array of Libraries to be presented
-    libraries: LibraryPlus[],
-    // Number of libraries per page
-    pageSize: number,
 }
 
 export default function LibraryList(props: LibraryListProps) {
 
     const [active, setActive] = useState<boolean>(false);
     const [currentPage, setCurrentPage] = useState<number>(1);
+    const [libraries, setLibraries] = useState<LibraryPlus[]>([]);
+    const pageSize = 2;
     const [search, setSearch] = useState<string>("");
+
+    // Select the Libraries that match the specified filter criteria
+    useEffect(() => {
+
+        async function fetchLibraries()  {
+            const options: LibraryAllOptions = {
+                active: (active) ? true : undefined,
+                limit: pageSize,
+                name: (search.length > 0) ? search : undefined,
+                offset: (pageSize * (currentPage - 1)),
+            };
+            const results = await LibraryActions.all(options);
+            //console.log("LibrariesPage.fetched", JSON.stringify(results));
+            setLibraries(results);
+        }
+
+        fetchLibraries();
+
+    }, [active, currentPage, search])
+
+    // No access validation is required because we are not a page
 
     const handleActive: HandleBoolean = (newActive) => {
         console.log("LibrariesList.handleActive", `'${newActive}'`);
         setActive(newActive);
-        props.handleActive(newActive);
     }
 
     const handleNext: HandleAction = () => {
-        props.handleNext();
         setCurrentPage(currentPage + 1);
     }
 
     const handlePrevious: HandleAction = () => {
-        props.handlePrevious();
         setCurrentPage(currentPage - 1);
     }
 
     const handleSearch: HandleString = (newSearch) => {
         console.log("LibrariesList.handleSearch", `'${newSearch}')`);
         setSearch(newSearch);
-        props.handleSearch(newSearch);
     }
 
     // Render the requested content
@@ -114,8 +122,8 @@ export default function LibraryList(props: LibraryListProps) {
                         currentPage={currentPage}
                         handleNext={handleNext}
                         handlePrevious={handlePrevious}
-                        lastPage={(props.libraries.length === 0) ||
-                            (props.libraries.length < props.pageSize)}
+                        lastPage={(libraries.length === 0) ||
+                            (libraries.length < pageSize)}
                     />
                 </div>
             </div>
@@ -132,7 +140,7 @@ export default function LibraryList(props: LibraryListProps) {
                         </TableRow>
                     </TableHeader>
                     <TableBody>
-                        {props.libraries.map((library, index) => (
+                        {libraries.map((library, index) => (
                             <TableRow key={index}>
                                 <TableCell>
                                     {library.name}
