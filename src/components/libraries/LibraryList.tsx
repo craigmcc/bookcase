@@ -69,7 +69,7 @@ export default function LibraryList(props: LibraryListProps) {
     // No access validation is required because we are not a page
 
     const handleActive: HandleBoolean = (newActive) => {
-        console.log("LibrariesList.handleActive", `'${newActive}'`);
+//        console.log("LibrariesList.handleActive", `'${newActive}'`);
         setActive(newActive);
     }
 
@@ -82,7 +82,7 @@ export default function LibraryList(props: LibraryListProps) {
     }
 
     const handleSearch: HandleString = (newSearch) => {
-        console.log("LibrariesList.handleSearch", `'${newSearch}')`);
+//        console.log("LibrariesList.handleSearch", `'${newSearch}')`);
         setSearch(newSearch);
     }
 

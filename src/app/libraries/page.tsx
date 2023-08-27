@@ -33,7 +33,7 @@ export default function LibrariesPage() {
     }
 
     return (
-        <div className="container mx-auto py-4" suppressHydrationWarning>
+        <div className="container py-4" suppressHydrationWarning>
             <LibrariesList/>
         </div>
     )

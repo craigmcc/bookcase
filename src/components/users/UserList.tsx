@@ -3,19 +3,26 @@
 // components/users/UserList.tsx
 
 /**
- * Render the specified Users in a table.  Perform callbacks to the
- * parent component when any filter criteria are changed.
+ * Render the specified Users in a table, applying user specified
+ * filtering as required.
  *
  * @packageDocumentation
  */
 
 // External Modules ----------------------------------------------------------
 
-import {useState} from "react";
+import {useEffect, useState} from "react";
 
 // Internal Modules ----------------------------------------------------------
 
+import * as UserActions from "@/actions/UserActionsShim";
 import {Icons} from "@/components/layout/Icons";
+import {AddButton} from "@/components/shared/AddButton";
+import {BackButton} from "@/components/shared/BackButton";
+import {CheckBox} from "@/components/shared/CheckBox";
+import {EditButton} from "@/components/shared/EditButton";
+import {Pagination} from "@/components/shared/Pagination";
+import {SearchBar} from "@/components/shared/SearchBar";
 import {
     Table,
     TableBody,
@@ -24,40 +31,58 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table";
-import {AddButton} from "@/components/shared/AddButton";
-import {BackButton} from "@/components/shared/BackButton";
-import {CheckBox} from "@/components/shared/CheckBox";
-import {EditButton} from "@/components/shared/EditButton";
-import {SearchBar} from "@/components/shared/SearchBar";
-import {UserPlus} from "@/types/models/User";
-import {HandleBoolean, HandleString} from "@/types/types";
+import {UserAllOptions, UserPlus} from "@/types/models/User";
+import {HandleAction, HandleBoolean, HandleString} from "@/types/types";
 
 // Public Objects ------------------------------------------------------------
 
 type UserListProps = {
-    // Handle new value for the "active" filter
-    handleActive: HandleBoolean;
-    // Handle new value for the "search" filter
-    handleSearch: HandleString;
-    // Array of Users to be presented
-    users: UserPlus[],
 }
 
 export default function UserList(props: UserListProps) {
 
     const [active, setActive] = useState<boolean>(false);
+    const [currentPage, setCurrentPage] = useState<number>(1);
+    const pageSize = 3;
     const [search, setSearch] = useState<string>("");
+    const [users, setUsers] = useState<UserPlus[]>([]);
+
+    // Select the Users that match the specified filter criteria
+    useEffect(() => {
+
+        async function fetchUsers() {
+            const options: UserAllOptions = {
+                active: (active) ? true : undefined,
+                limit: pageSize,
+                offset: (pageSize * (currentPage - 1)),
+                username: (search.length > 0) ? search : undefined,
+            }
+            const results = await UserActions.all(options);
+            setUsers(results);
+        }
+
+        fetchUsers();
+
+    }, [active, currentPage, search]);
+
+    // No access validation is required because we are not a page
 
     const handleActive: HandleBoolean = (newActive) => {
-        console.log("UsersList.handleActive", `'${newActive}'`);
+//        console.log("UsersList.handleActive", `'${newActive}'`);
         setActive(newActive);
-        props.handleActive(newActive);
+    }
+
+    const handleNext: HandleAction = () => {
+        setCurrentPage(currentPage + 1);
+    }
+
+    const handlePrevious: HandleAction = () => {
+        setCurrentPage(currentPage - 1);
     }
 
     const handleSearch: HandleString = (newSearch) => {
-        console.log("UsersList.handleSearch", `'${newSearch}')`);
+//        console.log("UsersList.handleSearch", `'${newSearch}')`);
         setSearch(newSearch);
-        props.handleSearch(newSearch);
     }
 
     // Render the requested content
@@ -86,11 +111,18 @@ export default function UserList(props: UserListProps) {
                         value={search}
                     />
                 </div>
-                <div className="text-right">
+                <div className="flex gap-4 justify-end">
                     <CheckBox
                         handleValue={handleActive}
                         label="Active Users Only?"
                         value={active}
+                    />
+                    <Pagination
+                        currentPage={currentPage}
+                        handleNext={handleNext}
+                        handlePrevious={handlePrevious}
+                        lastPage={(users.length === 0) ||
+                            (users.length < pageSize)}
                     />
                 </div>
             </div>
@@ -99,7 +131,7 @@ export default function UserList(props: UserListProps) {
                 <Table>
                     <TableHeader>
                         <TableRow>
-                            <TableHead>Userame</TableHead>
+                            <TableHead>Username</TableHead>
                             <TableHead>Active</TableHead>
                             <TableHead>Name</TableHead>
                             <TableHead>Scope</TableHead>
@@ -107,7 +139,7 @@ export default function UserList(props: UserListProps) {
                         </TableRow>
                     </TableHeader>
                     <TableBody>
-                        {props.users.map((user, index) => (
+                        {users.map((user, index) => (
                             <TableRow key={index}>
                                 <TableCell>
                                     {user.username}
