@@ -11,13 +11,17 @@
 import {
     ArrowBigLeft,
     ArrowDownToLine,
+    BookCopy,
     Check,
+    Folders,
     Github,
     Library,
     LogIn,
     LogOut,
     Pencil,
     Plus,
+    Rows,
+    Users,
     X,
     XOctagon,
     type XIcon as LucideIcon,
@@ -27,6 +31,7 @@ export type Icon = typeof LucideIcon;
 
 export const Icons = {
     Add: Plus,
+    Authors: Users,
     Back: ArrowBigLeft,
     Check: Check,
     Edit: Pencil,
@@ -34,7 +39,10 @@ export const Icons = {
     Library: Library,
     Remove: XOctagon,
     Save: ArrowDownToLine,
+    Series: Rows,
     SignIn: LogIn,
     SignOut: LogOut,
+    Stories: Folders,
     Uncheck: X,
+    Volumes: BookCopy,
 }
