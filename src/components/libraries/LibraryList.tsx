@@ -128,7 +128,7 @@ export default function LibraryList(props: LibraryListProps) {
                 </div>
             </div>
 
-            <div className="container mx-auto">
+            <div className="container px-0 mx-auto">
                 <Table>
                     <TableHeader>
                         <TableRow>
