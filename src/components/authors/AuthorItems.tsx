@@ -27,8 +27,8 @@ import {
     Table,
     TableBody,
     TableCell,
-    TableHead,
-    TableHeader,
+//    TableHead,
+//    TableHeader,
     TableRow,
 } from "@/components/ui/table";
 import {AuthorAllOptions, AuthorPlus} from "@/types/models/Author";
@@ -74,11 +74,13 @@ export default function AuthorItems(props: AuthorItemsProps) {
                 <CardTitle>Authors</CardTitle>
                 <CardContent className="p-1">
                     <Table className="container mx-auto">
+{/*
                         <TableHeader>
                             <TableRow>
                                 <TableHead className="h-auto p-1">Name</TableHead>
                             </TableRow>
                         </TableHeader>
+*/}
                         <TableBody>
                             {stories.map((author, index) => (
                                 <TableRow key={index}>

@@ -27,8 +27,8 @@ import {
     Table,
     TableBody,
     TableCell,
-    TableHead,
-    TableHeader,
+//    TableHead,
+//    TableHeader,
     TableRow,
 } from "@/components/ui/table";
 import {SeriesAllOptions, SeriesPlus} from "@/types/models/Series";
@@ -73,11 +73,13 @@ export default function SeriesItems(props: SeriesItemsProps) {
                 <CardTitle>Series</CardTitle>
                 <CardContent className="p-1">
                     <Table className="container mx-auto">
+{/*
                         <TableHeader>
                             <TableRow>
                                 <TableHead className="h-auto p-1">Name</TableHead>
                             </TableRow>
                         </TableHeader>
+*/}
                         <TableBody>
                             {serieses.map((series, index) => (
                                 <TableRow key={index}>

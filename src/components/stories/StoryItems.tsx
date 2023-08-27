@@ -27,8 +27,8 @@ import {
     Table,
     TableBody,
     TableCell,
-    TableHead,
-    TableHeader,
+//    TableHead,
+//    TableHeader,
     TableRow,
 } from "@/components/ui/table";
 import {StoryAllOptions, StoryPlus} from "@/types/models/Story";
@@ -73,11 +73,13 @@ export default function StoryItems(props: StoryItemsProps) {
                 <CardTitle>Stories</CardTitle>
                 <CardContent className="p-1">
                     <Table className="container mx-auto">
+{/*
                         <TableHeader>
                             <TableRow>
                                 <TableHead className="h-auto p-1">Name</TableHead>
                             </TableRow>
                         </TableHeader>
+*/}
                         <TableBody>
                             {stories.map((story, index) => (
                                 <TableRow key={index}>

@@ -27,8 +27,8 @@ import {
     Table,
     TableBody,
     TableCell,
-    TableHead,
-    TableHeader,
+//    TableHead,
+//    TableHeader,
     TableRow,
 } from "@/components/ui/table";
 import {VolumeAllOptions, VolumePlus} from "@/types/models/Volume";
@@ -73,11 +73,13 @@ export default function VolumeItems(props: VolumeItemsProps) {
                 <CardTitle>Volumes</CardTitle>
                 <CardContent className="p-1">
                     <Table className="container mx-auto">
+{/*
                         <TableHeader>
                             <TableRow>
                                 <TableHead className="h-auto p-1">Name</TableHead>
                             </TableRow>
                         </TableHeader>
+*/}
                         <TableBody>
                             {volumes.map((volume, index) => (
                                 <TableRow key={index}>
