@@ -7,6 +7,11 @@
  */
 
 /**
+ * Application level handler for an action (such as a button click)
+ */
+export type HandleAction = () => void;
+
+/**
  * Application level handler for a new boolean value from an input element.
  */
 export type HandleBoolean = (newBoolean: boolean) => void;

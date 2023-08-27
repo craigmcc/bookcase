@@ -28,30 +28,48 @@ import {AddButton} from "@/components/shared/AddButton";
 import {BackButton} from "@/components/shared/BackButton";
 import {CheckBox} from "@/components/shared/CheckBox";
 import {EditButton} from "@/components/shared/EditButton";
+import {Pagination} from "@/components/shared/Pagination";
 import {SearchBar} from "@/components/shared/SearchBar";
 import {LibraryPlus} from "@/types/models/Library";
-import {HandleBoolean, HandleString} from "@/types/types";
+import {HandleAction, HandleBoolean, HandleString} from "@/types/types";
 
 // Public Objects ------------------------------------------------------------
 
 type LibraryListProps = {
     // Handle new value for the "active" filter
     handleActive: HandleBoolean;
+    // Handle "next page" click
+    handleNext: HandleAction;
+    // Handle "previous page" click
+    handlePrevious: HandleAction;
     // Handle new value for the "search" filter
     handleSearch: HandleString;
     // Array of Libraries to be presented
     libraries: LibraryPlus[],
+    // Number of libraries per page
+    pageSize: number,
 }
 
 export default function LibraryList(props: LibraryListProps) {
 
     const [active, setActive] = useState<boolean>(false);
+    const [currentPage, setCurrentPage] = useState<number>(1);
     const [search, setSearch] = useState<string>("");
 
     const handleActive: HandleBoolean = (newActive) => {
         console.log("LibrariesList.handleActive", `'${newActive}'`);
         setActive(newActive);
         props.handleActive(newActive);
+    }
+
+    const handleNext: HandleAction = () => {
+        props.handleNext();
+        setCurrentPage(currentPage + 1);
+    }
+
+    const handlePrevious: HandleAction = () => {
+        props.handlePrevious();
+        setCurrentPage(currentPage - 1);
     }
 
     const handleSearch: HandleString = (newSearch) => {
@@ -86,11 +104,18 @@ export default function LibraryList(props: LibraryListProps) {
                         value={search}
                     />
                 </div>
-                <div className="text-right">
+                <div className="flex gap-4 justify-end">
                     <CheckBox
                         handleValue={handleActive}
                         label="Active Libraries Only?"
                         value={active}
+                    />
+                    <Pagination
+                        currentPage={currentPage}
+                        handleNext={handleNext}
+                        handlePrevious={handlePrevious}
+                        lastPage={(props.libraries.length === 0) ||
+                            (props.libraries.length < props.pageSize)}
                     />
                 </div>
             </div>
