@@ -3,4 +3,6 @@
 
 // Used for __tests__/testing-library.js
 // Learn more: https://github.com/testing-library/jest-dom
-import '@testing-library/jest-dom/extend-expect'
+
+// COMMENTED OUT for bumping @testing-library/jest-dom from 5.16.5 to 6.0.1
+//import '@testing-library/jest-dom/extend-expect'
