@@ -35,7 +35,7 @@
   "homepage": "https://github.com/craigmcc/bookcase#readme",
   "dependencies": {
     "@craigmcc/shared-utils": "^1.0.3",
-    "@hookform/resolvers": "^3.1.1",
+    "@hookform/resolvers": "^3.3.0",
     "@prisma/client": "^5.1.1",
     "@radix-ui/react-alert-dialog": "^1.0.4",
     "@radix-ui/react-checkbox": "^1.0.4",
