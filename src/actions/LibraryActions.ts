@@ -54,7 +54,7 @@ export const all = async (options?: LibraryAllOptions): Promise<LibraryPlus[]> =
     try {
         const results =
             await prisma.library.findMany(args);
-        return results as LibraryPlus[];
+        return results as unknown as LibraryPlus[];
     } catch (error) {
         throw new ServerError(
             error as Error,
@@ -88,7 +88,7 @@ export const exact = async (name: string, options?: LibraryFindOptions): Promise
             }
         });
         if (result) {
-            return result as LibraryPlus;
+            return result as unknown as LibraryPlus;
         } else {
             throw new NotFound(
                 `name: Missing Library '${name}'`,
@@ -131,7 +131,7 @@ export const find = async (libraryId: number, options?: LibraryFindOptions): Pro
                 }
             });
         if (result) {
-            return result as LibraryPlus;
+            return result as unknown as LibraryPlus;
         } else {
             throw new NotFound(
                 `id: Missing Library ${libraryId}`,
@@ -187,7 +187,7 @@ export const insert = async (library: Prisma.LibraryCreateInput): Promise<Librar
         delete library.id;
         const result =
             await prisma.library.create({ data: library });
-        return result as LibraryPlus;
+        return result as unknown as LibraryPlus;
     } catch (error) {
         throw new ServerError(
             error as Error,
@@ -216,7 +216,7 @@ export const remove = async (libraryId: number): Promise<LibraryPlus> => {
                 id: libraryId,
             }
         });
-        return result as LibraryPlus;
+        return result as unknown as LibraryPlus;
     } catch (error) {
         throw new ServerError(
             error as Error,
@@ -274,7 +274,7 @@ export const update = async (libraryId: number, library: Prisma.LibraryUpdateInp
                 id: libraryId,
             }
         });
-        return result as LibraryPlus;
+        return result as unknown as LibraryPlus;
     } catch (error) {
         throw new ServerError(
             error as Error,

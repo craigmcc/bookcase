@@ -20,7 +20,16 @@ import logger from "./util/ServerLogger";
 // TODO - support overriding things like datasources/db/url somehow
 const prisma = new PrismaClient({
 //    log: [ "query", "info", "warn", "error"],
-});
+})
+    .$extends({
+        result: {
+            library: {
+                _model: {
+                    compute(library) { return "Library" }
+                }
+            }
+        }
+    });
 let database = "UNKNOWN";
 if (process.env.DATABASE_URL) {
     // NOTE: assumes a traditional DATABASE_URL format

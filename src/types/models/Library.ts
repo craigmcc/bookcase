@@ -67,5 +67,5 @@ export type LibraryPlus = Library & Prisma.LibraryGetPayload<{
         stories: true,
         volumes: true,
     }
-}>;
+} & {_model: string}>;
 
