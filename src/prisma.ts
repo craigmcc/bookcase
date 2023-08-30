@@ -22,10 +22,10 @@ const prisma = new PrismaClient({
 //    log: [ "query", "info", "warn", "error"],
 })
     .$extends({
-        result: {
+        model: {
             library: {
                 _model: {
-                    compute(library) { return "Library" }
+                    compute() { return "Library" }
                 }
             }
         }
