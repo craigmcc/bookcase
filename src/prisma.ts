@@ -23,11 +23,31 @@ const prisma = new PrismaClient({
 })
     .$extends({
         model: {
+            author: {
+                _model: {
+                    compute() { return "Author" }
+                }
+            },
             library: {
                 _model: {
                     compute() { return "Library" }
                 }
-            }
+            },
+            series: {
+                _model: {
+                    compute() { return "Series" }
+                }
+            },
+            story: {
+                _model: {
+                    compute() { return "Story" }
+                }
+            },
+            volume: {
+                _model: {
+                    compute() { return "Volume" }
+                }
+            },
         }
     });
 let database = "UNKNOWN";

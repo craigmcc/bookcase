@@ -6,6 +6,8 @@
  * @packageDocumentation
  */
 
+import {Author, Library, Series, Story, Volume} from "@prisma/client";
+
 /**
  * Application level handler for an action (such as a button click)
  */
@@ -46,6 +48,11 @@ export type PaginationOptions = {
     // The zero-relative offset to the first row to be returned.
     offset?: number;
 }
+
+/**
+ * Union of models that can be a "parent" in a parent-child relationship.
+ */
+export type Parent = Author | Library | Series | Story | Volume;
 
 /**
  * The options offered by a Select input control.
