@@ -22,7 +22,7 @@ const prisma = new PrismaClient({
 //    log: [ "query", "info", "warn", "error"],
 })
     .$extends({
-        model: {
+        result: {
             author: {
                 _model: {
                     compute() { return "Author" }
@@ -30,6 +30,7 @@ const prisma = new PrismaClient({
             },
             library: {
                 _model: {
+                    needs: {},
                     compute() { return "Library" }
                 }
             },

@@ -32,6 +32,7 @@ import {
     FormMessage,
 } from "@/components/ui/form";
 import {Input} from "@/components/ui/input";
+import {LibraryPlus} from "@/types/models/Library";
 
 // Public Objects ------------------------------------------------------------
 
@@ -39,14 +40,16 @@ type LibraryFormProps = {
     // Navigation destination after successful save operation [/libraries]
     destination?: string,
     // Library to be edited (id < 0 means adding)
-    library: Library;
+    library: LibraryPlus;
     // Show the back button and header title? [true]
     showHeader?: boolean;
 }
 
 export default function LibraryForm(props: LibraryFormProps) {
 
-    //console.log("LibraryForm.entry", JSON.stringify(props.library));
+    console.log("LibraryForm.entry", JSON.stringify(props.library));
+    // @ts-ignore
+    console.log("LibraryForm._model", props.library["_model"]);
     const form = useForm<Yup.InferType<typeof formSchema>>({
         defaultValues: {
             id: props.library.id,
@@ -54,7 +57,6 @@ export default function LibraryForm(props: LibraryFormProps) {
             name: props.library.name ? props.library.name : "",
             notes: props.library.notes ? props.library.notes : "",
             scope: props.library.scope ? props.library.scope : "",
-
         },
         mode: "onBlur",
         resolver: yupResolver(formSchema),

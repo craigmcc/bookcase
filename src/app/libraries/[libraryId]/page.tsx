@@ -11,7 +11,6 @@
 
 // External Modules ----------------------------------------------------------
 
-import {Library} from "@prisma/client";
 import {getServerSession} from "next-auth/next";
 
 // Internal Modules ----------------------------------------------------------
@@ -22,6 +21,7 @@ import LibraryCard from "@/components/libraries/LibraryCard";
 import NotAuthorized from "@/components/shared/NotAuthorized";
 import NotFound from"@/components/shared/NotFound";
 import NotSignedIn from "@/components/shared/NotSignedIn";
+import {LibraryPlus} from "@/types/models/Library";
 import {authorizedSuperuser} from "@/util/Authorizations";
 
 // Public Objects ------------------------------------------------------------
@@ -38,8 +38,9 @@ export default async function LibraryPage({params}: {params: {libraryId: string}
 
     // Retrieve the requested Library or create a template for a new one
     const libraryId = Number(params.libraryId);
-    let library: Library;
+    let library: LibraryPlus;
     if (libraryId < 0) {
+        // @ts-ignore
         library = {
             id: -1,
             active: true,
