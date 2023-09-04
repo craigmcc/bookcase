@@ -64,7 +64,7 @@ export type SeriesPlus = Series & Prisma.SeriesGetPayload<{
         library: true,
         seriesStories: true,
     }
-}>;
+} & { _model: string }>;
 
 /**
  * Type for the Series-Stories join table.

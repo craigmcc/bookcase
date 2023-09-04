@@ -70,7 +70,7 @@ export type AuthorPlus = Author & Prisma.AuthorGetPayload<{
         authorsVolumes: true,
         library: true,
     }
-}>;
+} & { _model: string, _principal: boolean }>;
 
 /**
  * Type for the Authors-Series join table.

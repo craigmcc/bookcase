@@ -60,7 +60,7 @@ export type VolumePlus = Volume & Prisma.VolumeGetPayload<{
         library: true,
         volumesStories: true,
     }
-}>;
+} & { _model: string }>;
 
 /**
  * Type for the Volumes-Stories join table.

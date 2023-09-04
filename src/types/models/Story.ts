@@ -66,4 +66,4 @@ export type StoryPlus = Story & Prisma.StoryGetPayload<{
         seriesStories: true,
         volumesStories: true,
     }
-}>;
+} & { _model: string, _ordinal: number }>;

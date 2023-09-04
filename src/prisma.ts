@@ -26,7 +26,10 @@ const prisma = new PrismaClient({
             author: {
                 _model: {
                     compute() { return "Author" }
-                }
+                },
+                _principal: {
+                    compute() { return false }
+                },
             },
             library: {
                 _model: {
@@ -42,7 +45,10 @@ const prisma = new PrismaClient({
             story: {
                 _model: {
                     compute() { return "Story" }
-                }
+                },
+                _ordinal: {
+                    compute() { return 0 }
+                },
             },
             volume: {
                 _model: {
