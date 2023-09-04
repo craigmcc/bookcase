@@ -56,7 +56,7 @@ export const all = async (libraryId: number, options?: SeriesAllOptions): Promis
     }
     try {
         const results = await prisma.series.findMany(args);
-        return results as SeriesPlus[];
+        return results as unknown as SeriesPlus[];
     } catch (error) {
         throw new ServerError(
             error as Error,
@@ -187,7 +187,7 @@ export const exact = async (libraryId: number, name: string, options?: SeriesFin
             }
         });
         if (result) {
-            return result as SeriesPlus;
+            return result as unknown as SeriesPlus;
         } else {
             throw new NotFound(
                 `name: Missing Series '${name}'`,
@@ -232,7 +232,7 @@ export const find = async (libraryId: number, seriesId: number, options?: Series
             }
         });
         if (result) {
-            return result as SeriesPlus;
+            return result as unknown as SeriesPlus;
         } else {
             throw new NotFound(
                 `id: Missing Series ${seriesId}`,
@@ -283,7 +283,7 @@ export const insert = async (libraryId: number, series: Prisma.SeriesUncheckedCr
         const result = await prisma.series.create({
             data: args,
         });
-        return result as SeriesPlus;
+        return result as unknown as SeriesPlus;
     } catch (error) {
         throw new ServerError(
             error as Error,
@@ -452,7 +452,7 @@ export const update = async (libraryId: number, seriesId: number, series: Prisma
             },
             where: { id: seriesId },
         });
-        return result as SeriesPlus;
+        return result as unknown as SeriesPlus;
     } catch (error) {
         throw new ServerError(
             error as Error,

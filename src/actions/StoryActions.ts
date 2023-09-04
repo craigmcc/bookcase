@@ -58,7 +58,7 @@ export const all = async (libraryId: number, options?: StoryAllOptions): Promise
     }
     try {
         const results = await prisma.story.findMany(args);
-        return results as StoryPlus[];
+        return results as unknown as StoryPlus[];
     } catch (error) {
         throw new ServerError(
             error as Error,
@@ -191,7 +191,7 @@ export const exact = async (libraryId: number, name: string, options?: StoryFind
             }
         });
         if (result) {
-            return result as StoryPlus;
+            return result as unknown as StoryPlus;
         } else {
             throw new NotFound(
                 `name: Missing Story '${name}'`,
@@ -236,7 +236,7 @@ export const find = async (libraryId: number, storyId: number, options?: StoryFi
             }
         });
         if (result) {
-            return result as StoryPlus;
+            return result as unknown as StoryPlus;
         } else {
             throw new NotFound(
                 `id: Missing Story ${storyId}`,
@@ -287,7 +287,7 @@ export const insert = async (libraryId: number, story: Prisma.StoryUncheckedCrea
         const result = await prisma.story.create({
             data: args,
         });
-        return result as StoryPlus;
+        return result as unknown as StoryPlus;
     } catch (error) {
         throw new ServerError(
             error as Error,
@@ -455,7 +455,7 @@ export const update = async (libraryId: number, storyId: number, story: Prisma.S
             },
             where: { id: storyId },
         });
-        return result as StoryPlus;
+        return result as unknown as StoryPlus;
     } catch (error) {
         throw new ServerError(
             error as Error,

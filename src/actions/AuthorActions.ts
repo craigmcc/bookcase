@@ -60,7 +60,7 @@ export const all = async (libraryId: number, options?: AuthorAllOptions): Promis
     }
     try {
         const results = await prisma.author.findMany(args);
-        return results as AuthorPlus[];
+        return results as unknown as AuthorPlus[];
     } catch (error) {
         throw new ServerError(
             error as Error,
@@ -101,7 +101,7 @@ export const exact =
                 }
             });
             if (result) {
-                return result as AuthorPlus;
+                return result as unknown as AuthorPlus;
             } else {
                 throw new NotFound(
                     `name: Missing Author '${firstName} ${lastName}'`,
@@ -146,7 +146,7 @@ export const find = async (libraryId: number, authorId: number, options?: Author
             }
         });
         if (result) {
-            return result as AuthorPlus;
+            return result as unknown as AuthorPlus;
         } else {
             throw new NotFound(
                 `id: Missing Author ${authorId}`,
@@ -196,7 +196,7 @@ export const insert = async (libraryId: number, author: Prisma.AuthorUncheckedCr
         const result = await prisma.author.create({
             data: args,
         });
-        return result as AuthorPlus;
+        return result as unknown as AuthorPlus;
     } catch (error) {
         throw new ServerError(
             error as Error,
@@ -463,7 +463,7 @@ export const update = async (libraryId: number, authorId: number, author: Prisma
             },
             where: { id: authorId },
         });
-        return result as AuthorPlus;
+        return result as unknown as AuthorPlus;
     } catch (error) {
         throw new ServerError(
             error as Error,

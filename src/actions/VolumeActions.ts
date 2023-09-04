@@ -58,7 +58,7 @@ export const all = async (libraryId: number, options?: VolumeAllOptions): Promis
     }
     try {
         const results = await prisma.volume.findMany(args);
-        return results as VolumePlus[];
+        return results as unknown as VolumePlus[];
     } catch (error) {
         throw new ServerError(
             error as Error,
@@ -191,7 +191,7 @@ export const exact = async (libraryId: number, name: string, options?: VolumeFin
             }
         });
         if (result) {
-            return result as VolumePlus;
+            return result as unknown as VolumePlus;
         } else {
             throw new NotFound(
                 `name: Missing Volume '${name}'`,
@@ -236,7 +236,7 @@ export const find = async (libraryId: number, volumeId: number, options?: Volume
             }
         });
         if (result) {
-            return result as VolumePlus;
+            return result as unknown as VolumePlus;
         } else {
             throw new NotFound(
                 `id: Missing Volume ${volumeId}`,
@@ -299,7 +299,7 @@ export const insert = async (libraryId: number, volume: Prisma.VolumeUncheckedCr
         const result = await prisma.volume.create({
             data: args,
         });
-        return result as VolumePlus;
+        return result as unknown as VolumePlus;
     } catch (error) {
         throw new ServerError(
             error as Error,
@@ -385,7 +385,7 @@ export const update = async (libraryId: number, volumeId: number, volume: Prisma
             data: data,
             where: { id: volumeId },
         });
-        return result as VolumePlus;
+        return result as unknown as VolumePlus;
     } catch (error) {
         throw new ServerError(
             error as Error,

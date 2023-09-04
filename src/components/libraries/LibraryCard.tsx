@@ -10,8 +10,6 @@
 
 // External Modules ----------------------------------------------------------
 
-import {Library} from"@prisma/client";
-
 // Internal Modules ----------------------------------------------------------
 
 import LibraryForm from "./LibraryForm";
@@ -22,6 +20,7 @@ import {
     CardHeader,
     CardTitle,
 } from "@/components/ui/card";
+import {LibraryPlus} from "@/types/models/Library";
 
 // Public Objects ------------------------------------------------------------
 
@@ -31,7 +30,7 @@ type LibraryCardProps = {
     // Navigation destination after successful save operation [/libraries]
     destination?: string,
     // Library to be edited (id < 0 means adding)
-    library: Library;
+    library: LibraryPlus;
 }
 
 export default function LibraryCard(props: LibraryCardProps) {
