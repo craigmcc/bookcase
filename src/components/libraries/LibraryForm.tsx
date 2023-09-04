@@ -49,7 +49,7 @@ export default function LibraryForm(props: LibraryFormProps) {
 
     console.log("LibraryForm.entry", JSON.stringify(props.library));
     // @ts-ignore
-    console.log("LibraryForm._model", props.library["_model"]);
+    //console.log("LibraryForm._model", props.library._model);
     const form = useForm<Yup.InferType<typeof formSchema>>({
         defaultValues: {
             id: props.library.id,

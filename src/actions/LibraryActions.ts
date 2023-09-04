@@ -131,6 +131,13 @@ export const find = async (libraryId: number, options?: LibraryFindOptions): Pro
                 }
             });
         if (result) {
+/*
+            logger.info({
+                context: "LibraryActions.find.found",
+                library: result,
+                _model: result._model,
+            });
+*/
             return result as unknown as LibraryPlus;
         } else {
             throw new NotFound(
