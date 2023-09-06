@@ -19,6 +19,9 @@ import * as LibraryActions from "./LibraryActions";
 import * as StoryActions from "./StoryActions";
 import prisma from "../prisma";
 import {
+    StoryPlus,
+} from "@/types/models/Story";
+import {
     VolumeAllOptions,
     VolumeFindOptions,
     VolumeIncludeOptions,
@@ -393,6 +396,46 @@ export const update = async (libraryId: number, volumeId: number, volume: Prisma
         );
     }
 }
+
+/**
+ * Return the Stories that are connected with this Volume.
+ *
+ * @param libraryId                     ID of the Library being queried
+ * @param volumeId                      ID of the Volume for the requested Stories
+ * TODO: Probably need some filter criteria
+ *
+ * @throws NotFound                     If the specified Library or Volume is not found
+ * @throws ServerError                  If a low level error is thrown
+ */
+export const stories =
+    async (libraryId: number, volumeId: number): Promise<StoryPlus[]> => {
+        logger.info({
+            context: "VolumeActions.stories",
+            libraryId: libraryId,
+            volumeId: volumeId,
+        });
+        await find(libraryId, volumeId);
+        try {
+            const items = await prisma.volumesStories.findMany({
+                include: {
+                    story: true,
+                },
+                where: {
+                    volumeId: volumeId,
+                }
+            });
+            const stories: StoryPlus[] = [];
+            for (const item of items) {
+                stories.push(item.story as unknown as StoryPlus);
+            }
+            return stories;
+        } catch (error) {
+            throw new ServerError(
+                error as Error,
+                "VolumeActions.stories"
+            );
+        }
+    }
 
 /**
  * Connect the specified Story to this Volume.

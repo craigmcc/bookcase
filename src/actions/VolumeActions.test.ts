@@ -23,6 +23,7 @@ import * as StoryActions from "./StoryActions";
 import * as VolumeActions from "./VolumeActions";
 import ActionsUtils from "@/test/ActionsUtils";
 import * as SeedData from "@/test/SeedData";
+import {AuthorsVolumesPlus} from "@/types/models/Author";
 import {VolumesStoriesPlus} from "@/types/models/Volume";
 import {NotFound, NotUnique} from "@/util/HttpErrors";
 
@@ -195,7 +196,7 @@ describe("VolumeActions Functional Tests", () => {
                     withAuthors: true,
                 });
             expect(OUTPUT.authorsVolumes).to.exist;
-            const AUTHORS_VOLUMES = OUTPUT.authorsVolumes as AuthorActions.AuthorsVolumesPlus[];
+            const AUTHORS_VOLUMES = OUTPUT.authorsVolumes as AuthorsVolumesPlus[];
             expect(AUTHORS_VOLUMES.length).to.equal(1);
             expect(AUTHORS_VOLUMES[0].authorId).to.equal(AUTHOR.id);
             expect(AUTHORS_VOLUMES[0].author).to.exist;
@@ -701,6 +702,39 @@ describe("VolumeActions Functional Tests", () => {
             expect(OUTPUT.volumesStories).to.exist;
             expect(OUTPUT.volumesStories.length).to.equal(0);
         });
+
+    });
+
+    describe("VolumeActions.stories()", () => {
+
+        it("should fail on invalid volumeId", async () => {
+            const LIBRARY =
+                await LibraryActions.exact(SeedData.LIBRARY_NAME_THIRD);
+            const VOLUME_ID = 9999;
+            try {
+                await VolumeActions.stories(LIBRARY.id, VOLUME_ID);
+                expect.fail("Should have thrown NotFound");
+            } catch (error) {
+                expect((error as Error).message).to.include
+                    (`id: Missing Volume ${VOLUME_ID}`);
+            }
+        });
+
+        it("should pass on valid volumeId", async () => {
+            const LIBRARY =
+                await LibraryActions.exact(SeedData.LIBRARY_NAME_FIRST);
+            const VOLUME =
+                await VolumeActions.exact(LIBRARY.id, SeedData.VOLUMES_LIBRARY0[0].name);
+            try {
+                const stories = await VolumeActions.stories(LIBRARY.id, VOLUME.id);
+                expect(stories.length).to.be.greaterThan(0);
+                for (const story of stories) {
+                    expect(story.libraryId).to.equal(LIBRARY.id);
+                }
+            } catch (error) {
+                expect.fail(`Should not have thrown ${(error as Error).message}`);
+            }
+        })
 
     });
 
