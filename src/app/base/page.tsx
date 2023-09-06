@@ -3,7 +3,7 @@
 // app/libraries/base.tsx
 
 /**
- * Base page for performing operations on the selected (and therefore
+ * Base route for performing operations on the selected (and therefore
  * authorized) Library:  managing Authors, Series, Stories, and Volumes.
  *
  * @packageDocumentation
@@ -43,18 +43,18 @@ export default function BasePage() {
     // Render the requested content
     return (
         <>
-            <div className="container mx-auto py-10">
+            <div className="container mx-auto py-6">
                 <span>Base page for Library <strong>{libraryContext.library.name}</strong></span>
             </div>
             <div className="container grid grid-cols-4 gap-4">
                 <div>
-                    <AuthorItems library={libraryContext.library}/>
+                    <AuthorItems parent={libraryContext.library}/>
                 </div>
                 <div>
                     <SeriesItems library={libraryContext.library}/>
                 </div>
                 <div>
-                    <StoryItems library={libraryContext.library}/>
+                    <StoryItems parent={libraryContext.library}/>
                 </div>
                 <div>
                     <VolumeItems library={libraryContext.library}/>

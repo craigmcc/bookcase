@@ -12,11 +12,11 @@
 // External Modules ----------------------------------------------------------
 
 import {useEffect, useState} from "react";
-import {Library} from "@prisma/client";
 
 // Internal Modules ----------------------------------------------------------
 
 import * as StoryActions from "@/actions/StoryActionsShim";
+import * as VolumeActions from "@/actions/VolumeActionsShim";
 import {
     Card,
     CardContent,
@@ -31,15 +31,18 @@ import {
 //    TableHeader,
     TableRow,
 } from "@/components/ui/table";
+import {AuthorPlus} from "@/types/models/Author";
+import {LibraryPlus} from "@/types/models/Library";
+import {SeriesPlus} from "@/types/models/Series";
 import {StoryAllOptions, StoryPlus} from "@/types/models/Story";
+import {VolumePlus} from "@/types/models/Volume";
 //import {HandleBoolean, HandleString} from "@/types/types";
 
 // Public Objects ------------------------------------------------------------
 
 type StoryItemsProps = {
-    // Library for which to retrieve Stories
-    library: Library;
-    // TODO - will need other parent types in the future
+    // Parent model for which to retrieve Stories
+    parent: AuthorPlus | LibraryPlus | SeriesPlus | VolumePlus;
     // TODO - will need navigation actions?
 }
 
@@ -53,17 +56,41 @@ export default function StoryItems(props: StoryItemsProps) {
     useEffect(() => {
 
         async function fetchStories() {
-            const options: StoryAllOptions = {
-                active: (active) ? true : undefined,
-                name: (search.length > 0) ? search : undefined,
+
+            console.log("StoryItems Parent", JSON.stringify(props.parent));
+
+            // @ts-ignore
+            const _model = props.parent["_model"];
+            switch (_model) {
+
+                // TODO: case "Author":
+
+                case "Library":
+                    setStories(await StoryActions.all(props.parent.id, {
+                        active: (active) ? true : undefined,
+                        name: (search.length > 0) ? search : undefined,
+                    }));
+                    break;
+
+                // TODO: case "Series":
+
+                case "Volume":
+                    // @ts-ignore
+                    setStories(await VolumeActions.stories(props.parent.libraryId, props.parent.id));
+                    break;
+
+                default:
+                    alert(`StoryItems: Unsupported parent model ${_model}`);
+                    setStories([]);
+                    break;
+
             }
-            const results = await StoryActions.all(props.library.id, options);
-            setStories(results);
+
         }
 
         fetchStories();
 
-    }, [active, search, props.library]);
+    }, [active, search, props.parent]);
 
     // No access validation needed, since this is not a page
 
