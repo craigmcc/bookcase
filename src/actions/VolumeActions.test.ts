@@ -290,6 +290,39 @@ describe("VolumeActions Functional Tests", () => {
 
     });
 
+    describe("VolumeActions.authors()", () => {
+
+        it("should fail on invalid volumeId", async () => {
+            const LIBRARY =
+                await LibraryActions.exact(SeedData.LIBRARY_NAME_THIRD);
+            const VOLUME_ID = 9999;
+            try {
+                await VolumeActions.authors(LIBRARY.id, VOLUME_ID);
+                expect.fail("Should have thrown NotFound");
+            } catch (error) {
+                expect((error as Error).message).to.include
+                (`id: Missing Volume ${VOLUME_ID}`);
+            }
+        });
+
+        it("should pass on valid volumeId", async () => {
+            const LIBRARY =
+                await LibraryActions.exact(SeedData.LIBRARY_NAME_SECOND);
+            const VOLUME =
+                await VolumeActions.exact(LIBRARY.id, SeedData.VOLUMES_LIBRARY1[0].name);
+            try {
+                const authors = await VolumeActions.authors(LIBRARY.id, VOLUME.id);
+                expect(authors.length).to.be.greaterThan(0);
+                for (const story of authors) {
+                    expect(story.libraryId).to.equal(LIBRARY.id);
+                }
+            } catch (error) {
+                expect.fail(`Should not have thrown ${(error as Error).message}`);
+            }
+        })
+
+    });
+
     describe("VolumeActions.exact()", () => {
 
         it("should fail on invalid name", async () => {
