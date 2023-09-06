@@ -16,6 +16,8 @@ import {Prisma} from "@prisma/client";
 // Internal Modules ----------------------------------------------------------
 
 import * as VolumeActions from "./VolumeActions";
+import {AuthorPlus} from "@/types/models/Author";
+import {StoryPlus} from "@/types/models/Story";
 import {
     VolumeAllOptions,
     VolumeFindOptions,
@@ -36,6 +38,11 @@ export const authorConnect =
 export const authorDisconnect =
     async (libraryId: number, volumeId: number, authorId: number): Promise<VolumePlus> => {
     return await VolumeActions.authorDisconnect(libraryId, volumeId, authorId);
+}
+
+export const authors =
+    async (libraryId: number, volumeId: number): Promise<AuthorPlus[]> => {
+    return await VolumeActions.authors(libraryId, volumeId);
 }
 
 export const exact = async (libraryId: number, name: string, options?: VolumeFindOptions): Promise<VolumePlus> => {
@@ -61,6 +68,11 @@ export const storyConnect = async (libraryId: number, volumeId: number, storyId:
 export const storyDisconnect = async (libraryId: number, volumeId: number, storyId: number): Promise<VolumePlus> => {
     return await VolumeActions.storyDisconnect(libraryId, volumeId, storyId);
 }
+
+export const stories =
+    async (libraryId: number, volumeId: number): Promise<StoryPlus[]> => {
+        return await VolumeActions.stories(libraryId, volumeId);
+    }
 
 export const update = async (libraryId: number, volumeId: number, volume: Prisma.VolumeUpdateInput): Promise<VolumePlus> => {
     return await VolumeActions.update(libraryId, volumeId, volume);
