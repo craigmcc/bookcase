@@ -27,7 +27,7 @@ import {authorizedRegular} from "@/util/Authorizations";
 
 export default async function VolumePage({params}: {params: {libraryId: string, volumeId: string}}) {
 
-    // Validate access to this page
+    // Validate access to this route
     const session = await getServerSession(authOptions);
     if (!session || !session.user) {
         return <NotSignedIn/>

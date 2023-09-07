@@ -3,8 +3,9 @@
 // app/libraries/[libraryId]/page.tsx
 
 /**
- * Editing page for Library objects.  Performs authorization checks for
- * the route, and retrieves the Library specified as a path parameter.
+ * Route for the editing page for Library objects.  Performs authorization
+ * checks for the route, and retrieves the Library specified as a path
+ * parameter, and delegates to
  *
  * @packageDocumentation
  */
@@ -26,7 +27,7 @@ import {authorizedSuperuser} from "@/util/Authorizations";
 
 // Public Objects ------------------------------------------------------------
 
-export default async function LibraryPage({params}: {params: {libraryId: string}}) {
+export default async function LibraryRoute({params}: {params: {libraryId: string}}) {
 
     // Validate access to this page
     const session = await getServerSession(authOptions);

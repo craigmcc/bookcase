@@ -18,10 +18,12 @@ export const siteConfig = {
             title: "Select",
             href: "/select",
         },
+/* No longer viable because URL must be /base/{libraryId} now
         {
             title: "Base",
             href: "/base",
         },
+*/
         {
             title: "Libraries",
             href: "/libraries",

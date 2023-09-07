@@ -3,7 +3,7 @@
 // app/select/page.tsx
 
 /**
- * Allow the user to select which Library they wish to manage,
+ * Route for allowing the user to select which Library they wish to manage,
  * or (for superuser) select an administrative function.
  *
  * @packageDocumentation
@@ -24,7 +24,7 @@ import {authorizedSuperuser} from "@/util/Authorizations";
 
 // Public Objects ------------------------------------------------------------
 
-export default async function SelectPage() {
+export default async function SelectRoute() {
 
     const session = await getServerSession(authOptions);
     if (!session || !session.user) {

@@ -3,8 +3,8 @@
 // app/users/[userId]/page.tsx
 
 /**
- * Editing page for User objects.  Performs authorization checks for
- * the route, and retrieves the User specified as a path parameter.
+ * Route for the editing page for User objects.  Performs authorization checks
+ * for the route, and retrieves the User specified as a path parameter.
  *
  * @packageDocumentation
  */
@@ -26,7 +26,7 @@ import {authorizedSuperuser} from "@/util/Authorizations";
 
 // Public Objects ------------------------------------------------------------
 
-export default async function UserPage({params}: {params: {userId: string}}) {
+export default async function UserRoute({params}: {params: {userId: string}}) {
 
     // Validate access to this page
     const session = await getServerSession(authOptions);

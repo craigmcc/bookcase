@@ -15,7 +15,6 @@ import {ChangeEvent, useContext, useState} from "react";
 
 // Internal Modules ----------------------------------------------------------
 
-import {LibraryContext} from "@/components/layout/LibraryContext";
 import {Button} from "@/components/my/Button";
 import {LibraryPlus} from "@/types/models/Library";
 import {SelectOption} from "@/types/types";
@@ -31,9 +30,8 @@ type SelectLibraryFormProps = {
 
 export default function SelectLibraryForm(props: SelectLibraryFormProps) {
 
-    const libraryContext = useContext(LibraryContext);
     const [libraryId, setLibraryId]
-        = useState<number>(libraryContext.library ? libraryContext.library.id : -1);
+        = useState<number>(-1);
 
     const options: SelectOption[] = [];
     options.push({
@@ -51,11 +49,9 @@ export default function SelectLibraryForm(props: SelectLibraryFormProps) {
         const newLibraryId = Number(event.target.value);
 //        console.log("Selecting: ", libraryId);
         setLibraryId(newLibraryId);
-        libraryContext.library = null;
         for (const library of props.libraries) {
             if (library.id === newLibraryId) {
 //                console.log("Storing: ", library);
-                libraryContext.library = library;
             }
         }
     }
@@ -73,7 +69,7 @@ export default function SelectLibraryForm(props: SelectLibraryFormProps) {
                     </option>
                 ))}
             </select>
-            <Link href="/base">
+            <Link href={`/base/${libraryId}`}>
                 <Button
                     disabled={libraryId < 0}
                     fullWidth

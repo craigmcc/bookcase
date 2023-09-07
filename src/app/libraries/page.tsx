@@ -1,17 +1,19 @@
-"use client"
+"use server"
 
 // app/libraries/page.tsx
 
 /**
- * Listing page for Library objects.  Performs authorization checks for
- * the route, and delegates to LibraryList for fetching and rendering.
+ * Route for the listing page for Library objects.  Performs authorization
+ * checks for the route, and delegates to LibraryList for fetching and
+ * rendering.
  *
  * @packageDocumentation
  */
 
 // External Modules ----------------------------------------------------------
 
-import {useSession} from "next-auth/react";
+import {getServerSession} from "next-auth/next";
+import {authOptions} from "@/app/api/auth/[...nextauth]/route";
 
 // Internal Modules ----------------------------------------------------------
 
@@ -22,10 +24,10 @@ import {authorizedSuperuser} from "@/util/Authorizations";
 
 // Public Objects ------------------------------------------------------------
 
-export default function LibrariesPage() {
+export default async function LibrariesRoute() {
 
-    // Validate access to this page
-    const {data: session} = useSession();
+    // Validate access to this route
+    const session = await getServerSession(authOptions);
     if (!session || !session.user) {
         return <NotSignedIn/>;
     } else if (!authorizedSuperuser(session.user)) {
