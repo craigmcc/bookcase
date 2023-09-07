@@ -24,6 +24,7 @@ import * as StoryActions from "./StoryActions";
 import * as VolumeActions from "./VolumeActions";
 import ActionsUtils from "@/test/ActionsUtils";
 import * as SeedData from "@/test/SeedData";
+import {AuthorsSeriesPlus, AuthorsStoriesPlus, AuthorsVolumesPlus} from "@/types/models/Author";
 import {NotFound, NotUnique} from "@/util/HttpErrors";
 
 const UTILS = new ActionsUtils();
@@ -450,7 +451,7 @@ describe("AuthorActions Functional Tests", () => {
                     withSeries: true,
                 });
             expect(OUTPUT.authorsSeries).to.exist;
-            const AUTHORS_SERIES = OUTPUT.authorsSeries as AuthorActions.AuthorsSeriesPlus[];
+            const AUTHORS_SERIES = OUTPUT.authorsSeries as AuthorsSeriesPlus[];
             expect(AUTHORS_SERIES.length).to.equal(1);
             expect(AUTHORS_SERIES[0].authorId).to.equal(AUTHOR.id);
 //            expect(AUTHORS_SERIES[0].author).to.exist;
@@ -604,7 +605,7 @@ describe("AuthorActions Functional Tests", () => {
                     withStories: true,
                 });
             expect(OUTPUT.authorsStories).to.exist;
-            const AUTHORS_STORIES = OUTPUT.authorsStories as AuthorActions.AuthorsStoriesPlus[];
+            const AUTHORS_STORIES = OUTPUT.authorsStories as AuthorsStoriesPlus[];
             expect(AUTHORS_STORIES.length).to.equal(1);
             expect(AUTHORS_STORIES[0].authorId).to.equal(AUTHOR.id);
 //            expect(AUTHORS_STORIES[0].author).to.exist;
@@ -842,7 +843,7 @@ describe("AuthorActions Functional Tests", () => {
                     withVolumes: true,
                 });
             expect(OUTPUT.authorsVolumes).to.exist;
-            const AUTHORS_VOLUMES = OUTPUT.authorsVolumes as AuthorActions.AuthorsVolumesPlus[];
+            const AUTHORS_VOLUMES = OUTPUT.authorsVolumes as AuthorsVolumesPlus[];
             expect(AUTHORS_VOLUMES.length).to.equal(1);
             expect(AUTHORS_VOLUMES[0].authorId).to.equal(AUTHOR.id);
 //            expect(AUTHORS_VOLUMES[0].author).to.exist;

@@ -24,6 +24,9 @@ import * as StoryActions from "./StoryActions";
 import * as VolumeActions from "./VolumeActions";
 import ActionsUtils from "@/test/ActionsUtils";
 import * as SeedData from "@/test/SeedData";
+import {AuthorsStoriesPlus} from "@/types/models/Author";
+import {SeriesStoriesPlus} from "@/types/models/Series";
+import {VolumesStoriesPlus} from "@/types/models/Volume";
 import {NotFound, NotUnique} from "@/util/HttpErrors";
 
 const UTILS = new ActionsUtils();
@@ -193,7 +196,7 @@ describe("StoryActions Functional Tests", () => {
                     withAuthors: true,
                 });
             expect(OUTPUT.authorsStories).to.exist;
-            const AUTHORS_STORIES = OUTPUT.authorsStories as AuthorActions.AuthorsStoriesPlus[];
+            const AUTHORS_STORIES = OUTPUT.authorsStories as AuthorsStoriesPlus[];
             expect(AUTHORS_STORIES.length).to.equal(1);
             expect(AUTHORS_STORIES[0].authorId).to.equal(AUTHOR.id);
             expect(AUTHORS_STORIES[0].author).to.exist;
@@ -605,7 +608,7 @@ describe("StoryActions Functional Tests", () => {
                     withSeries: true,
                 });
             expect(OUTPUT.seriesStories).to.exist;
-            const SERIES_STORIES = OUTPUT.seriesStories as SeriesActions.SeriesStoriesPlus[];
+            const SERIES_STORIES = OUTPUT.seriesStories as SeriesStoriesPlus[];
             expect(SERIES_STORIES.length).to.equal(1);
             expect(SERIES_STORIES[0].seriesId).to.equal(SERIES.id);
             expect(SERIES_STORIES[0].series).to.exist;
@@ -838,7 +841,7 @@ describe("StoryActions Functional Tests", () => {
                     withVolumes: true,
                 });
             expect(OUTPUT.volumesStories).to.exist;
-            const VOLUMES_STORIES = OUTPUT.volumesStories as VolumeActions.VolumesStoriesPlus[];
+            const VOLUMES_STORIES = OUTPUT.volumesStories as VolumesStoriesPlus[];
             expect(VOLUMES_STORIES.length).to.equal(1);
             expect(VOLUMES_STORIES[0].volumeId).to.equal(VOLUME.id);
             expect(VOLUMES_STORIES[0].volume).to.exist;

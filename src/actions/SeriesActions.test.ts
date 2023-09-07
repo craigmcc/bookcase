@@ -23,6 +23,8 @@ import * as SeriesActions from "./SeriesActions";
 import * as StoryActions from "./StoryActions";
 import ActionsUtils from "@/test/ActionsUtils";
 import * as SeedData from "@/test/SeedData";
+import {AuthorsSeriesPlus} from "@/types/models/Author";
+import {SeriesStoriesPlus} from "@/types/models/Series";
 import {NotFound, NotUnique} from "@/util/HttpErrors";
 
 const UTILS = new ActionsUtils();
@@ -190,7 +192,7 @@ describe("SeriesActions Functional Tests", () => {
                     withAuthors: true,
                 });
             expect(OUTPUT.authorsSeries).to.exist;
-            const AUTHORS_STORIES = OUTPUT.authorsSeries as AuthorActions.AuthorsSeriesPlus[];
+            const AUTHORS_STORIES = OUTPUT.authorsSeries as AuthorsSeriesPlus[];
             expect(AUTHORS_STORIES.length).to.equal(1);
             expect(AUTHORS_STORIES[0].authorId).to.equal(AUTHOR.id);
             expect(AUTHORS_STORIES[0].author).to.exist;
@@ -587,7 +589,7 @@ describe("SeriesActions Functional Tests", () => {
                     withStories: true,
                 });
             expect(OUTPUT.seriesStories).to.exist;
-            const SERIES_STORIES = OUTPUT.seriesStories as SeriesActions.SeriesStoriesPlus[];
+            const SERIES_STORIES = OUTPUT.seriesStories as SeriesStoriesPlus[];
             expect(SERIES_STORIES.length).to.equal(1);
             expect(SERIES_STORIES[0].seriesId).to.equal(SERIES.id);
 //            expect(SERIES_STORIES[0].series).to.exist;
