@@ -19,6 +19,8 @@ import * as LibraryActions from "./LibraryActions";
 import * as SeriesActions from "./SeriesActions";
 import * as VolumeActions from "./VolumeActions";
 import prisma from "@/prisma";
+import {AuthorPlus} from "@/types/models/Author";
+import {SeriesPlus} from "@/types/models/Series";
 import {
     StoryAllOptions,
     StoryFindOptions,
@@ -26,6 +28,7 @@ import {
     StoryMatchOptions,
     StoryPlus,
 } from "@/types/models/Story";
+import {VolumePlus} from "@/types/models/Volume";
 import {PaginationOptions} from "@/types/types";
 import {NotFound, NotUnique, ServerError} from "@/util/HttpErrors";
 import logger from "@/util/ServerLogger";
@@ -159,6 +162,49 @@ export const authorDisconnect =
             throw new ServerError(
                 error as Error,
                 "StoryActions.authorDisconnect()",
+            );
+        }
+    }
+
+/**
+ * Return the Authors that are connected with this Story.
+ *
+ * @param libraryId                     ID of the Library being queried
+ * @param storyId                       ID of the Story for the requested Authors
+ * TODO: Probably need some filter criteria
+ *
+ * @throws NotFound                     If the specified Library or Story is not found
+ * @throws ServerError                  If a low level error is thrown
+ */
+export const authors =
+    async (libraryId: number, storyId: number): Promise<AuthorPlus[]> => {
+        logger.info({
+            context: "StoryActions.authors",
+            libraryId: libraryId,
+            storyId: storyId,
+        });
+        await find(libraryId, storyId);
+        try {
+            const items = await prisma.authorsStories.findMany({
+                include: {
+                    author: true,
+                },
+                where: {
+                    storyId: storyId,
+                }
+            });
+            const authors: AuthorPlus[] = [];
+            for (const item of items) {
+                if (item.principal !== undefined) {
+                    item.author._principal = item.principal!;
+                }
+                authors.push(item.author as unknown as AuthorPlus);
+            }
+            return authors;
+        } catch (error) {
+            throw new ServerError(
+                error as Error,
+                "StoryActions.authors"
             );
         }
     }
@@ -421,6 +467,46 @@ export const seriesDisconnect =
     }
 
 /**
+ * Return the Series that are connected with this Story.
+ *
+ * @param libraryId                     ID of the Library being queried
+ * @param storyId                       ID of the Story for the requested Authors
+ * TODO: Probably need some filter criteria
+ *
+ * @throws NotFound                     If the specified Library or Story is not found
+ * @throws ServerError                  If a low level error is thrown
+ */
+export const series =
+    async (libraryId: number, storyId: number): Promise<SeriesPlus[]> => {
+        logger.info({
+            context: "StoryActions.series",
+            libraryId: libraryId,
+            storyId: storyId,
+        });
+        await find(libraryId, storyId);
+        try {
+            const items = await prisma.seriesStories.findMany({
+                include: {
+                    series: true,
+                },
+                where: {
+                    storyId: storyId,
+                }
+            });
+            const series: SeriesPlus[] = [];
+            for (const item of items) {
+                series.push(item.series as unknown as SeriesPlus);
+            }
+            return series;
+        } catch (error) {
+            throw new ServerError(
+                error as Error,
+                "StoryActions.series"
+            );
+        }
+    }
+
+/**
  * Update and return the specified Story.
  *
  * @param libraryId                     ID of the owning Library
@@ -553,6 +639,46 @@ export const volumeDisconnect =
             throw new ServerError(
                 error as Error,
                 "StoryActions.volumeDisconnect()",
+            );
+        }
+    }
+
+/**
+ * Return the Volumes that are connected with this Story.
+ *
+ * @param libraryId                     ID of the Library being queried
+ * @param storyId                       ID of the Story for the requested Authors
+ * TODO: Probably need some filter criteria
+ *
+ * @throws NotFound                     If the specified Library or Story is not found
+ * @throws ServerError                  If a low level error is thrown
+ */
+export const volumes =
+    async (libraryId: number, storyId: number): Promise<VolumePlus[]> => {
+        logger.info({
+            context: "StoryActions.volumes",
+            libraryId: libraryId,
+            storyId: storyId,
+        });
+        await find(libraryId, storyId);
+        try {
+            const items = await prisma.volumesStories.findMany({
+                include: {
+                    volume: true,
+                },
+                where: {
+                    storyId: storyId,
+                }
+            });
+            const volumes: VolumePlus[] = [];
+            for (const item of items) {
+                volumes.push(item.volume as unknown as VolumePlus);
+            }
+            return volumes;
+        } catch (error) {
+            throw new ServerError(
+                error as Error,
+                "StoryActions.volumes"
             );
         }
     }

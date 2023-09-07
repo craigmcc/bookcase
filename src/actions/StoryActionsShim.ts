@@ -16,11 +16,14 @@ import {Prisma} from "@prisma/client";
 // Internal Modules ----------------------------------------------------------
 
 import * as StoryActions from "./StoryActions";
+import {AuthorPlus} from "@/types/models/Author";
+import {SeriesPlus} from "@/types/models/Series";
 import {
     StoryAllOptions,
     StoryFindOptions,
     StoryPlus,
 } from "@/types/models/Story";
+import {VolumePlus} from "@/types/models/Volume";
 
 // Public Functions ----------------------------------------------------------
 
@@ -36,6 +39,11 @@ export const authorConnect =
 export const authorDisconnect =
     async (libraryId: number, storyId: number, authorId: number): Promise<StoryPlus> => {
         return await StoryActions.authorDisconnect(libraryId, storyId, authorId);
+    }
+
+export const authors =
+    async (libraryId: number, storyId: number): Promise<AuthorPlus[]> => {
+        return await StoryActions.authors(libraryId, storyId);
     }
 
 export const exact = async (libraryId: number, name: string, options?: StoryFindOptions): Promise<StoryPlus> => {
@@ -54,6 +62,21 @@ export const remove = async (libraryId: number, storyId: number): Promise<StoryP
     return await StoryActions.remove(libraryId, storyId);
 }
 
+export const seriesConnect =
+    async (libraryId: number, storyId: number, seriesId: number, ordinal?: number): Promise<StoryPlus> => {
+        return await StoryActions.seriesConnect(libraryId, storyId, seriesId, ordinal);
+    }
+
+export const seriesDisconnect =
+    async (libraryId: number, storyId: number, seriesId: number): Promise<StoryPlus> => {
+        return await StoryActions.seriesDisconnect(libraryId, storyId, seriesId);
+    }
+
+export const series =
+    async (libraryId: number, storyId: number): Promise<SeriesPlus[]> => {
+        return await StoryActions.series(libraryId, storyId);
+    }
+
 export const update = async (libraryId: number, storyId: number, story: Prisma.StoryUpdateInput): Promise<StoryPlus> => {
     return await StoryActions.update(libraryId, storyId, story);
 }
@@ -65,4 +88,10 @@ export const volumeConnect = async (libraryId: number, storyId: number, volumeId
 export const volumeDisconnect = async (libraryId: number, storyId: number, volumeId: number): Promise<StoryPlus> => {
     return await StoryActions.volumeDisconnect(libraryId, storyId, volumeId);
 }
+
+export const volumes =
+    async (libraryId: number, storyId: number): Promise<VolumePlus[]> => {
+        return await StoryActions.volumes(libraryId, storyId);
+    }
+
 

@@ -286,6 +286,39 @@ describe("StoryActions Functional Tests", () => {
 
     });
 
+    describe("StoryActions.authors()", () => {
+
+        it("should fail on invalid storyId", async () => {
+            const LIBRARY =
+                await LibraryActions.exact(SeedData.LIBRARY_NAME_THIRD);
+            const STORY_ID = 9999;
+            try {
+                await StoryActions.authors(LIBRARY.id, STORY_ID);
+                expect.fail("Should have thrown NotFound");
+            } catch (error) {
+                expect((error as Error).message).to.include
+                (`id: Missing Story ${STORY_ID}`);
+            }
+        });
+
+        it("should pass on valid storyId", async () => {
+            const LIBRARY =
+                await LibraryActions.exact(SeedData.LIBRARY_NAME_SECOND);
+            const STORY =
+                await StoryActions.exact(LIBRARY.id, SeedData.STORIES_LIBRARY1[0].name);
+            try {
+                const authors = await StoryActions.authors(LIBRARY.id, STORY.id);
+                expect(authors.length).to.be.greaterThan(0);
+                for (const story of authors) {
+                    expect(story.libraryId).to.equal(LIBRARY.id);
+                }
+            } catch (error) {
+                expect.fail(`Should not have thrown ${(error as Error).message}`);
+            }
+        })
+
+    });
+
     describe("StoryActions.exact()", () => {
 
         it("should fail on invalid name", async () => {
@@ -696,6 +729,39 @@ describe("StoryActions Functional Tests", () => {
 
     });
 
+    describe("StoryActions.series()", () => {
+
+        it("should fail on invalid storyId", async () => {
+            const LIBRARY =
+                await LibraryActions.exact(SeedData.LIBRARY_NAME_THIRD);
+            const STORY_ID = 9999;
+            try {
+                await StoryActions.series(LIBRARY.id, STORY_ID);
+                expect.fail("Should have thrown NotFound");
+            } catch (error) {
+                expect((error as Error).message).to.include
+                (`id: Missing Story ${STORY_ID}`);
+            }
+        });
+
+        it("should pass on valid storyId", async () => {
+            const LIBRARY =
+                await LibraryActions.exact(SeedData.LIBRARY_NAME_SECOND);
+            const STORY =
+                await StoryActions.exact(LIBRARY.id, SeedData.STORIES_LIBRARY1[0].name);
+            try {
+                const serieses = await StoryActions.series(LIBRARY.id, STORY.id);
+                expect(serieses.length).to.be.greaterThan(0);
+                for (const series of serieses) {
+                    expect(series.libraryId).to.equal(LIBRARY.id);
+                }
+            } catch (error) {
+                expect.fail(`Should not have thrown ${(error as Error).message}`);
+            }
+        });
+
+    });
+
     describe("StoryActions.update()", () => {
 
         it("should fail on duplicate name", async () => {
@@ -929,6 +995,39 @@ describe("StoryActions Functional Tests", () => {
             expect(OUTPUT.authorsStories.length).to.equal(0);
         });
 
+    });
+
+});
+
+describe("StoryActions.volumes()", () => {
+
+    it("should fail on invalid storyId", async () => {
+        const LIBRARY =
+            await LibraryActions.exact(SeedData.LIBRARY_NAME_THIRD);
+        const STORY_ID = 9999;
+        try {
+            await StoryActions.volumes(LIBRARY.id, STORY_ID);
+            expect.fail("Should have thrown NotFound");
+        } catch (error) {
+            expect((error as Error).message).to.include
+            (`id: Missing Story ${STORY_ID}`);
+        }
+    });
+
+    it("should pass on valid storyId", async () => {
+        const LIBRARY =
+            await LibraryActions.exact(SeedData.LIBRARY_NAME_SECOND);
+        const STORY =
+            await StoryActions.exact(LIBRARY.id, SeedData.STORIES_LIBRARY1[0].name);
+        try {
+            const volumes = await StoryActions.volumes(LIBRARY.id, STORY.id);
+            expect(volumes.length).to.be.greaterThan(0);
+            for (const volume of volumes) {
+                expect(volume.libraryId).to.equal(LIBRARY.id);
+            }
+        } catch (error) {
+            expect.fail(`Should not have thrown ${(error as Error).message}`);
+        }
     });
 
 });
