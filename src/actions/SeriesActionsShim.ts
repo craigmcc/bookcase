@@ -15,12 +15,14 @@ import {Prisma} from "@prisma/client";
 
 // Internal Modules ----------------------------------------------------------
 
+import {AuthorPlus} from "@/types/models/Author";
 import * as SeriesActions from "./SeriesActions";
 import {
     SeriesAllOptions,
     SeriesFindOptions,
     SeriesPlus,
 } from "@/types/models/Series";
+import {StoryPlus} from "@/types/models/Story";
 
 // Public Functions ----------------------------------------------------------
 
@@ -37,6 +39,11 @@ export const authorDisconnect =
     async (libraryId: number, storyId: number, authorId: number): Promise<SeriesPlus> => {
         return await SeriesActions.authorDisconnect(libraryId, storyId, authorId);
     }
+
+export const authors =
+    async (libraryId: number, seriesId: number): Promise<AuthorPlus[]> => {
+    return await SeriesActions.authors(libraryId, seriesId);
+}
 
 export const exact = async (libraryId: number, name: string, options?: SeriesFindOptions): Promise<SeriesPlus> => {
     return await SeriesActions.exact(libraryId, name, options);
@@ -60,6 +67,10 @@ export const storyConnect = async (libraryId: number, seriesId: number, storyId:
 
 export const storyDisconnect = async (libraryId: number, seriesId: number, storyId: number): Promise<SeriesPlus> => {
     return await SeriesActions.storyDisconnect(libraryId, seriesId, storyId);
+}
+
+export const stories = async (libraryId: number, seriesId: number): Promise<StoryPlus[]> => {
+    return await SeriesActions.stories(libraryId, seriesId);
 }
 
 export const update = async (libraryId: number, storyId: number, story: Prisma.SeriesUpdateInput): Promise<SeriesPlus> => {

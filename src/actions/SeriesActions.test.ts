@@ -282,6 +282,39 @@ describe("SeriesActions Functional Tests", () => {
 
     });
 
+    describe("SeriesActions.authors()", () => {
+
+        it("should fail on invalid seriesId", async () => {
+            const LIBRARY =
+                await LibraryActions.exact(SeedData.LIBRARY_NAME_THIRD);
+            const SERIES_ID = 9999;
+            try {
+                await SeriesActions.authors(LIBRARY.id, SERIES_ID);
+                expect.fail("Should have thrown NotFound");
+            } catch (error) {
+                expect((error as Error).message).to.include
+                (`id: Missing Series ${SERIES_ID}`);
+            }
+        });
+
+        it("should pass on valid seriesId", async () => {
+            const LIBRARY =
+                await LibraryActions.exact(SeedData.LIBRARY_NAME_SECOND);
+            const SERIES =
+                await SeriesActions.exact(LIBRARY.id, SeedData.SERIES_LIBRARY1[0].name);
+            try {
+                const authors = await SeriesActions.authors(LIBRARY.id, SERIES.id);
+                expect(authors.length).to.be.greaterThan(0);
+                for (const author of authors) {
+                    expect(author.libraryId).to.equal(LIBRARY.id);
+                }
+            } catch (error) {
+                expect.fail(`Should not have thrown ${(error as Error).message}`);
+            }
+        })
+
+    });
+
     describe("SeriesActions.exact()", () => {
 
         it("should fail on invalid name", async () => {
@@ -677,7 +710,40 @@ describe("SeriesActions Functional Tests", () => {
 
     });
 
-    describe("SeriesActions.update()", () => {
+    describe("SeriesActions.stories()", () => {
+
+        it("should fail on invalid seriesId", async () => {
+            const LIBRARY =
+                await LibraryActions.exact(SeedData.LIBRARY_NAME_THIRD);
+            const SERIES_ID = 9999;
+            try {
+                await SeriesActions.stories(LIBRARY.id, SERIES_ID);
+                expect.fail("Should have thrown NotFound");
+            } catch (error) {
+                expect((error as Error).message).to.include
+                (`id: Missing Series ${SERIES_ID}`);
+            }
+        });
+
+        it("should pass on valid seriesId", async () => {
+            const LIBRARY =
+                await LibraryActions.exact(SeedData.LIBRARY_NAME_FIRST);
+            const SERIES =
+                await SeriesActions.exact(LIBRARY.id, SeedData.SERIES_LIBRARY0[0].name);
+            try {
+                const stories = await SeriesActions.stories(LIBRARY.id, SERIES.id);
+                expect(stories.length).to.be.greaterThan(0);
+                for (const story of stories) {
+                    expect(story.libraryId).to.equal(LIBRARY.id);
+                }
+            } catch (error) {
+                expect.fail(`Should not have thrown ${(error as Error).message}`);
+            }
+        });
+
+    });
+
+        describe("SeriesActions.update()", () => {
 
         it("should fail on duplicate name", async () => {
             const LIBRARY =

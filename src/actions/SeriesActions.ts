@@ -16,7 +16,9 @@ import {Prisma} from "@prisma/client";
 
 import * as AuthorActions from "./AuthorActions";
 import * as LibraryActions from "./LibraryActions";
+import * as StoryActions from "./StoryActions";
 import prisma from "@/prisma";
+import {AuthorPlus} from "@/types/models/Author";
 import {
     SeriesAllOptions,
     SeriesFindOptions,
@@ -24,6 +26,7 @@ import {
     SeriesMatchOptions,
     SeriesPlus,
 } from "@/types/models/Series";
+import {StoryPlus} from "@/types/models/Story";
 import {PaginationOptions} from "@/types/types";
 import {NotFound, NotUnique, ServerError} from "@/util/HttpErrors";
 import logger from "@/util/ServerLogger";
@@ -157,6 +160,49 @@ export const authorDisconnect =
             );
         }
 
+    }
+
+/**
+ * Return the Authors that are connected with this Series.
+ *
+ * @param libraryId                     ID of the Library being queried
+ * @param seriesId                      ID of the Series for the requested Authors
+ * TODO: Probably need some filter criteria
+ *
+ * @throws NotFound                     If the specified Library or Series is not found
+ * @throws ServerError                  If a low level error is thrown
+ */
+export const authors =
+    async (libraryId: number, seriesId: number): Promise<AuthorPlus[]> => {
+        logger.info({
+            context: "SeriesActions.authors",
+            libraryId: libraryId,
+            seriesId: seriesId,
+        });
+        await find(libraryId, seriesId);
+        try {
+            const items = await prisma.authorsSeries.findMany({
+                include: {
+                    author: true,
+                },
+                where: {
+                    seriesId: seriesId,
+                }
+            });
+            const authors: AuthorPlus[] = [];
+            for (const item of items) {
+                if (item.principal !== undefined) {
+                    item.author._principal = item.principal!;
+                }
+                authors.push(item.author as unknown as AuthorPlus);
+            }
+            return authors;
+        } catch (error) {
+            throw new ServerError(
+                error as Error,
+                "SeriesActions.authors"
+            );
+        }
     }
 
 /**
@@ -343,6 +389,7 @@ export const storyConnect =
             ordinal: ordinal,
         });
         const series = await find(libraryId, seriesId);
+        await StoryActions.find(libraryId, storyId);
         // TODO: await StoryActions.find(libraryId, storyId);
         try {
             await prisma.seriesStories.create({
@@ -415,6 +462,49 @@ export const storyDisconnect =
             );
         }
 
+    }
+
+/**
+ * Return the Stories that are connected with this Series.
+ *
+ * @param libraryId                     ID of the Library being queried
+ * @param seriesId                      ID of the Series for the requested Stories
+ * TODO: Probably need some filter criteria
+ *
+ * @throws NotFound                     If the specified Library or Volume is not found
+ * @throws ServerError                  If a low level error is thrown
+ */
+export const stories =
+    async (libraryId: number, seriesId: number): Promise<StoryPlus[]> => {
+        logger.info({
+            context: "SeriesActions.stories",
+            libraryId: libraryId,
+            seriesId: seriesId,
+        });
+        await find(libraryId, seriesId);
+        try {
+            const items = await prisma.seriesStories.findMany({
+                include: {
+                    story: true,
+                },
+                where: {
+                    seriesId: seriesId,
+                }
+            });
+            const stories: StoryPlus[] = [];
+            for (const item of items) {
+                if (item.ordinal) {
+                    item.story._ordinal = item.ordinal;
+                }
+                stories.push(item.story as unknown as StoryPlus);
+            }
+            return stories;
+        } catch (error) {
+            throw new ServerError(
+                error as Error,
+                "VolumeActions.stories"
+            );
+        }
     }
 
 /**
