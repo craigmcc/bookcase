@@ -25,7 +25,7 @@ import {authorizedRegular} from "@/util/Authorizations";
 
 // Public Objects ------------------------------------------------------------
 
-export default async function VolumePage({params}: {params: {libraryId: string, volumeId: string}}) {
+export default async function VolumeRoute({params}: {params: {libraryId: string, volumeId: string}}) {
 
     // Validate access to this route
     const session = await getServerSession(authOptions);

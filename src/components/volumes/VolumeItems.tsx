@@ -12,7 +12,6 @@
 // External Modules ----------------------------------------------------------
 
 import {useEffect, useState} from "react";
-import {Library} from "@prisma/client";
 
 // Internal Modules ----------------------------------------------------------
 
@@ -31,6 +30,7 @@ import {
 //    TableHeader,
     TableRow,
 } from "@/components/ui/table";
+import {LibraryPlus} from "@/types/models/Library";
 import {VolumeAllOptions, VolumePlus} from "@/types/models/Volume";
 //import {HandleBoolean, HandleString} from "@/types/types";
 
@@ -38,7 +38,7 @@ import {VolumeAllOptions, VolumePlus} from "@/types/models/Volume";
 
 type VolumeItemsProps = {
     // Library for which to retrieve Volumes
-    library: Library;
+    library: LibraryPlus;
     // TODO - will need other parent types in the future
     // TODO - will need navigation actions?
 }

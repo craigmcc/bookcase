@@ -12,7 +12,6 @@
 // External Modules ----------------------------------------------------------
 
 import {useEffect, useState} from "react";
-import {Library} from "@prisma/client";
 
 // Internal Modules ----------------------------------------------------------
 
@@ -31,6 +30,7 @@ import {
 //    TableHeader,
     TableRow,
 } from "@/components/ui/table";
+import {LibraryPlus} from "@/types/models/Library";
 import {SeriesAllOptions, SeriesPlus} from "@/types/models/Series";
 //import {HandleBoolean, HandleString} from "@/types/types";
 
@@ -38,7 +38,7 @@ import {SeriesAllOptions, SeriesPlus} from "@/types/models/Series";
 
 type SeriesItemsProps = {
     // Library for which to retrieve Series
-    library: Library;
+    library: LibraryPlus;
     // TODO - will need other parent types in the future
     // TODO - will need navigation actions?
 }
