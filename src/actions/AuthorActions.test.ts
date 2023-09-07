@@ -541,6 +541,39 @@ describe("AuthorActions Functional Tests", () => {
 
     });
 
+    describe("AuthorActions.series()", () => {
+
+        it("should fail on invalid authorId", async () => {
+            const LIBRARY =
+                await LibraryActions.exact(SeedData.LIBRARY_NAME_THIRD);
+            const AUTHOR_ID = 9999;
+            try {
+                await AuthorActions.series(LIBRARY.id, AUTHOR_ID);
+                expect.fail("Should have thrown NotFound");
+            } catch (error) {
+                expect((error as Error).message).to.include
+                (`id: Missing Author ${AUTHOR_ID}`);
+            }
+        });
+
+        it("should pass on valid authorId", async () => {
+            const LIBRARY =
+                await LibraryActions.exact(SeedData.LIBRARY_NAME_SECOND);
+            const AUTHOR =
+                await AuthorActions.exact(LIBRARY.id, SeedData.AUTHORS_LIBRARY1[0].firstName, SeedData.AUTHORS_LIBRARY1[0].lastName);
+            try {
+                const serieses = await AuthorActions.series(LIBRARY.id, AUTHOR.id);
+                expect(serieses.length).to.be.greaterThan(0);
+                for (const series of serieses) {
+                    expect(series.libraryId).to.equal(LIBRARY.id);
+                }
+            } catch (error) {
+                expect.fail(`Should not have thrown ${(error as Error).message}`);
+            }
+        });
+
+    });
+
     describe("AuthorActions.storyConnect()", () => {
 
         it("should fail on connecting twice", async () => {
@@ -691,6 +724,39 @@ describe("AuthorActions Functional Tests", () => {
             });
             expect(OUTPUT.authorsStories).to.exist;
             expect(OUTPUT.authorsStories.length).to.equal(0);
+        });
+
+    });
+
+    describe("AuthorActions.stories()", () => {
+
+        it("should fail on invalid authorId", async () => {
+            const LIBRARY =
+                await LibraryActions.exact(SeedData.LIBRARY_NAME_THIRD);
+            const AUTHOR_ID = 9999;
+            try {
+                await AuthorActions.stories(LIBRARY.id, AUTHOR_ID);
+                expect.fail("Should have thrown NotFound");
+            } catch (error) {
+                expect((error as Error).message).to.include
+                (`id: Missing Author ${AUTHOR_ID}`);
+            }
+        });
+
+        it("should pass on valid authorId", async () => {
+            const LIBRARY =
+                await LibraryActions.exact(SeedData.LIBRARY_NAME_SECOND);
+            const AUTHOR =
+                await AuthorActions.exact(LIBRARY.id, SeedData.AUTHORS_LIBRARY1[0].firstName, SeedData.AUTHORS_LIBRARY1[0].lastName);
+            try {
+                const stories = await AuthorActions.stories(LIBRARY.id, AUTHOR.id);
+                expect(stories.length).to.be.greaterThan(0);
+                for (const story of stories) {
+                    expect(story.libraryId).to.equal(LIBRARY.id);
+                }
+            } catch (error) {
+                expect.fail(`Should not have thrown ${(error as Error).message}`);
+            }
         });
 
     });
@@ -933,6 +999,39 @@ describe("AuthorActions Functional Tests", () => {
             expect(OUTPUT.authorsVolumes.length).to.equal(0);
         });
 
+    });
+
+});
+
+describe("AuthorActions.volumes()", () => {
+
+    it("should fail on invalid authorId", async () => {
+        const LIBRARY =
+            await LibraryActions.exact(SeedData.LIBRARY_NAME_THIRD);
+        const AUTHOR_ID = 9999;
+        try {
+            await AuthorActions.volumes(LIBRARY.id, AUTHOR_ID);
+            expect.fail("Should have thrown NotFound");
+        } catch (error) {
+            expect((error as Error).message).to.include
+            (`id: Missing Author ${AUTHOR_ID}`);
+        }
+    });
+
+    it("should pass on valid authorId", async () => {
+        const LIBRARY =
+            await LibraryActions.exact(SeedData.LIBRARY_NAME_SECOND);
+        const AUTHOR =
+            await AuthorActions.exact(LIBRARY.id, SeedData.AUTHORS_LIBRARY1[0].firstName, SeedData.AUTHORS_LIBRARY1[0].lastName);
+        try {
+            const volumes = await AuthorActions.volumes(LIBRARY.id, AUTHOR.id);
+            expect(volumes.length).to.be.greaterThan(0);
+            for (const volume of volumes) {
+                expect(volume.libraryId).to.equal(LIBRARY.id);
+            }
+        } catch (error) {
+            expect.fail(`Should not have thrown ${(error as Error).message}`);
+        }
     });
 
 });

@@ -21,6 +21,9 @@ import {
     AuthorFindOptions,
     AuthorPlus,
 } from "@/types/models/Author";
+import {SeriesPlus} from "@/types/models/Series";
+import {StoryPlus} from "@/types/models/Story";
+import {VolumePlus} from "@/types/models/Volume";
 
 // Public Functions ----------------------------------------------------------
 
@@ -54,12 +57,21 @@ export const seriesDisconnect =
         return await AuthorActions.seriesDisconnect(libraryId, authorId, seriesId);
     }
 
+export const series =
+    async (libraryId: number, authorId: number): Promise<SeriesPlus[]> => {
+        return await AuthorActions.series(libraryId, authorId);
+    }
+
 export const storyConnect = async (libraryId: number, authorId: number, storyId: number): Promise<AuthorPlus> =>{
     return await AuthorActions.storyConnect(libraryId, authorId, storyId);
 }
 
 export const storyDisconnect = async (libraryId: number, authorId: number, storyId: number): Promise<AuthorPlus> => {
     return await AuthorActions.storyDisconnect(libraryId, authorId, storyId);
+}
+
+export const stories = async (libraryId: number, authorId: number): Promise<StoryPlus[]> => {
+    return await AuthorActions.stories(libraryId, authorId);
 }
 
 export const update = async (libraryId: number, volumeId: number, volume: Prisma.AuthorUpdateInput): Promise<AuthorPlus> => {
@@ -72,4 +84,8 @@ export const volumeConnect = async (libraryId: number, authorId: number, volumeI
 
 export const volumeDisconnect = async (libraryId: number, authorId: number, volumeId: number): Promise<AuthorPlus> => {
     return await AuthorActions.volumeDisconnect(libraryId, authorId, volumeId);
+}
+
+export const volumes = async (libraryId: number, authorId: number): Promise<VolumePlus[]> => {
+    return await AuthorActions.volumes(libraryId, authorId);
 }
