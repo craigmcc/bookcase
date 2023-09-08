@@ -39,7 +39,7 @@ export default function StoryBase(props: StoryBaseProps) {
             </div>
             <div className="container grid grid-cols-3 gap-4">
                 <div>
-                    <AuthorItems parent={props.story}/>
+                    <AuthorItems parent={props.story} showPrincipal={true}/>
                 </div>
                 <div>
                     <SeriesItems parent={props.story}/>

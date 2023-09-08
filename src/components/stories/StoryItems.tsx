@@ -36,7 +36,7 @@ import {
 import {AuthorPlus} from "@/types/models/Author";
 import {LibraryPlus} from "@/types/models/Library";
 import {SeriesPlus} from "@/types/models/Series";
-import {StoryAllOptions, StoryPlus} from "@/types/models/Story";
+import {StoryPlus} from "@/types/models/Story";
 import {VolumePlus} from "@/types/models/Volume";
 //import {HandleBoolean, HandleString} from "@/types/types";
 
@@ -45,12 +45,15 @@ import {VolumePlus} from "@/types/models/Volume";
 type StoryItemsProps = {
     // Parent model for which to retrieve Stories
     parent: AuthorPlus | LibraryPlus | SeriesPlus | VolumePlus;
+    // Show ordinal values? [false]
+    showOrdinal?: boolean;
     // TODO - will need navigation actions?
 }
 
 export default function StoryItems(props: StoryItemsProps) {
 
     const [active, setActive] = useState<boolean>(false);
+    const [ordinals, setOrdinals] = useState<number[]>([]);
     const [search, setSearch] = useState<string>("");
     const [stories, setStories] = useState<StoryPlus[]>([]);
 
@@ -63,36 +66,48 @@ export default function StoryItems(props: StoryItemsProps) {
 
             // @ts-ignore
             const _model = props.parent["_model"];
+            let results: StoryPlus[] = [];
             switch (_model) {
 
                 case "Author":
                     // @ts-ignore
-                    setStories(await AuthorActions.stories(props.parent.libraryId, props.parent.id));
+                    results = await AuthorActions.stories(props.parent.libraryId, props.parent.id);
                     break;
 
                 case "Library":
-                    setStories(await StoryActions.all(props.parent.id, {
+                    results = await StoryActions.all(props.parent.id, {
                         active: (active) ? true : undefined,
                         name: (search.length > 0) ? search : undefined,
-                    }));
+                    });
                     break;
 
                 case "Series":
                     // @ts-ignore
-                    setStories(await SeriesActions.stories(props.parent.libraryId, props.parent.id));
+                    results = await SeriesActions.stories(props.parent.libraryId, props.parent.id);
                     break;
 
                 case "Volume":
                     // @ts-ignore
-                    setStories(await VolumeActions.stories(props.parent.libraryId, props.parent.id));
+                    results = await VolumeActions.stories(props.parent.libraryId, props.parent.id);
                     break;
 
                 default:
                     alert(`StoryItems: Unsupported parent model ${_model}`);
-                    setStories([]);
+                    results =[];
                     break;
 
             }
+
+            // TODO: sort by ordinal/name first?
+            setStories(results);
+
+            // Save ordinals in case we were requested to display them
+            const ords: number[] = [];
+            for (const result of results) {
+                // @ts-ignore
+                ords.push(Number(result["_ordinal"]));
+            }
+            setOrdinals(ords);
 
         }
 
@@ -119,6 +134,9 @@ export default function StoryItems(props: StoryItemsProps) {
                             {stories.map((story, index) => (
                                 <TableRow key={index}>
                                     <TableCell className="p-1">
+                                        {props.showOrdinal ? (
+                                            <span>({ordinals[index]})&nbsp;</span>
+                                        ) : null }
                                         {story.name}
                                     </TableCell>
                                 </TableRow>

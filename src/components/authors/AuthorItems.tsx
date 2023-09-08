@@ -45,6 +45,8 @@ import {VolumePlus} from "@/types/models/Volume";
 type AuthorItemsProps = {
     // Parent model for which to retrieve Authors
     parent: LibraryPlus | SeriesPlus | StoryPlus | VolumePlus;
+    // Show principal values? [false]
+    showPrincipal?: boolean;
     // TODO - will need navigation actions?
 }
 
@@ -52,6 +54,7 @@ export default function AuthorItems(props: AuthorItemsProps) {
 
     const [active, setActive] = useState<boolean>(false);
     const [authors, setAuthors] = useState<AuthorPlus[]>([]);
+    const [principals, setPrincipals] = useState<boolean[]>([]);
     const [search, setSearch] = useState<string>("");
 
     // Select the Authors that match the specified filter criteria
@@ -63,28 +66,29 @@ export default function AuthorItems(props: AuthorItemsProps) {
 
             // @ts-ignore
             const _model = props.parent["_model"];
+            let results: AuthorPlus[] = [];
             switch (_model) {
 
                 case "Library":
-                    setAuthors(await AuthorActions.all(props.parent.id, {
+                    results = await AuthorActions.all(props.parent.id, {
                         active: (active) ? true : undefined,
                         name: (search.length > 0) ? search : undefined,
-                    }));
+                    });
                     break;
 
                 case "Series":
                     // @ts-ignore
-                    setAuthors(await SeriesActions.authors(props.parent.libraryId, props.parent.id));
+                    results = await SeriesActions.authors(props.parent.libraryId, props.parent.id);
                     break;
 
                 case "Story":
                     // @ts-ignore
-                    setAuthors(await StoryActions.authors(props.parent.libraryId, props.parent.id));
+                    results = await StoryActions.authors(props.parent.libraryId, props.parent.id);
                     break;
 
                 case "Volume":
                     // @ts-ignore
-                    setAuthors(await VolumeActions.authors(props.parent.libraryId, props.parent.id));
+                    results = await VolumeActions.authors(props.parent.libraryId, props.parent.id);
                     break;
 
                 default:
@@ -93,6 +97,21 @@ export default function AuthorItems(props: AuthorItemsProps) {
                     break;
 
             }
+
+            // TODO: sort by lastName/firstName first?
+            setAuthors(results);
+
+            // Save principals in case we were requested to display them
+            const prins: boolean[] = [];
+            for (const result of results) {
+                if (props.showPrincipal) {
+                    // @ts-ignore
+                    prins.push(Boolean(result["_principal"]));
+                } else {
+                    prins.push(false);
+                }
+            }
+            setPrincipals(prins);
 
         }
 
@@ -120,6 +139,9 @@ export default function AuthorItems(props: AuthorItemsProps) {
                                 <TableRow key={index}>
                                     <TableCell className="p-1">
                                         {author.lastName}, {author.firstName}
+                                        {(props.showPrincipal && principals[index]) ? (
+                                            <span className="text-blue-500"> *</span>
+                                        ) : null }
                                     </TableCell>
                                 </TableRow>
                             ))}

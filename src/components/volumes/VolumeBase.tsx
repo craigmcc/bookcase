@@ -38,7 +38,7 @@ export default function VolumeBase(props: VolumeBaseProps) {
             </div>
             <div className="container grid grid-cols-2 gap-4">
                 <div>
-                    <AuthorItems parent={props.volume}/>
+                    <AuthorItems parent={props.volume} showPrincipal={true}/>
                 </div>
                 <div>
                     <StoryItems parent={props.volume}/>

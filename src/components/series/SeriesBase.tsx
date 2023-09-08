@@ -38,10 +38,10 @@ export default function SeriesBase(props: SeriesBaseProps) {
             </div>
             <div className="container grid grid-cols-2 gap-4">
                 <div>
-                    <AuthorItems parent={props.series}/>
+                    <AuthorItems parent={props.series} showPrincipal={true}/>
                 </div>
                 <div>
-                    <StoryItems parent={props.series}/>
+                    <StoryItems parent={props.series} showOrdinal={true}/>
                 </div>
             </div>
         </>
