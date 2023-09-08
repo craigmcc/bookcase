@@ -1,9 +1,9 @@
 "use server"
 
-// app/base/[libraryId]/authors/[authorId]/page.tsx
+// app/base/[libraryId]/stories/[storyId]/page.tsx
 
 /**
- * Base route for performing operations on the specified Author
+ * Base route for performing operations on the specified Story
  * (after authorization checks).
  *
  * @packageDocumentation
@@ -17,15 +17,15 @@ import {authOptions} from "@/app/api/auth/[...nextauth]/route";
 // Internal Modules ----------------------------------------------------------
 
 import * as LibraryActions from "@/actions/LibraryActionsShim";
-import * as AuthorActions from "@/actions/AuthorActionsShim";
-import AuthorBase from "@/components/authors/AuthorBase";
+import * as StoryActions from "@/actions/StoryActionsShim";
+import StoryBase from "@/components/stories/StoryBase";
 import NotAuthorized from "@/components/shared/NotAuthorized";
 import NotSignedIn from "@/components/shared/NotSignedIn";
 import {authorizedRegular} from "@/util/Authorizations";
 
 // Public Objects ------------------------------------------------------------
 
-export default async function AuthorRoute({params}: {params: {libraryId: string, authorId: string}}) {
+export default async function StoryRoute({params}: {params: {libraryId: string, storyId: string}}) {
 
     // Validate access to this route
     const session = await getServerSession(authOptions);
@@ -36,16 +36,16 @@ export default async function AuthorRoute({params}: {params: {libraryId: string,
     if (!authorizedRegular(session.user, library)) {
         return <NotAuthorized/>
     }
-    const author = await AuthorActions.find(library.id, Number(params.authorId));
-    if (author.libraryId !== library.id) {
+    const story = await StoryActions.find(library.id, Number(params.storyId));
+    if (story.libraryId !== library.id) {
         return <NotAuthorized/>
     }
 
     // Render the requested content
     return (
-        <AuthorBase
-            author={author}
+        <StoryBase
             library={library}
+            story={story}
         />
     )
 

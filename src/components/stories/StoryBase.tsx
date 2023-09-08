@@ -1,9 +1,9 @@
 "use client"
 
-// components/authors/AuthorBase.tsx
+// components/stories/StoryBase.tsx
 
 /**
- * Base page for performing operations on the specified Author
+ * Base page for performing operations on the specified Story
  * (authorization checks assumed to have been completed).
  *
  * @packageDocumentation
@@ -13,39 +13,39 @@
 
 // Internal Modules ----------------------------------------------------------
 
+import AuthorItems from "@/components/authors/AuthorItems";
 import SeriesItems from "@/components/series/SeriesItems";
-import StoryItems from "@/components/stories/StoryItems";
 import VolumeItems from "@/components/volumes/VolumeItems";
-import {AuthorPlus} from "@/types/models/Author";
 import {LibraryPlus} from "@/types/models/Library";
+import {StoryPlus} from "@/types/models/Story";
 
 // Public Objects ------------------------------------------------------------
 
-type AuthorBaseProps = {
-    // Author to be managed
-    author: AuthorPlus;
-    // Library that owns this Author
+type StoryBaseProps = {
+    // Library that owns this Story
     library: LibraryPlus;
+    // Story to be managed
+    story: StoryPlus;
 }
 
-export default function AuthorBase(props: AuthorBaseProps) {
+export default function StoryBase(props: StoryBaseProps) {
 
     // Render the requested content
     return (
         <>
             <div className="container mx-auto py-6">
-                <span>Base page for Author <strong>{props.author.lastName}, {props.author.firstName}</strong>&nbsp;
+                <span>Base page for Story <strong>{props.story.name}</strong>&nbsp;
                     in Library <strong>{props.library.name}</strong></span>
             </div>
             <div className="container grid grid-cols-3 gap-4">
                 <div>
-                    <SeriesItems parent={props.author}/>
+                    <AuthorItems parent={props.story}/>
                 </div>
                 <div>
-                    <StoryItems parent={props.author}/>
+                    <SeriesItems parent={props.story}/>
                 </div>
                 <div>
-                    <VolumeItems parent={props.author}/>
+                    <VolumeItems parent={props.story}/>
                 </div>
             </div>
         </>

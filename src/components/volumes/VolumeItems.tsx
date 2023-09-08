@@ -77,7 +77,7 @@ export default function VolumeItems(props: VolumeItemsProps) {
 
                 case "Story":
                     // @ts-ignore
-                    setVolumes(await StoryActions.svolumes(props.parent.libraryId, props.parent.id));
+                    setVolumes(await StoryActions.volumes(props.parent.libraryId, props.parent.id));
                     break;
 
                 default:
