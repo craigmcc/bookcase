@@ -15,7 +15,9 @@ import {useEffect, useState} from "react";
 
 // Internal Modules ----------------------------------------------------------
 
+import * as AuthorActions from "@/actions/AuthorActionsShim";
 import * as SeriesActions from "@/actions/SeriesActionsShim";
+import * as StoryActions from "@/actions/StoryActionsShim";
 import {
     Card,
     CardContent,
@@ -30,16 +32,17 @@ import {
 //    TableHeader,
     TableRow,
 } from "@/components/ui/table";
+import {AuthorPlus} from "@/types/models/Author";
 import {LibraryPlus} from "@/types/models/Library";
+import {StoryPlus} from "@/types/models/Story";
 import {SeriesAllOptions, SeriesPlus} from "@/types/models/Series";
 //import {HandleBoolean, HandleString} from "@/types/types";
 
 // Public Objects ------------------------------------------------------------
 
 type SeriesItemsProps = {
-    // Library for which to retrieve Series
-    library: LibraryPlus;
-    // TODO - will need other parent types in the future
+    // Parent model for which to retrieve Series
+    parent: AuthorPlus | LibraryPlus | StoryPlus;
     // TODO - will need navigation actions?
 }
 
@@ -53,17 +56,42 @@ export default function SeriesItems(props: SeriesItemsProps) {
     useEffect(() => {
 
         async function fetchSeries() {
-            const options: SeriesAllOptions = {
-                active: (active) ? true : undefined,
-                name: (search.length > 0) ? search : undefined,
+
+            console.log("SeriesItems Parent", JSON.stringify(props.parent));
+
+            // @ts-ignore
+            const _model = props.parent["_model"];
+            switch (_model) {
+
+                case "Author":
+                    // @ts-ignore
+                    setSerieses(await AuthorActions.series(props.parent.libraryId, props.parent.id));
+                    break;
+
+                case "Library":
+                    setSerieses(await SeriesActions.all(props.parent.id, {
+                        active: (active) ? true : undefined,
+                        name: (search.length > 0) ? search : undefined,
+                    }));
+                    break;
+
+                case "Story":
+                    // @ts-ignore
+                    setSerieses(await StoryActions.series(props.parent.libraryId, props.parent.id));
+                    break;
+
+                default:
+                    alert(`SeriesItems: Unsupported parent model ${_model}`);
+                    setSerieses([]);
+                    break;
+
             }
-            const results = await SeriesActions.all(props.library.id, options);
-            setSerieses(results);
+
         }
 
         fetchSeries();
 
-    }, [active, search, props.library]);
+    }, [active, search, props.parent]);
 
     // No access validation needed, since this is not a page
 

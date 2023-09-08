@@ -51,13 +51,13 @@ export default async function BaseRoute({params}: {params: {libraryId: string}})
                     <AuthorItems parent={library}/>
                 </div>
                 <div>
-                    <SeriesItems library={library}/>
+                    <SeriesItems parent={library}/>
                 </div>
                 <div>
                     <StoryItems parent={library}/>
                 </div>
                 <div>
-                    <VolumeItems library={library}/>
+                    <VolumeItems parent={library}/>
                 </div>
             </div>
         </>

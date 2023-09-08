@@ -15,6 +15,8 @@ import {useEffect, useState} from "react";
 
 // Internal Modules ----------------------------------------------------------
 
+import * as AuthorActions from "@/actions/AuthorActionsShim";
+import * as SeriesActions from "@/actions/SeriesActionsShim";
 import * as StoryActions from "@/actions/StoryActionsShim";
 import * as VolumeActions from "@/actions/VolumeActionsShim";
 import {
@@ -63,7 +65,10 @@ export default function StoryItems(props: StoryItemsProps) {
             const _model = props.parent["_model"];
             switch (_model) {
 
-                // TODO: case "Author":
+                case "Author":
+                    // @ts-ignore
+                    setStories(await AuthorActions.stories(props.parent.libraryId, props.parent.id));
+                    break;
 
                 case "Library":
                     setStories(await StoryActions.all(props.parent.id, {
@@ -72,7 +77,10 @@ export default function StoryItems(props: StoryItemsProps) {
                     }));
                     break;
 
-                // TODO: case "Series":
+                case "Series":
+                    // @ts-ignore
+                    setSeries(await SeriesActions.stories(props.parent.libraryId, props.parent.id));
+                    break;
 
                 case "Volume":
                     // @ts-ignore

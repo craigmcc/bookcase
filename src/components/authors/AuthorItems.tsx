@@ -31,11 +31,11 @@ import {
 //    TableHeader,
     TableRow,
 } from "@/components/ui/table";
-import {AuthorAllOptions, AuthorPlus} from "@/types/models/Author";
+import {AuthorPlus} from "@/types/models/Author";
 import {LibraryPlus} from "@/types/models/Library";
-import {SeriesAllOptions, SeriesPlus} from "@/types/models/Series";
-import {StoryAllOptions, StoryPlus} from "@/types/models/Story";
-import {VolumeAllOptions, VolumePlus} from "@/types/models/Volume";
+import {SeriesPlus} from "@/types/models/Series";
+import {StoryPlus} from "@/types/models/Story";
+import {VolumePlus} from "@/types/models/Volume";
 //import {HandleBoolean, HandleString} from "@/types/types";
 
 // Public Objects ------------------------------------------------------------
@@ -70,9 +70,15 @@ export default function AuthorItems(props: AuthorItemsProps) {
                     }));
                     break;
 
-                // TODO: case "Series":
+                case "Series":
+                    // @ts-ignore
+                    setAuthors(await SeriesActions.authors(props.parent.libraryId, props.parent.id));
+                    break;
 
-                // TODO: case "Story":
+                case "Story":
+                    // @ts-ignore
+                    setAuthors(await StoryActions.authors(props.parent.libraryId, props.parent.id));
+                    break;
 
                 case "Volume":
                     // @ts-ignore
@@ -111,7 +117,7 @@ export default function AuthorItems(props: AuthorItemsProps) {
                             {authors.map((author, index) => (
                                 <TableRow key={index}>
                                     <TableCell className="p-1">
-                                        {author.firstName} {author.lastName}
+                                        {author.lastName}, {author.firstName}
                                     </TableCell>
                                 </TableRow>
                             ))}

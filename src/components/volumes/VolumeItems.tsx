@@ -30,16 +30,19 @@ import {
 //    TableHeader,
     TableRow,
 } from "@/components/ui/table";
+import {AuthorPlus} from "@/types/models/Author";
 import {LibraryPlus} from "@/types/models/Library";
-import {VolumeAllOptions, VolumePlus} from "@/types/models/Volume";
+import {StoryPlus} from "@/types/models/Story";
+import {VolumePlus} from "@/types/models/Volume";
+import * as AuthorActions from "@/actions/AuthorActionsShim";
+import * as StoryActions from "@/actions/StoryActionsShim";
 //import {HandleBoolean, HandleString} from "@/types/types";
 
 // Public Objects ------------------------------------------------------------
 
 type VolumeItemsProps = {
-    // Library for which to retrieve Volumes
-    library: LibraryPlus;
-    // TODO - will need other parent types in the future
+    // Parent model for which to retrieve Volumes
+    parent: AuthorPlus | LibraryPlus | StoryPlus;
     // TODO - will need navigation actions?
 }
 
@@ -53,17 +56,42 @@ export default function VolumeItems(props: VolumeItemsProps) {
     useEffect(() => {
 
         async function fetchVolumes() {
-            const options: VolumeAllOptions = {
-                active: (active) ? true : undefined,
-                name: (search.length > 0) ? search : undefined,
+
+            console.log("VolumeItems Parent", JSON.stringify(props.parent));
+
+            // @ts-ignore
+            const _model = props.parent["_model"];
+            switch (_model) {
+
+                case "Author":
+                    // @ts-ignore
+                    setVolumes(await AuthorActions.volumes(props.parent.libraryId, props.parent.id));
+                    break;
+
+                case "Library":
+                    setVolumes(await VolumeActions.all(props.parent.id, {
+                        active: (active) ? true : undefined,
+                        name: (search.length > 0) ? search : undefined,
+                    }));
+                    break;
+
+                case "Story":
+                    // @ts-ignore
+                    setVolumes(await StoryActions.svolumes(props.parent.libraryId, props.parent.id));
+                    break;
+
+                default:
+                    alert(`VolumeItems: Unsupported parent model ${_model}`);
+                    setVolumes([]);
+                    break;
+
             }
-            const results = await VolumeActions.all(props.library.id, options);
-            setVolumes(results);
+
         }
 
         fetchVolumes();
 
-    }, [active, search, props.library]);
+    }, [active, search, props.parent]);
 
     // No access validation needed, since this is not a page
 
