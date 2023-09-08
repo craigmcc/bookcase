@@ -79,7 +79,7 @@ export default function StoryItems(props: StoryItemsProps) {
 
                 case "Series":
                     // @ts-ignore
-                    setSeries(await SeriesActions.stories(props.parent.libraryId, props.parent.id));
+                    setStories(await SeriesActions.stories(props.parent.libraryId, props.parent.id));
                     break;
 
                 case "Volume":

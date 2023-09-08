@@ -16,6 +16,7 @@ import {useEffect, useState, useTransition} from "react";
 // Internal Modules ----------------------------------------------------------
 
 import * as AuthorActions from "@/actions/AuthorActionsShim";
+import * as SeriesActions from "@/actions/SeriesActionsShim";
 import * as StoryActions from "@/actions/StoryActionsShim";
 import * as VolumeActions from "@/actions/VolumeActionsShim";
 import {
