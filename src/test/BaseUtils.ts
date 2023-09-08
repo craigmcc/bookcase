@@ -117,22 +117,22 @@ export abstract class BaseUtils {
 
         // Load relationships if both related tables were requested
         if (options.withAuthors && options.withSeries) {
-            await loadAuthorsSeries(authors0[0], [series0[0]]);
-            await loadAuthorsSeries(authors0[1], [series0[0]]);
-            await loadAuthorsSeries(authors1[0], [series1[0]]);
-            await loadAuthorsSeries(authors1[1], [series1[0]]);
+            await loadAuthorsSeries(authors0[0], [series0[0]], true);
+            await loadAuthorsSeries(authors0[1], [series0[0]], false);
+            await loadAuthorsSeries(authors1[0], [series1[0]], true);
+            await loadAuthorsSeries(authors1[1], [series1[0]], false);
         }
         if (options.withAuthors && options.withStories) {
-            await loadAuthorsStories(authors0[0], [stories0[0], stories0[2]]);
-            await loadAuthorsStories(authors0[1], [stories0[1], stories0[2]]);
-            await loadAuthorsStories(authors1[0], [stories1[0], stories1[2]]);
-            await loadAuthorsStories(authors1[1], [stories1[1], stories1[2]]);
+            await loadAuthorsStories(authors0[0], [stories0[0], stories0[2]], true);
+            await loadAuthorsStories(authors0[1], [stories0[1], stories0[2]], false);
+            await loadAuthorsStories(authors1[0], [stories1[0], stories1[2]], true);
+            await loadAuthorsStories(authors1[1], [stories1[1], stories1[2]], false);
         }
         if (options.withAuthors && options.withVolumes) {
-            await loadAuthorsVolumes(authors0[0], [volumes0[0], volumes0[2]]);
-            await loadAuthorsVolumes(authors0[1], [volumes0[1], volumes0[2]]);
-            await loadAuthorsVolumes(authors1[0], [volumes1[0], volumes1[2]]);
-            await loadAuthorsVolumes(authors1[1], [volumes1[1], volumes1[2]]);
+            await loadAuthorsVolumes(authors0[0], [volumes0[0], volumes0[2]], true);
+            await loadAuthorsVolumes(authors0[1], [volumes0[1], volumes0[2]], false);
+            await loadAuthorsVolumes(authors1[0], [volumes1[0], volumes1[2]], true);
+            await loadAuthorsVolumes(authors1[1], [volumes1[1], volumes1[2]], false);
         }
         if (options.withSeries && options.withStories) {
             await loadSeriesStories(series0[0], stories0);
@@ -187,33 +187,36 @@ const loadAuthors = async (library: Library, authors: Prisma.AuthorUncheckedCrea
     }
 }
 
-const loadAuthorsSeries = async (author: Author, serieses: Series[]): Promise<void> => {
+const loadAuthorsSeries = async (author: Author, serieses: Series[], principal: boolean): Promise<void> => {
     for (const series of serieses) {
         await prisma.authorsSeries.create({
             data: {
                 authorId: author.id,
+                principal: principal,
                 seriesId: series.id,
             }
         });
     }
 }
 
-const loadAuthorsStories = async (author: Author, stories: Story[]): Promise<void> => {
+const loadAuthorsStories = async (author: Author, stories: Story[], principal: boolean): Promise<void> => {
     for (const story of stories) {
         await prisma.authorsStories.create({
             data: {
                 authorId: author.id,
+                principal: principal,
                 storyId: story.id,
             }
         });
     }
 }
 
-const loadAuthorsVolumes = async (author: Author, volumes: Volume[]): Promise<void> => {
+const loadAuthorsVolumes = async (author: Author, volumes: Volume[], principal: boolean): Promise<void> => {
     for (const volume of volumes) {
         await prisma.authorsVolumes.create({
             data: {
                 authorId: author.id,
+                principal: principal,
                 volumeId: volume.id,
             }
         });
