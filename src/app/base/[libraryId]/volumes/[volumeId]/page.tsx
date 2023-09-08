@@ -1,6 +1,6 @@
 "use server"
 
-// app/volumes/[libraryId]/[volumeId]/page.tsx
+// app/base/[libraryId]/volumes/[volumeId]/page.tsx
 
 /**
  * Base route for performing operations on the specified Volume
