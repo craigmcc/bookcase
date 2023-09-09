@@ -18,7 +18,7 @@ import * as AuthorActions from "./AuthorActions";
 import * as LibraryActions from "./LibraryActions";
 import * as StoryActions from "./StoryActions";
 import prisma from "@/prisma";
-import {AuthorPlus} from "@/types/models/Author";
+import {AuthorAllOptions, AuthorPlus} from "@/types/models/Author";
 import {
     SeriesAllOptions,
     SeriesFindOptions,
@@ -26,7 +26,7 @@ import {
     SeriesMatchOptions,
     SeriesPlus,
 } from "@/types/models/Series";
-import {StoryPlus} from "@/types/models/Story";
+import {StoryAllOptions, StoryPlus} from "@/types/models/Story";
 import {PaginationOptions} from "@/types/types";
 import {NotFound, NotUnique, ServerError} from "@/util/HttpErrors";
 import logger from "@/util/ServerLogger";
@@ -167,27 +167,40 @@ export const authorDisconnect =
  *
  * @param libraryId                     ID of the Library being queried
  * @param seriesId                      ID of the Series for the requested Authors
- * TODO: Probably need some filter criteria
+ * @param options                       Optional match query options
  *
  * @throws NotFound                     If the specified Library or Series is not found
  * @throws ServerError                  If a low level error is thrown
  */
 export const authors =
-    async (libraryId: number, seriesId: number): Promise<AuthorPlus[]> => {
+    async (libraryId: number, seriesId: number, options?: AuthorAllOptions): Promise<AuthorPlus[]> => {
         logger.info({
             context: "SeriesActions.authors",
             libraryId: libraryId,
             seriesId: seriesId,
+            options: options,
         });
         await find(libraryId, seriesId);
         try {
             const items = await prisma.authorsSeries.findMany({
-                include: {
-                    author: true,
+/* TODO: Typescript does not like AuthorActions.orderBy(options)
+                orderBy: {
+                    author: {
+                        lastName: "asc",
+                        firstName: "asc",
+                    },
                 },
+*/
+                select: {
+                    author: true,
+                    principal: true,
+                },
+                skip: AuthorActions.skip(options),
+                take: AuthorActions.take(options),
                 where: {
                     seriesId: seriesId,
-                }
+                    author: AuthorActions.where(libraryId, options),
+                },
             });
             const authors: AuthorPlus[] = [];
             for (const item of items) {
@@ -469,27 +482,35 @@ export const storyDisconnect =
  *
  * @param libraryId                     ID of the Library being queried
  * @param seriesId                      ID of the Series for the requested Stories
- * TODO: Probably need some filter criteria
+ * @param options                       Optional match query parameters
  *
- * @throws NotFound                     If the specified Library or Volume is not found
+ * @throws NotFound                     If the specified Library or Series is not found
  * @throws ServerError                  If a low level error is thrown
  */
 export const stories =
-    async (libraryId: number, seriesId: number): Promise<StoryPlus[]> => {
+    async (libraryId: number, seriesId: number, options?: StoryAllOptions): Promise<StoryPlus[]> => {
         logger.info({
             context: "SeriesActions.stories",
             libraryId: libraryId,
             seriesId: seriesId,
+            options: options,
         });
         await find(libraryId, seriesId);
         try {
             const items = await prisma.seriesStories.findMany({
-                include: {
+                orderBy: {
+                    story: StoryActions.orderBy(options),
+                },
+                select: {
+                    ordinal: true,
                     story: true,
                 },
+                skip: StoryActions.skip(options),
+                take: StoryActions.take(options),
                 where: {
                     seriesId: seriesId,
-                }
+                    story: StoryActions.where(libraryId, options),
+                },
             });
             const stories: StoryPlus[] = [];
             for (const item of items) {
@@ -592,10 +613,10 @@ export const include = (options?: SeriesIncludeOptions): Prisma.SeriesInclude | 
  * Calculate and return the "orderBy" options from the specified query
  * options, if any were specified.
  */
-export const orderBy = (options?: any): Prisma.SeriesOrderByWithRelationInput[] => {
-    return [
-        { name: "asc" },
-    ];
+export const orderBy = (options?: any): Prisma.SeriesOrderByWithRelationInput => {
+    return {
+        name: "asc"
+    }
 }
 
 /**

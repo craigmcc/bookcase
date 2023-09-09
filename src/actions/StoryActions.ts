@@ -19,8 +19,8 @@ import * as LibraryActions from "./LibraryActions";
 import * as SeriesActions from "./SeriesActions";
 import * as VolumeActions from "./VolumeActions";
 import prisma from "@/prisma";
-import {AuthorPlus} from "@/types/models/Author";
-import {SeriesPlus} from "@/types/models/Series";
+import {AuthorAllOptions, AuthorPlus} from "@/types/models/Author";
+import {SeriesAllOptions, SeriesPlus} from "@/types/models/Series";
 import {
     StoryAllOptions,
     StoryFindOptions,
@@ -28,7 +28,7 @@ import {
     StoryMatchOptions,
     StoryPlus,
 } from "@/types/models/Story";
-import {VolumePlus} from "@/types/models/Volume";
+import {VolumeAllOptions, VolumePlus} from "@/types/models/Volume";
 import {PaginationOptions} from "@/types/types";
 import {NotFound, NotUnique, ServerError} from "@/util/HttpErrors";
 import logger from "@/util/ServerLogger";
@@ -171,27 +171,40 @@ export const authorDisconnect =
  *
  * @param libraryId                     ID of the Library being queried
  * @param storyId                       ID of the Story for the requested Authors
- * TODO: Probably need some filter criteria
+ * @params options                      Optional match query parameters
  *
  * @throws NotFound                     If the specified Library or Story is not found
  * @throws ServerError                  If a low level error is thrown
  */
 export const authors =
-    async (libraryId: number, storyId: number): Promise<AuthorPlus[]> => {
+    async (libraryId: number, storyId: number, options?: AuthorAllOptions): Promise<AuthorPlus[]> => {
         logger.info({
             context: "StoryActions.authors",
             libraryId: libraryId,
             storyId: storyId,
+            options: options,
         });
         await find(libraryId, storyId);
         try {
             const items = await prisma.authorsStories.findMany({
-                include: {
+                /* TODO: Typescript does not like AuthorActions.orderBy(options)
+                                orderBy: {
+                                    author: {
+                                        lastName: "asc",
+                                        firstName: "asc",
+                                    },
+                                },
+                */
+                select: {
                     author: true,
+                    principal: true,
                 },
+                skip: AuthorActions.skip(options),
+                take: AuthorActions.take(options),
                 where: {
                     storyId: storyId,
-                }
+                    author: AuthorActions.where(libraryId, options),
+                },
             });
             const authors: AuthorPlus[] = [];
             for (const item of items) {
@@ -471,27 +484,34 @@ export const seriesDisconnect =
  *
  * @param libraryId                     ID of the Library being queried
  * @param storyId                       ID of the Story for the requested Authors
- * TODO: Probably need some filter criteria
+ * @param options                       Optional match query options
  *
  * @throws NotFound                     If the specified Library or Story is not found
  * @throws ServerError                  If a low level error is thrown
  */
 export const series =
-    async (libraryId: number, storyId: number): Promise<SeriesPlus[]> => {
+    async (libraryId: number, storyId: number, options?: SeriesAllOptions): Promise<SeriesPlus[]> => {
         logger.info({
             context: "StoryActions.series",
             libraryId: libraryId,
             storyId: storyId,
+            options: options,
         });
         await find(libraryId, storyId);
         try {
             const items = await prisma.seriesStories.findMany({
-                include: {
+                orderBy: {
+                    series: SeriesActions.orderBy(options),
+                },
+                select: {
                     series: true,
                 },
+                skip: SeriesActions.skip(options),
+                take: SeriesActions.take(options),
                 where: {
                     storyId: storyId,
-                }
+                    series: SeriesActions.where(libraryId, options),
+                },
             });
             const series: SeriesPlus[] = [];
             for (const item of items) {
@@ -647,28 +667,35 @@ export const volumeDisconnect =
  * Return the Volumes that are connected with this Story.
  *
  * @param libraryId                     ID of the Library being queried
- * @param storyId                       ID of the Story for the requested Authors
- * TODO: Probably need some filter criteria
+ * @param storyId                       ID of the Story for the requested Volumes
+ * @param options                       Optional match query options
  *
  * @throws NotFound                     If the specified Library or Story is not found
  * @throws ServerError                  If a low level error is thrown
  */
 export const volumes =
-    async (libraryId: number, storyId: number): Promise<VolumePlus[]> => {
+    async (libraryId: number, storyId: number, options?: VolumeAllOptions): Promise<VolumePlus[]> => {
         logger.info({
             context: "StoryActions.volumes",
             libraryId: libraryId,
             storyId: storyId,
+            options: options,
         });
         await find(libraryId, storyId);
         try {
             const items = await prisma.volumesStories.findMany({
-                include: {
+                orderBy: {
+                    volume: VolumeActions.orderBy(options),
+                },
+                select: {
                     volume: true,
                 },
+                skip: VolumeActions.skip(options),
+                take: VolumeActions.take(options),
                 where: {
                     storyId: storyId,
-                }
+                    volume: VolumeActions.where(libraryId, options),
+                },
             });
             const volumes: VolumePlus[] = [];
             for (const item of items) {

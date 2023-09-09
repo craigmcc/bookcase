@@ -117,7 +117,7 @@ export default function AuthorItems(props: AuthorItemsProps) {
 
         fetchAuthors();
 
-    }, [active, search, props.parent]);
+    }, [active, search, props.parent, props.showPrincipal]);
 
     // No access validation needed, since this is not a page
 

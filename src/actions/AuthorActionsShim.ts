@@ -21,9 +21,9 @@ import {
     AuthorFindOptions,
     AuthorPlus,
 } from "@/types/models/Author";
-import {SeriesPlus} from "@/types/models/Series";
-import {StoryPlus} from "@/types/models/Story";
-import {VolumePlus} from "@/types/models/Volume";
+import {SeriesAllOptions, SeriesPlus} from "@/types/models/Series";
+import {StoryAllOptions, StoryPlus} from "@/types/models/Story";
+import {VolumeAllOptions, VolumePlus} from "@/types/models/Volume";
 
 // Public Functions ----------------------------------------------------------
 
@@ -58,8 +58,8 @@ export const seriesDisconnect =
     }
 
 export const series =
-    async (libraryId: number, authorId: number): Promise<SeriesPlus[]> => {
-        return await AuthorActions.series(libraryId, authorId);
+    async (libraryId: number, authorId: number, options?: SeriesAllOptions): Promise<SeriesPlus[]> => {
+        return await AuthorActions.series(libraryId, authorId, options);
     }
 
 export const storyConnect = async (libraryId: number, authorId: number, storyId: number): Promise<AuthorPlus> =>{
@@ -70,8 +70,8 @@ export const storyDisconnect = async (libraryId: number, authorId: number, story
     return await AuthorActions.storyDisconnect(libraryId, authorId, storyId);
 }
 
-export const stories = async (libraryId: number, authorId: number): Promise<StoryPlus[]> => {
-    return await AuthorActions.stories(libraryId, authorId);
+export const stories = async (libraryId: number, authorId: number, options?: StoryAllOptions): Promise<StoryPlus[]> => {
+    return await AuthorActions.stories(libraryId, authorId, options);
 }
 
 export const update = async (libraryId: number, volumeId: number, volume: Prisma.AuthorUpdateInput): Promise<AuthorPlus> => {
@@ -86,6 +86,6 @@ export const volumeDisconnect = async (libraryId: number, authorId: number, volu
     return await AuthorActions.volumeDisconnect(libraryId, authorId, volumeId);
 }
 
-export const volumes = async (libraryId: number, authorId: number): Promise<VolumePlus[]> => {
-    return await AuthorActions.volumes(libraryId, authorId);
+export const volumes = async (libraryId: number, authorId: number, options?: VolumeAllOptions): Promise<VolumePlus[]> => {
+    return await AuthorActions.volumes(libraryId, authorId, options);
 }

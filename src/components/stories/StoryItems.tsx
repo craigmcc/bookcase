@@ -113,7 +113,7 @@ export default function StoryItems(props: StoryItemsProps) {
 
         fetchStories();
 
-    }, [active, search, props.parent]);
+    }, [active, search, props.parent, props.showOrdinal]);
 
     // No access validation needed, since this is not a page
 

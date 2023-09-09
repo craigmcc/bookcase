@@ -18,12 +18,8 @@ import * as AuthorActions from "./AuthorActions";
 import * as LibraryActions from "./LibraryActions";
 import * as StoryActions from "./StoryActions";
 import prisma from "../prisma";
-import {
-    AuthorPlus,
-} from "@/types/models/Author";
-import {
-    StoryPlus,
-} from "@/types/models/Story";
+import {AuthorAllOptions, AuthorPlus} from "@/types/models/Author";
+import {StoryAllOptions, StoryPlus} from "@/types/models/Story";
 import {
     VolumeAllOptions,
     VolumeFindOptions,
@@ -174,13 +170,13 @@ export const authorDisconnect =
  *
  * @param libraryId                     ID of the Library being queried
  * @param volumeId                      ID of the Volume for the requested Authors
- * TODO: Probably need some filter criteria
+ * @param options                       Optional match query options
  *
  * @throws NotFound                     If the specified Library or Volume is not found
  * @throws ServerError                  If a low level error is thrown
  */
 export const authors =
-    async (libraryId: number, volumeId: number): Promise<AuthorPlus[]> => {
+    async (libraryId: number, volumeId: number, options?: AuthorAllOptions): Promise<AuthorPlus[]> => {
         logger.info({
             context: "VolumeActions.authors",
             libraryId: libraryId,
@@ -189,12 +185,24 @@ export const authors =
         await find(libraryId, volumeId);
         try {
             const items = await prisma.authorsVolumes.findMany({
-                include: {
+                /* TODO: Typescript does not like AuthorActions.orderBy(options)
+                                orderBy: {
+                                    author: {
+                                        lastName: "asc",
+                                        firstName: "asc",
+                                    },
+                                },
+                */
+                select: {
                     author: true,
+                    principal: true,
                 },
+                skip: AuthorActions.skip(options),
+                take: AuthorActions.take(options),
                 where: {
                     volumeId: volumeId,
-                }
+                    author: AuthorActions.where(libraryId, options),
+                },
             });
             const authors: AuthorPlus[] = [];
             for (const item of items) {
@@ -448,27 +456,34 @@ export const update = async (libraryId: number, volumeId: number, volume: Prisma
  *
  * @param libraryId                     ID of the Library being queried
  * @param volumeId                      ID of the Volume for the requested Stories
- * TODO: Probably need some filter criteria
+ * @param options                       Optional match query options
  *
  * @throws NotFound                     If the specified Library or Volume is not found
  * @throws ServerError                  If a low level error is thrown
  */
 export const stories =
-    async (libraryId: number, volumeId: number): Promise<StoryPlus[]> => {
+    async (libraryId: number, volumeId: number, options?: StoryAllOptions): Promise<StoryPlus[]> => {
         logger.info({
             context: "VolumeActions.stories",
             libraryId: libraryId,
             volumeId: volumeId,
+            options: options,
         });
         await find(libraryId, volumeId);
         try {
             const items = await prisma.volumesStories.findMany({
-                include: {
+                orderBy: {
+                    story: StoryActions.orderBy(options),
+                },
+                select: {
                     story: true,
                 },
+                skip: StoryActions.skip(options),
+                take: StoryActions.take(options),
                 where: {
                     volumeId: volumeId,
-                }
+                    story: StoryActions.where(libraryId, options),
+                },
             });
             const stories: StoryPlus[] = [];
             for (const item of items) {
