@@ -16,6 +16,9 @@ import {useEffect, useState} from "react";
 // Internal Modules ----------------------------------------------------------
 
 import * as VolumeActions from "@/actions/VolumeActionsShim";
+import {CheckBox} from "@/components/shared/CheckBox";
+import {Pagination} from "@/components/shared/Pagination";
+import {SearchBar} from "@/components/shared/SearchBar";
 import {
     Card,
     CardContent,
@@ -49,6 +52,8 @@ type VolumeItemsProps = {
 export default function VolumeItems(props: VolumeItemsProps) {
 
     const [active, setActive] = useState<boolean>(false);
+    const [currentPage, setCurrentPage] = useState<number>(1);
+    const pageSize = 2;
     const [search, setSearch] = useState<string>("");
     const [volumes, setVolumes] = useState<VolumePlus[]>([]);
 
@@ -57,7 +62,7 @@ export default function VolumeItems(props: VolumeItemsProps) {
 
         async function fetchVolumes() {
 
-            console.log("VolumeItems Parent", JSON.stringify(props.parent));
+            //console.log("VolumeItems Parent", JSON.stringify(props.parent));
 
             // @ts-ignore
             const _model = props.parent["_model"];
@@ -65,19 +70,31 @@ export default function VolumeItems(props: VolumeItemsProps) {
 
                 case "Author":
                     // @ts-ignore
-                    setVolumes(await AuthorActions.volumes(props.parent.libraryId, props.parent.id));
+                    setVolumes(await AuthorActions.volumes(props.parent.libraryId, props.parent.id, {
+                        active: (active) ? true : undefined,
+                        limit: pageSize,
+                        offset: (pageSize * (currentPage - 1)),
+                        name: (search.length > 0) ? search : undefined,
+                    }));
                     break;
 
                 case "Library":
                     setVolumes(await VolumeActions.all(props.parent.id, {
                         active: (active) ? true : undefined,
+                        limit: pageSize,
+                        offset: (pageSize * (currentPage - 1)),
                         name: (search.length > 0) ? search : undefined,
                     }));
                     break;
 
                 case "Story":
                     // @ts-ignore
-                    setVolumes(await StoryActions.volumes(props.parent.libraryId, props.parent.id));
+                    setVolumes(await StoryActions.volumes(props.parent.libraryId, props.parent.id), {
+                        active: (active) ? true : undefined,
+                        limit: pageSize,
+                        offset: (pageSize * (currentPage - 1)),
+                        name: (search.length > 0) ? search : undefined,
+                    });
                     break;
 
                 default:
@@ -91,7 +108,7 @@ export default function VolumeItems(props: VolumeItemsProps) {
 
         fetchVolumes();
 
-    }, [active, search, props.parent]);
+    }, [active, currentPage, search, props.parent]);
 
     // No access validation needed, since this is not a page
 
@@ -100,6 +117,34 @@ export default function VolumeItems(props: VolumeItemsProps) {
             <CardHeader>
                 <CardTitle>Volumes</CardTitle>
                 <CardContent className="p-1">
+                    <div className="w-auto py-1">
+                        <SearchBar
+                            handleChange={(newSearch) => setSearch(newSearch)}
+                            placeholder="Volume name"
+                            value={search}
+                        />
+                    </div>
+
+                    <div className="flex gap-2 py-1">
+                        <CheckBox
+                            handleValue={(newValue) => setActive(newValue)}
+                            label="Active Only?"
+                            value={active}
+                        />
+                        <Pagination
+                            currentPage={currentPage}
+                            handleNext={() => setCurrentPage(currentPage + 1)}
+                            handlePrevious={() => setCurrentPage(currentPage - 1)}
+                            lastPage={(volumes.length === 0) ||
+                                (volumes.length < pageSize)}
+                            size="xs"
+                        />
+                    </div>
+
+                    <div className="w-full">
+                        <hr/>
+                    </div>
+
                     <Table className="container mx-auto">
 {/*
                         <TableHeader>
@@ -108,6 +153,7 @@ export default function VolumeItems(props: VolumeItemsProps) {
                             </TableRow>
                         </TableHeader>
 */}
+
                         <TableBody>
                             {volumes.map((volume, index) => (
                                 <TableRow key={index}>

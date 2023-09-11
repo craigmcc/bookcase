@@ -25,12 +25,15 @@ interface PaginationProps {
     handlePrevious?: HandleAction;
     // Is this the last page? [false]
     lastPage: boolean;
+    // Button size (xs/sm/lg/icon) [sm]
+    size?: ButtonProps["size"];
     // Button variant style [info]
     variant?: ButtonProps["variant"];
 }
 
 export function Pagination(props: PaginationProps) {
 
+    const size = props.size ? props.size : "sm";
     const variant = props.variant ? props.variant : "info";
 
     return (
@@ -39,6 +42,7 @@ export function Pagination(props: PaginationProps) {
                 className="mr-1"
                 disabled={props.currentPage === 1}
                 onClick={props.handlePrevious ? props.handlePrevious : undefined}
+                size={size}
                 variant={variant}
             >
                 <Icons.Previous/>
@@ -46,6 +50,7 @@ export function Pagination(props: PaginationProps) {
             <Button
                 className="mr-1"
                 disabled
+                size={size}
                 variant={variant}
             >
                 {props.currentPage}
@@ -53,6 +58,7 @@ export function Pagination(props: PaginationProps) {
             <Button
                 disabled={props.lastPage}
                 onClick={props.handleNext ? props.handleNext : undefined}
+                size={size}
                 variant={variant}
             >
                 <Icons.Next/>
