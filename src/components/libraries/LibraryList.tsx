@@ -102,8 +102,8 @@ export default function LibraryList(props: LibraryListProps) {
                 </div>
             </div>
 
-            <div className="grid grid-cols-2 py-4">
-                <div className="text-left">
+            <div className="flex flex-row py-4">
+                <div className="flex flex-1 text-left">
                     <SearchBar
                         autoFocus={true}
                         handleChange={handleSearch}
@@ -112,7 +112,7 @@ export default function LibraryList(props: LibraryListProps) {
                         value={search}
                     />
                 </div>
-                <div className="flex gap-4 justify-end">
+                <div className="flex flex-none gap-4 justify-end">
                     <CheckBox
                         handleValue={handleActive}
                         label="Active Libraries Only?"

@@ -125,7 +125,7 @@ export default function VolumeItems(props: VolumeItemsProps) {
                         />
                     </div>
 
-                    <div className="flex gap-2 py-1">
+                    <div className="flex flex-1 gap-2 py-1">
                         <CheckBox
                             handleValue={(newValue) => setActive(newValue)}
                             label="Active Only?"

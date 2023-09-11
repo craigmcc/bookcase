@@ -73,7 +73,7 @@ export function SearchBar(props: SearchBarProps) {
         <div className={props.className ? props.className : undefined}>
             {(props.label) ? (
                 <label htmlFor={name}>
-                    <span className="mr-1 text-sm">{props.label}</span>
+                    <span className="mr-2 text-sm">{props.label}</span>
                 </label>
             ) : null }
             <input
