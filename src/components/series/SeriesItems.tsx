@@ -18,6 +18,9 @@ import {useEffect, useState} from "react";
 import * as AuthorActions from "@/actions/AuthorActionsShim";
 import * as SeriesActions from "@/actions/SeriesActionsShim";
 import * as StoryActions from "@/actions/StoryActionsShim";
+import {CheckBox} from "@/components/shared/CheckBox";
+import {Pagination} from "@/components/shared/Pagination";
+import {SearchBar} from "@/components/shared/SearchBar";
 import {
     Card,
     CardContent,
@@ -35,7 +38,7 @@ import {
 import {AuthorPlus} from "@/types/models/Author";
 import {LibraryPlus} from "@/types/models/Library";
 import {StoryPlus} from "@/types/models/Story";
-import {SeriesAllOptions, SeriesPlus} from "@/types/models/Series";
+import {SeriesPlus} from "@/types/models/Series";
 //import {HandleBoolean, HandleString} from "@/types/types";
 
 // Public Objects ------------------------------------------------------------
@@ -49,6 +52,8 @@ type SeriesItemsProps = {
 export default function SeriesItems(props: SeriesItemsProps) {
 
     const [active, setActive] = useState<boolean>(false);
+    const [currentPage, setCurrentPage] = useState<number>(1);
+    const pageSize = 2;
     const [search, setSearch] = useState<string>("");
     const [serieses, setSerieses] = useState<SeriesPlus[]>([]);
 
@@ -65,19 +70,31 @@ export default function SeriesItems(props: SeriesItemsProps) {
 
                 case "Author":
                     // @ts-ignore
-                    setSerieses(await AuthorActions.series(props.parent.libraryId, props.parent.id));
+                    setSerieses(await AuthorActions.series(props.parent.libraryId, props.parent.id, {
+                        active: (active) ? true : undefined,
+                        limit: pageSize,
+                        name: (search.length > 0) ? search : undefined,
+                        offset: (pageSize * (currentPage - 1)),
+                    }));
                     break;
 
                 case "Library":
                     setSerieses(await SeriesActions.all(props.parent.id, {
                         active: (active) ? true : undefined,
+                        limit: pageSize,
                         name: (search.length > 0) ? search : undefined,
+                        offset: (pageSize * (currentPage - 1)),
                     }));
                     break;
 
                 case "Story":
                     // @ts-ignore
-                    setSerieses(await StoryActions.series(props.parent.libraryId, props.parent.id));
+                    setSerieses(await StoryActions.series(props.parent.libraryId, props.parent.id), {
+                        active: (active) ? true : undefined,
+                        limit: pageSize,
+                        name: (search.length > 0) ? search : undefined,
+                        offset: (pageSize * (currentPage - 1)),
+                    });
                     break;
 
                 default:
@@ -91,7 +108,7 @@ export default function SeriesItems(props: SeriesItemsProps) {
 
         fetchSeries();
 
-    }, [active, search, props.parent]);
+    }, [active, currentPage, search, props.parent]);
 
     // No access validation needed, since this is not a page
 
@@ -100,6 +117,33 @@ export default function SeriesItems(props: SeriesItemsProps) {
             <CardHeader>
                 <CardTitle>Series</CardTitle>
                 <CardContent className="p-1">
+
+                    <div className="w-auto py-1">
+                        <SearchBar
+                            handleChange={(newSearch) => setSearch(newSearch)}
+                            placeholder="Series name"
+                            value={search}
+                        />
+                    </div>
+                    <div className="flex flex-1 gap-2 py-1">
+                        <CheckBox
+                            handleValue={(newValue) => setActive(newValue)}
+                            label="Active Only?"
+                            value={active}
+                        />
+                        <Pagination
+                            currentPage={currentPage}
+                            handleNext={() => setCurrentPage(currentPage + 1)}
+                            handlePrevious={() => setCurrentPage(currentPage - 1)}
+                            lastPage={(serieses.length === 0) ||
+                                (serieses.length < pageSize)}
+                            size="xs"
+                        />
+                    </div>
+                    <div className="w-full">
+                        <hr/>
+                    </div>
+
                     <Table className="container mx-auto">
 {/*
                         <TableHeader>
@@ -118,6 +162,7 @@ export default function SeriesItems(props: SeriesItemsProps) {
                             ))}
                         </TableBody>
                     </Table>
+
                 </CardContent>
             </CardHeader>
         </Card>

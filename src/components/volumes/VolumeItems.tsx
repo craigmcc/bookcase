@@ -15,6 +15,8 @@ import {useEffect, useState} from "react";
 
 // Internal Modules ----------------------------------------------------------
 
+import * as AuthorActions from "@/actions/AuthorActionsShim";
+import * as StoryActions from "@/actions/StoryActionsShim";
 import * as VolumeActions from "@/actions/VolumeActionsShim";
 import {CheckBox} from "@/components/shared/CheckBox";
 import {Pagination} from "@/components/shared/Pagination";
@@ -37,8 +39,6 @@ import {AuthorPlus} from "@/types/models/Author";
 import {LibraryPlus} from "@/types/models/Library";
 import {StoryPlus} from "@/types/models/Story";
 import {VolumePlus} from "@/types/models/Volume";
-import * as AuthorActions from "@/actions/AuthorActionsShim";
-import * as StoryActions from "@/actions/StoryActionsShim";
 //import {HandleBoolean, HandleString} from "@/types/types";
 
 // Public Objects ------------------------------------------------------------
@@ -82,8 +82,8 @@ export default function VolumeItems(props: VolumeItemsProps) {
                     setVolumes(await VolumeActions.all(props.parent.id, {
                         active: (active) ? true : undefined,
                         limit: pageSize,
-                        offset: (pageSize * (currentPage - 1)),
                         name: (search.length > 0) ? search : undefined,
+                        offset: (pageSize * (currentPage - 1)),
                     }));
                     break;
 
@@ -117,6 +117,7 @@ export default function VolumeItems(props: VolumeItemsProps) {
             <CardHeader>
                 <CardTitle>Volumes</CardTitle>
                 <CardContent className="p-1">
+
                     <div className="w-auto py-1">
                         <SearchBar
                             handleChange={(newSearch) => setSearch(newSearch)}
@@ -124,7 +125,6 @@ export default function VolumeItems(props: VolumeItemsProps) {
                             value={search}
                         />
                     </div>
-
                     <div className="flex flex-1 gap-2 py-1">
                         <CheckBox
                             handleValue={(newValue) => setActive(newValue)}
@@ -140,7 +140,6 @@ export default function VolumeItems(props: VolumeItemsProps) {
                             size="xs"
                         />
                     </div>
-
                     <div className="w-full">
                         <hr/>
                     </div>
