@@ -16,15 +16,11 @@ import {authOptions} from "@/app/api/auth/[...nextauth]/route";
 
 // Internal Modules ----------------------------------------------------------
 
-import AuthorItems from "@/components/authors/AuthorItems";
-import {Icons} from "@/components/layout/Icons";
-import SeriesItems from "@/components/series/SeriesItems";
-import NotSignedIn from "@/components/shared/NotSignedIn";
-import StoryItems from "@/components/stories/StoryItems";
-import VolumeItems from "@/components/volumes/VolumeItems"
 import * as LibraryActions from "@/actions/LibraryActionsShim";
-import {authorizedRegular} from "@/util/Authorizations";
+import LibraryBase from "@/components/libraries/LibraryBase";
 import NotAuthorized from "@/components/shared/NotAuthorized";
+import NotSignedIn from "@/components/shared/NotSignedIn";
+import {authorizedRegular} from "@/util/Authorizations";
 
 
 // Public Objects ------------------------------------------------------------
@@ -43,26 +39,7 @@ export default async function BaseRoute({params}: {params: {libraryId: string}})
 
     // Render the requested content
     return (
-        <>
-            <div className="container flex space-x-2 py-4">
-                <Icons.Library/>
-                <span>Base page for Library <strong>{library.name}</strong></span>
-            </div>
-            <div className="container grid grid-cols-4 gap-4">
-                <div>
-                    <AuthorItems parent={library}/>
-                </div>
-                <div>
-                    <SeriesItems parent={library}/>
-                </div>
-                <div>
-                    <StoryItems parent={library}/>
-                </div>
-                <div>
-                    <VolumeItems parent={library}/>
-                </div>
-            </div>
-        </>
+        <LibraryBase library={library}/>
     )
 
 }

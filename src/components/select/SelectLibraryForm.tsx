@@ -10,14 +10,16 @@
 
 // External Modules ----------------------------------------------------------
 
-import Link from "next/link";
-import {ChangeEvent, useContext, useState} from "react";
+import {redirect} from "next/navigation";
+import {ChangeEvent, useState} from "react";
 
 // Internal Modules ----------------------------------------------------------
 
 import {Button} from "@/components/my/Button";
 import {LibraryPlus} from "@/types/models/Library";
 import {SelectOption} from "@/types/types";
+import * as BreadcrumbUtils from "@/util/BreadcrumbUtils";
+import Link from "next/link";
 
 // Public Objects ------------------------------------------------------------
 
@@ -30,8 +32,8 @@ type SelectLibraryFormProps = {
 
 export default function SelectLibraryForm(props: SelectLibraryFormProps) {
 
-    const [libraryId, setLibraryId]
-        = useState<number>(-1);
+    const [library, setLibrary] = useState<LibraryPlus | null>(null);
+    const [libraryId, setLibraryId] = useState<number>(-1);
 
     const options: SelectOption[] = [];
     options.push({
@@ -47,13 +49,31 @@ export default function SelectLibraryForm(props: SelectLibraryFormProps) {
 
     function onChange(event: ChangeEvent<HTMLSelectElement>) {
         const newLibraryId = Number(event.target.value);
-//        console.log("Selecting: ", libraryId);
-        setLibraryId(newLibraryId);
-        for (const library of props.libraries) {
-            if (library.id === newLibraryId) {
-//                console.log("Storing: ", library);
+        for (const thisLibrary of props.libraries) {
+            if (thisLibrary.id === newLibraryId) {
+                setLibraryId(thisLibrary.id);
+                setLibrary(thisLibrary);
             }
         }
+    }
+
+    /**
+     * Add a breadcrumb for this selection, and return the
+     * associated href.
+     */
+    function onSelect(): string {
+        //console.log("onSelect " + libraryId + " " + JSON.stringify(library));
+        if (!library) {
+            return "/";
+        }
+        const href = `/base/${library.id}`;
+        BreadcrumbUtils.clear();
+        BreadcrumbUtils.add({
+            href: href,
+            label: library.name,
+        });
+        //console.log("onSelect " + href);
+        return href;
     }
 
     return (
@@ -69,7 +89,7 @@ export default function SelectLibraryForm(props: SelectLibraryFormProps) {
                     </option>
                 ))}
             </select>
-            <Link href={`/base/${libraryId}`}>
+            <Link href={onSelect()}>
                 <Button
                     disabled={libraryId < 0}
                     fullWidth

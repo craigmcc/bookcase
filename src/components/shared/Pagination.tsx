@@ -17,6 +17,8 @@ import {HandleAction} from "@/types/types";
 // Public Objects ------------------------------------------------------------
 
 interface PaginationProps {
+    // CSS to add to the surrounding element [none]
+    className?: string;
     // One-relative current page number
     currentPage: number;
     // Handle "next" click [no handler]
@@ -37,9 +39,9 @@ export function Pagination(props: PaginationProps) {
     const variant = props.variant ? props.variant : "info";
 
     return (
-        <div className="flex align-middle">
+        <div className={props.className ? props.className : "flex align-middle"}>
             <Button
-                className="mr-1"
+                className="flex mr-1"
                 disabled={props.currentPage === 1}
                 onClick={props.handlePrevious ? props.handlePrevious : undefined}
                 size={size}
@@ -48,7 +50,7 @@ export function Pagination(props: PaginationProps) {
                 <Icons.Previous/>
             </Button>
             <Button
-                className="mr-1"
+                className="flex mr-1"
                 disabled
                 size={size}
                 variant={variant}
@@ -56,6 +58,7 @@ export function Pagination(props: PaginationProps) {
                 {props.currentPage}
             </Button>
             <Button
+                className="flex"
                 disabled={props.lastPage}
                 onClick={props.handleNext ? props.handleNext : undefined}
                 size={size}

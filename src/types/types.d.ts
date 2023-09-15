@@ -6,11 +6,29 @@
  * @packageDocumentation
  */
 
+// Internal Modules ----------------------------------------------------------
+
 import {AuthorPlus} from "@/types/models/Author";
 import {LibraryPlus} from "@/types/models/Library";
 import {SeriesPlus} from "@/types/models/Series";
 import {StoryPlus} from "@/types/models/Story";
 import {VolumePlus} from "@/types/models/Volume";
+
+// Public Types --------------------------------------------------------------
+
+/**
+ * An individual item for the Breadcrumbs component (and associated storage).
+ */
+export interface BreadcrumbItem {
+    /**
+     * The site-relative URL to return to if this item is selected.
+     */
+    href: string;
+    /**
+     * The textual label for this item when it is displayed.
+     */
+    label: string;
+}
 
 /**
  * Application level handler for an action (such as a button click)
@@ -21,7 +39,6 @@ export type HandleAction = () => void;
  * Application level handler for a new boolean value from an input element.
  */
 export type HandleBoolean = (newBoolean: boolean) => void;
-
 
 /**
  * Application level handler for a new string value from an input element.
