@@ -15,6 +15,12 @@ import Link from "next/link";
 
 import * as BreadcrumbUtils from "@/util/BreadcrumbUtils";
 import {Icons} from "@/components/layout/Icons";
+import {
+    Tooltip,
+    TooltipContent,
+    TooltipProvider,
+    TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 // Public Objects ------------------------------------------------------------
 
@@ -58,15 +64,70 @@ type IconProps = {
  */
 function Icon(props: IconProps) {
     if (props.item.href.includes("/authors")) {
-        return <Icons.Author/>;
+        return (
+            <TooltipProvider>
+                <Tooltip>
+                    <TooltipContent>
+                        <p>Author</p>
+                    </TooltipContent>
+                    <TooltipTrigger>
+                        <Icons.Author/>
+                    </TooltipTrigger>
+                </Tooltip>
+            </TooltipProvider>
+        );
     } else if (props.item.href.includes("/series")) {
-        return <Icons.Series/>;
+        return (
+            <TooltipProvider>
+                <Tooltip>
+                    <TooltipContent>
+                        <p>Series</p>
+                    </TooltipContent>
+                    <TooltipTrigger>
+                        <Icons.Series/>
+                    </TooltipTrigger>
+                </Tooltip>
+            </TooltipProvider>
+        );
     } else if (props.item.href.includes("/stories")) {
-        return <Icons.Story/>;
+        return (
+            <TooltipProvider>
+                <Tooltip>
+                    <TooltipContent>
+                        <p>Story</p>
+                    </TooltipContent>
+                    <TooltipTrigger>
+                        <Icons.Story/>
+                    </TooltipTrigger>
+                </Tooltip>
+            </TooltipProvider>
+        );
     } else if (props.item.href.includes("/volumes")) {
-        return <Icons.Volume/>;
+        return (
+            <TooltipProvider>
+                <Tooltip>
+                    <TooltipContent>
+                        <p>Volume</p>
+                    </TooltipContent>
+                    <TooltipTrigger>
+                        <Icons.Volume/>
+                    </TooltipTrigger>
+                </Tooltip>
+            </TooltipProvider>
+        );
     } else {
-        return <Icons.Library/>;
+        return (
+            <TooltipProvider>
+                <Tooltip>
+                    <TooltipContent>
+                        <p>Library</p>
+                    </TooltipContent>
+                    <TooltipTrigger>
+                        <Icons.Library/>
+                    </TooltipTrigger>
+                </Tooltip>
+            </TooltipProvider>
+        );
     }
 }
 
