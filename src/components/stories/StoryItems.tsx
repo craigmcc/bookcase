@@ -11,6 +11,7 @@
 
 // External Modules ----------------------------------------------------------
 
+import Link from "next/link";
 import {useEffect, useState} from "react";
 
 // Internal Modules ----------------------------------------------------------
@@ -183,10 +184,13 @@ export default function StoryItems(props: StoryItemsProps) {
                             {stories.map((story, index) => (
                                 <TableRow key={index}>
                                     <TableCell className="p-1">
-                                        {props.showOrdinal ? (
-                                            <span>({ordinals[index]})&nbsp;</span>
-                                        ) : null }
-                                        {story.name}
+                                        <Link href={`/base/${story.libraryId}/stories/${story.id}`}
+                                        >
+                                            {props.showOrdinal ? (
+                                                <span>({ordinals[index]})&nbsp;</span>
+                                            ) : null }
+                                            {story.name}
+                                        </Link>
                                     </TableCell>
                                 </TableRow>
                             ))}

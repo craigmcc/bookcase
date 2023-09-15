@@ -11,6 +11,7 @@
 
 // External Modules ----------------------------------------------------------
 
+import Link from "next/link";
 import {useEffect, useState} from "react";
 
 // Internal Modules ----------------------------------------------------------
@@ -157,7 +158,9 @@ export default function VolumeItems(props: VolumeItemsProps) {
                             {volumes.map((volume, index) => (
                                 <TableRow key={index}>
                                     <TableCell className="p-1">
-                                        {volume.name}
+                                        <Link href={`/base/${volume.libraryId}/volumes/${volume.id}`}>
+                                            {volume.name}
+                                        </Link>
                                     </TableCell>
                                 </TableRow>
                             ))}

@@ -11,6 +11,7 @@
 
 // External Modules ----------------------------------------------------------
 
+import Link from "next/link";
 import {useEffect, useState} from "react";
 
 // Internal Modules ----------------------------------------------------------
@@ -156,7 +157,9 @@ export default function SeriesItems(props: SeriesItemsProps) {
                             {serieses.map((series, index) => (
                                 <TableRow key={index}>
                                     <TableCell className="p-1">
-                                        {series.name}
+                                        <Link href={`/base/${series.libraryId}/series/${series.id}`}>
+                                            {series.name}
+                                        </Link>
                                     </TableCell>
                                 </TableRow>
                             ))}

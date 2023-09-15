@@ -11,6 +11,7 @@
 
 // External Modules ----------------------------------------------------------
 
+import Link from "next/link";
 import {useEffect, useState} from "react";
 
 // Internal Modules ----------------------------------------------------------
@@ -188,10 +189,12 @@ export default function AuthorItems(props: AuthorItemsProps) {
                             {authors.map((author, index) => (
                                 <TableRow key={index}>
                                     <TableCell className="p-1">
-                                        {author.lastName}, {author.firstName}
-                                        {(props.showPrincipal && principals[index]) ? (
-                                            <span className="text-blue-500"> *</span>
-                                        ) : null }
+                                        <Link href={`/base/${author.libraryId}/authors/${author.id}`}>
+                                            {author.lastName}, {author.firstName}
+                                            {(props.showPrincipal && principals[index]) ? (
+                                                <span className="text-blue-500"> *</span>
+                                            ) : null }
+                                        </Link>
                                     </TableCell>
                                 </TableRow>
                             ))}

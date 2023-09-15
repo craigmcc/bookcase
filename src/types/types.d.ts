@@ -6,7 +6,11 @@
  * @packageDocumentation
  */
 
-import {Author, Library, Series, Story, Volume} from "@prisma/client";
+import {AuthorPlus} from "@/types/models/Author";
+import {LibraryPlus} from "@/types/models/Library";
+import {SeriesPlus} from "@/types/models/Series";
+import {StoryPlus} from "@/types/models/Story";
+import {VolumePlus} from "@/types/models/Volume";
 
 /**
  * Application level handler for an action (such as a button click)
@@ -52,7 +56,7 @@ export type PaginationOptions = {
 /**
  * Union of models that can be a "parent" in a parent-child relationship.
  */
-export type Parent = Author | Library | Series | Story | Volume;
+export type Parent = AuthorPlus | LibraryPlus | SeriesPlus | StoryPlus | VolumePlus;
 
 /**
  * The options offered by a Select input control.
