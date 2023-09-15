@@ -14,6 +14,7 @@
 // Internal Modules ----------------------------------------------------------
 
 import AuthorItems from "@/components/authors/AuthorItems";
+import {Icons} from "@/components/layout/Icons";
 import StoryItems from "@/components/stories/StoryItems";
 import {LibraryPlus} from "@/types/models/Library";
 import {VolumePlus} from "@/types/models/Volume";
@@ -32,7 +33,8 @@ export default function VolumeBase(props: VolumeBaseProps) {
     // Render the requested content
     return (
         <>
-            <div className="container mx-auto py-6">
+            <div className="container flex space-x-2 py-4">
+                <Icons.Volume/>
                 <span>Base page for Volume <strong>{props.volume.name}</strong>&nbsp;
                     in Library <strong>{props.library.name}</strong></span>
             </div>

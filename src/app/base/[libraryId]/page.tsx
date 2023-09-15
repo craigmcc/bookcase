@@ -17,6 +17,7 @@ import {authOptions} from "@/app/api/auth/[...nextauth]/route";
 // Internal Modules ----------------------------------------------------------
 
 import AuthorItems from "@/components/authors/AuthorItems";
+import {Icons} from "@/components/layout/Icons";
 import SeriesItems from "@/components/series/SeriesItems";
 import NotSignedIn from "@/components/shared/NotSignedIn";
 import StoryItems from "@/components/stories/StoryItems";
@@ -43,7 +44,8 @@ export default async function BaseRoute({params}: {params: {libraryId: string}})
     // Render the requested content
     return (
         <>
-            <div className="container mx-auto py-6">
+            <div className="container flex space-x-2 py-4">
+                <Icons.Library/>
                 <span>Base page for Library <strong>{library.name}</strong></span>
             </div>
             <div className="container grid grid-cols-4 gap-4">

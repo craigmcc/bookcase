@@ -12,6 +12,7 @@ import {
     ArrowBigLeft,
     ArrowDownToLine,
     BookCopy,
+    BookOpen,
     Check,
     ChevronLeft,
     ChevronRight,
@@ -23,6 +24,8 @@ import {
     Pencil,
     Plus,
     Rows,
+    ScrollText,
+    User,
     Users,
     X,
     XOctagon,
@@ -33,6 +36,7 @@ export type Icon = typeof LucideIcon;
 
 export const Icons = {
     Add: Plus,
+    Author: User,
     Authors: Users,
     Back: ArrowBigLeft,
     Check: Check,
@@ -46,7 +50,9 @@ export const Icons = {
     Series: Rows,
     SignIn: LogIn,
     SignOut: LogOut,
+    Story: ScrollText,
     Stories: Folders,
     Uncheck: X,
+    Volume: BookOpen,
     Volumes: BookCopy,
 }
