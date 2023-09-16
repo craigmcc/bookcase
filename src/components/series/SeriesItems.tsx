@@ -65,7 +65,7 @@ export default function SeriesItems(props: SeriesItemsProps) {
 
         async function fetchSeries() {
 
-            console.log("SeriesItems Parent", JSON.stringify(props.parent));
+            //console.log("SeriesItems Parent", JSON.stringify(props.parent));
 
             // @ts-ignore
             const _model = props.parent["_model"];

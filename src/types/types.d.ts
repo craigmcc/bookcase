@@ -17,20 +17,6 @@ import {VolumePlus} from "@/types/models/Volume";
 // Public Types --------------------------------------------------------------
 
 /**
- * An individual item for the Breadcrumbs component (and associated storage).
- */
-export interface BreadcrumbItem {
-    /**
-     * The site-relative URL to return to if this item is selected.
-     */
-    href: string;
-    /**
-     * The textual label for this item when it is displayed.
-     */
-    label: string;
-}
-
-/**
  * Application level handler for an action (such as a button click)
  */
 export type HandleAction = () => void;

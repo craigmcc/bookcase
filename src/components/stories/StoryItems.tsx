@@ -70,7 +70,7 @@ export default function StoryItems(props: StoryItemsProps) {
 
         async function fetchStories() {
 
-            console.log("StoryItems Parent", JSON.stringify(props.parent));
+            //console.log("StoryItems Parent", JSON.stringify(props.parent));
 
             // @ts-ignore
             const _model = props.parent["_model"];

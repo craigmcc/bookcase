@@ -11,7 +11,6 @@
 
 // Internal Modules ----------------------------------------------------------
 
-//import BreadcrumbItem from "@/types/types";
 import LocalStorage from "@/util/LocalStorage";
 
 // Public Objects ------------------------------------------------------------
@@ -50,8 +49,11 @@ export const BreadcrumbLocalStorage =
  * @returns                             The updated BreadcrumbItem array
  */
 export function add(item: BreadcrumbItem): BreadcrumbItem[] {
+    //console.log("add.item", JSON.stringify(item));
     const items = BreadcrumbLocalStorage.value;
+    //console.log("add.before", JSON.stringify(items));
     items.push(item);
+    //console.log("add.after", JSON.stringify(items));
     BreadcrumbLocalStorage.value = items;
     return items;
 }
@@ -62,7 +64,10 @@ export function add(item: BreadcrumbItem): BreadcrumbItem[] {
  * @returns                             The newly empty BreadcrumbItem array
  */
 export function clear(): BreadcrumbItem[] {
-    const items: BreadcrumbItem[] = [];
+    let items = BreadcrumbLocalStorage.value;
+    //console.log("clear.before", JSON.stringify(items));
+    items = [];
+    //console.log("clear.after", JSON.stringify(items));
     BreadcrumbLocalStorage.value = items;
     return items;
 }
@@ -73,7 +78,9 @@ export function clear(): BreadcrumbItem[] {
  * @returns                             The current BreadcrumbItem array
  */
 export function current(): BreadcrumbItem[] {
-    return BreadcrumbLocalStorage.value;
+    const items = BreadcrumbLocalStorage.value;
+    //console.log("current", JSON.stringify(items));
+    return items;
 }
 
 /**
@@ -86,7 +93,8 @@ export function current(): BreadcrumbItem[] {
  */
 export function trim(href: string): BreadcrumbItem[] {
     let items = BreadcrumbLocalStorage.value;
-    console.log("trim.before", JSON.stringify(items));
+    //console.log("trim.before", JSON.stringify(items));
+    //console.log("trim.href", href);
     while (items.length > 0) {
         const item = items[items.length - 1];
         if (item.href === href) {
@@ -94,7 +102,7 @@ export function trim(href: string): BreadcrumbItem[] {
         }
         items = items.slice(0, -1);
     }
-    console.log("trim.after ", JSON.stringify(items));
+    //console.log("trim.after ", JSON.stringify(items));
     BreadcrumbLocalStorage.value = items;
     return items;
 }

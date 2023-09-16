@@ -70,7 +70,7 @@ export default function AuthorItems(props: AuthorItemsProps) {
 
         async function fetchAuthors() {
 
-            console.log("AuthorItems Parent", JSON.stringify(props.parent));
+            //console.log("AuthorItems Parent", JSON.stringify(props.parent));
 
             // @ts-ignore
             const _model = props.parent["_model"];

@@ -9,7 +9,7 @@
 
 // External Modules ----------------------------------------------------------
 
-import Link from "next/link";
+import {useRouter} from "next/navigation";
 
 // Internal Modules ----------------------------------------------------------
 
@@ -43,12 +43,12 @@ export default function Breadcrumbs() {
 */
         <div className="flex flex-row">
             {breadcrumbItems.map((item, index) => (
-                <>
+                <span key={`Breadcrumbs.${index}`}>
                     {(index > 0) ? (
                         <span>&nbsp;|&nbsp;</span>
                     ) : null }
-                    <Item index={index} item={item} key={index}/>
-                </>
+                    <Item index={index} item={item}/>
+                </span>
             ))}
         </div>
 
@@ -144,22 +144,27 @@ type ItemProps = {
  */
 function Item(props: ItemProps) {
 
+    const router = useRouter();
+
     /**
      * Clear breadcrumbs back to one with the specified href,
      * and return the href to link to.
      */
-    function onSelect(item: BreadcrumbUtils.BreadcrumbItem): string {
+    function onSelect(item: BreadcrumbUtils.BreadcrumbItem): void {
         const href = item.href;
         BreadcrumbUtils.trim(href);
-        return href;
+        router.push(href);
     }
 
     return (
-        <span key={props.item.href}>
+        <span key={`Breadcrumb.${props.item.href}`}>
             <Icon item={props.item}/>
-            <Link className="text-info ps-1 hover:underline" href={onSelect(props.item)}>
+            <span
+                className={"text-info ps-1 hover:underline"}
+                onClick={() => onSelect(props.item)}
+            >
                 {props.item.label}
-            </Link>
+            </span>
         </span>
     )
 }
