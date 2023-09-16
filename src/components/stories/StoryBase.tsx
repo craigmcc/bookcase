@@ -14,6 +14,7 @@
 // Internal Modules ----------------------------------------------------------
 
 import AuthorItems from "@/components/authors/AuthorItems";
+import Breadcrumbs from "@/components/layout/Breadcrumbs";
 import {Icons} from "@/components/layout/Icons";
 import SeriesItems from "@/components/series/SeriesItems";
 import VolumeItems from "@/components/volumes/VolumeItems";
@@ -34,6 +35,9 @@ export default function StoryBase(props: StoryBaseProps) {
     // Render the requested content
     return (
         <>
+            <div className="container pt-4">
+                <Breadcrumbs/>
+            </div>
             <div className="container flex space-x-2 py-4">
                 <Icons.Story/>
                 <span>Base page for Story <strong>{props.story.name}</strong>&nbsp;

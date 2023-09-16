@@ -85,14 +85,16 @@ export function current(): BreadcrumbItem[] {
  * @returns                             The updated BreadcrumbItem array
  */
 export function trim(href: string): BreadcrumbItem[] {
-    const items = BreadcrumbLocalStorage.value;
+    let items = BreadcrumbLocalStorage.value;
+    console.log("trim.before", JSON.stringify(items));
     while (items.length > 0) {
         const item = items[items.length - 1];
         if (item.href === href) {
             break;
         }
-        items.pop();
+        items = items.slice(0, -1);
     }
+    console.log("trim.after ", JSON.stringify(items));
     BreadcrumbLocalStorage.value = items;
     return items;
 }

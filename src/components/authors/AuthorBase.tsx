@@ -13,6 +13,7 @@
 
 // Internal Modules ----------------------------------------------------------
 
+import Breadcrumbs from "@/components/layout/Breadcrumbs";
 import {Icons} from "@/components/layout/Icons";
 import SeriesItems from "@/components/series/SeriesItems";
 import StoryItems from "@/components/stories/StoryItems";
@@ -34,6 +35,9 @@ export default function AuthorBase(props: AuthorBaseProps) {
     // Render the requested content
     return (
         <>
+            <div className="container pt-4">
+                <Breadcrumbs/>
+            </div>
             <div className="container flex space-x-2 py-4">
                 <Icons.Author/>
                 <span>Base page for Author <strong>{props.author.lastName}, {props.author.firstName}</strong>&nbsp;

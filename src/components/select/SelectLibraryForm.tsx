@@ -10,7 +10,7 @@
 
 // External Modules ----------------------------------------------------------
 
-import {redirect} from "next/navigation";
+import {useRouter} from "next/navigation";
 import {ChangeEvent, useState} from "react";
 
 // Internal Modules ----------------------------------------------------------
@@ -34,6 +34,7 @@ export default function SelectLibraryForm(props: SelectLibraryFormProps) {
 
     const [library, setLibrary] = useState<LibraryPlus | null>(null);
     const [libraryId, setLibraryId] = useState<number>(-1);
+    const router = useRouter();
 
     const options: SelectOption[] = [];
     options.push({
@@ -58,22 +59,20 @@ export default function SelectLibraryForm(props: SelectLibraryFormProps) {
     }
 
     /**
-     * Add a breadcrumb for this selection, and return the
-     * associated href.
+     * Add a breadcrumb for this selection, and route to the
+     * corresponding href.
      */
-    function onSelect(): string {
+    function onSelect() {
         //console.log("onSelect " + libraryId + " " + JSON.stringify(library));
-        if (!library) {
-            return "/";
+        if (library) {
+            const href = `/base/${library.id}`;
+            BreadcrumbUtils.clear();
+            BreadcrumbUtils.add({
+                href: href,
+                label: library.name,
+            });
+            router.push(href);
         }
-        const href = `/base/${library.id}`;
-        BreadcrumbUtils.clear();
-        BreadcrumbUtils.add({
-            href: href,
-            label: library.name,
-        });
-        //console.log("onSelect " + href);
-        return href;
     }
 
     return (
@@ -89,15 +88,14 @@ export default function SelectLibraryForm(props: SelectLibraryFormProps) {
                     </option>
                 ))}
             </select>
-            <Link href={onSelect()}>
-                <Button
-                    disabled={libraryId < 0}
-                    fullWidth
-                    variant="primary"
-                >
-                    Select Library
-                </Button>
-            </Link>
+            <Button
+                disabled={libraryId < 0}
+                fullWidth
+                onClick={onSelect}
+                variant="primary"
+            >
+                Select Library
+            </Button>
         </>
     )
 

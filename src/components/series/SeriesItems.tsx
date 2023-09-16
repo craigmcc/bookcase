@@ -11,7 +11,7 @@
 
 // External Modules ----------------------------------------------------------
 
-import Link from "next/link";
+import {useRouter} from "next/navigation";
 import {useEffect, useState} from "react";
 
 // Internal Modules ----------------------------------------------------------
@@ -41,6 +41,7 @@ import {LibraryPlus} from "@/types/models/Library";
 import {StoryPlus} from "@/types/models/Story";
 import {SeriesPlus} from "@/types/models/Series";
 //import {HandleBoolean, HandleString} from "@/types/types";
+import * as BreadcrumbUtils from "@/util/BreadcrumbUtils";
 
 // Public Objects ------------------------------------------------------------
 
@@ -55,6 +56,7 @@ export default function SeriesItems(props: SeriesItemsProps) {
     const [active, setActive] = useState<boolean>(false);
     const [currentPage, setCurrentPage] = useState<number>(1);
     const pageSize = 2;
+    const router = useRouter();
     const [search, setSearch] = useState<string>("");
     const [serieses, setSerieses] = useState<SeriesPlus[]>([]);
 
@@ -113,6 +115,21 @@ export default function SeriesItems(props: SeriesItemsProps) {
 
     // No access validation needed, since this is not a page
 
+    /**
+     * Add a breadcrumb for this selection, and route to the
+     * corresponding href.
+     *
+     * @param series                    The selected Series
+     */
+    function onSelect(series: SeriesPlus): void {
+        const href = `/base/${series.libraryId}/series/${series.id}`;
+        BreadcrumbUtils.add({
+            href: href,
+            label: series.name,
+        });
+        router.push(href);
+    }
+
     return (
         <Card className="border-solid">
             <CardHeader>
@@ -155,11 +172,14 @@ export default function SeriesItems(props: SeriesItemsProps) {
 */}
                         <TableBody>
                             {serieses.map((series, index) => (
-                                <TableRow key={index}>
+                                <TableRow key={`Series.${series.id}`}>
                                     <TableCell className="p-1">
-                                        <Link href={`/base/${series.libraryId}/series/${series.id}`}>
+                                        <span
+                                            className="hover:underline"
+                                            onClick={() => onSelect(series)}
+                                        >
                                             {series.name}
-                                        </Link>
+                                        </span>
                                     </TableCell>
                                 </TableRow>
                             ))}

@@ -11,7 +11,7 @@
 
 // External Modules ----------------------------------------------------------
 
-import Link from "next/link";
+import {useRouter} from "next/navigation";
 import {useEffect, useState} from "react";
 
 // Internal Modules ----------------------------------------------------------
@@ -43,6 +43,7 @@ import {SeriesPlus} from "@/types/models/Series";
 import {StoryPlus} from "@/types/models/Story";
 import {VolumePlus} from "@/types/models/Volume";
 //import {HandleBoolean, HandleString} from "@/types/types";
+import * as BreadcrumbUtils from "@/util/BreadcrumbUtils";
 
 // Public Objects ------------------------------------------------------------
 
@@ -60,6 +61,7 @@ export default function StoryItems(props: StoryItemsProps) {
     const [currentPage, setCurrentPage] = useState<number>(1);
     const [ordinals, setOrdinals] = useState<number[]>([]);
     const pageSize = 2;
+    const router = useRouter();
     const [search, setSearch] = useState<string>("");
     const [stories, setStories] = useState<StoryPlus[]>([]);
 
@@ -140,6 +142,21 @@ export default function StoryItems(props: StoryItemsProps) {
 
     // No access validation needed, since this is not a page
 
+    /**
+     * Add a breadcrumb for this selection, and route to the
+     * corresponding href.
+     *
+     * @param story                     The selected Story
+     */
+    function onSelect(story: StoryPlus): void {
+        const href = `/base/${story.libraryId}/stories/${story.id}`;
+        BreadcrumbUtils.add({
+            href: href,
+            label: story.name,
+        });
+        router.push(href);
+    }
+
     return (
         <Card className="border-solid">
             <CardHeader>
@@ -181,16 +198,18 @@ export default function StoryItems(props: StoryItemsProps) {
                         </TableHeader>
 */}
                         <TableBody>
-                            {stories.map((story, index) => (
-                                <TableRow key={index}>
+                            {stories.map((story, index: number) => (
+                                <TableRow key={story.id}>
                                     <TableCell className="p-1">
-                                        <Link href={`/base/${story.libraryId}/stories/${story.id}`}
+                                        <span
+                                            className="hover:underline"
+                                            onClick={() => onSelect(story)}
                                         >
                                             {props.showOrdinal ? (
                                                 <span>({ordinals[index]})&nbsp;</span>
                                             ) : null }
                                             {story.name}
-                                        </Link>
+                                        </span>
                                     </TableCell>
                                 </TableRow>
                             ))}

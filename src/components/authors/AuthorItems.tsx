@@ -11,7 +11,7 @@
 
 // External Modules ----------------------------------------------------------
 
-import Link from "next/link";
+import {useRouter} from "next/navigation";
 import {useEffect, useState} from "react";
 
 // Internal Modules ----------------------------------------------------------
@@ -43,6 +43,7 @@ import {SeriesPlus} from "@/types/models/Series";
 import {StoryPlus} from "@/types/models/Story";
 import {VolumePlus} from "@/types/models/Volume";
 //import {HandleBoolean, HandleString} from "@/types/types";
+import * as BreadcrumbUtils from "@/util/BreadcrumbUtils";
 
 // Public Objects ------------------------------------------------------------
 
@@ -60,6 +61,7 @@ export default function AuthorItems(props: AuthorItemsProps) {
     const [authors, setAuthors] = useState<AuthorPlus[]>([]);
     const [currentPage, setCurrentPage] = useState<number>(1);
     const pageSize = 2;
+    const router = useRouter();
     const [principals, setPrincipals] = useState<boolean[]>([]);
     const [search, setSearch] = useState<string>("");
 
@@ -121,7 +123,6 @@ export default function AuthorItems(props: AuthorItemsProps) {
 
             }
 
-            // TODO: sort by lastName/firstName first?
             setAuthors(results);
 
             // Save principals in case we were requested to display them
@@ -143,6 +144,21 @@ export default function AuthorItems(props: AuthorItemsProps) {
     }, [active, currentPage, search, props.parent, props.showPrincipal]);
 
     // No access validation needed, since this is not a page
+
+    /**
+     * Add a breadcrumb for this selection, and route to the
+     * corresponding href.
+     *
+     * @param author                    The selected Author
+     */
+    function onSelect(author: AuthorPlus): void {
+        const href = `/base/${author.libraryId}/authors/${author.id}`;
+        BreadcrumbUtils.add({
+            href: href,
+            label: `${author.lastName}, ${author.firstName}`,
+        });
+        router.push(href);
+    }
 
     return (
         <Card className="border-solid">
@@ -187,14 +203,17 @@ export default function AuthorItems(props: AuthorItemsProps) {
 */}
                         <TableBody>
                             {authors.map((author, index) => (
-                                <TableRow key={index}>
+                                <TableRow key={`Author.${author.id}`}>
                                     <TableCell className="p-1">
-                                        <Link href={`/base/${author.libraryId}/authors/${author.id}`}>
+                                        <span
+                                            className="hover:underline"
+                                            onClick={() => onSelect(author)}
+                                        >
                                             {author.lastName}, {author.firstName}
                                             {(props.showPrincipal && principals[index]) ? (
                                                 <span className="text-blue-500"> *</span>
                                             ) : null }
-                                        </Link>
+                                        </span>
                                     </TableCell>
                                 </TableRow>
                             ))}

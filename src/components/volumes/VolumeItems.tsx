@@ -11,7 +11,7 @@
 
 // External Modules ----------------------------------------------------------
 
-import Link from "next/link";
+import {useRouter} from "next/navigation";
 import {useEffect, useState} from "react";
 
 // Internal Modules ----------------------------------------------------------
@@ -41,6 +41,7 @@ import {LibraryPlus} from "@/types/models/Library";
 import {StoryPlus} from "@/types/models/Story";
 import {VolumePlus} from "@/types/models/Volume";
 //import {HandleBoolean, HandleString} from "@/types/types";
+import * as BreadcrumbUtils from "@/util/BreadcrumbUtils";
 
 // Public Objects ------------------------------------------------------------
 
@@ -55,6 +56,7 @@ export default function VolumeItems(props: VolumeItemsProps) {
     const [active, setActive] = useState<boolean>(false);
     const [currentPage, setCurrentPage] = useState<number>(1);
     const pageSize = 2;
+    const router = useRouter();
     const [search, setSearch] = useState<string>("");
     const [volumes, setVolumes] = useState<VolumePlus[]>([]);
 
@@ -113,6 +115,21 @@ export default function VolumeItems(props: VolumeItemsProps) {
 
     // No access validation needed, since this is not a page
 
+    /**
+     * Add a breadcrumb for this selection, and route to the
+     * corresponding href.
+     *
+     * @param volume                    The selected Volume
+     */
+    function onSelect(volume: VolumePlus): void {
+        const href = `/base/${volume.libraryId}/volumes/${volume.id}`;
+        BreadcrumbUtils.add({
+            href: href,
+            label: volume.name,
+        });
+        router.push(href);
+    }
+
     return (
         <Card className="border-solid">
             <CardHeader>
@@ -155,12 +172,15 @@ export default function VolumeItems(props: VolumeItemsProps) {
 */}
 
                         <TableBody>
-                            {volumes.map((volume, index) => (
-                                <TableRow key={index}>
+                            {volumes.map((volume) => (
+                                <TableRow key={`Volume.${volume.id}`}>
                                     <TableCell className="p-1">
-                                        <Link href={`/base/${volume.libraryId}/volumes/${volume.id}`}>
+                                        <span
+                                            className="hover:underline"
+                                            onClick={() => onSelect(volume)}
+                                        >
                                             {volume.name}
-                                        </Link>
+                                        </span>
                                     </TableCell>
                                 </TableRow>
                             ))}

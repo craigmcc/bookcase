@@ -44,6 +44,9 @@ export default function Breadcrumbs() {
         <div className="flex flex-row">
             {breadcrumbItems.map((item, index) => (
                 <>
+                    {(index > 0) ? (
+                        <span>&nbsp;|&nbsp;</span>
+                    ) : null }
                     <Item index={index} item={item} key={index}/>
                 </>
             ))}
@@ -140,13 +143,24 @@ type ItemProps = {
  * Return the UI for the specified BreadcrumbItem
  */
 function Item(props: ItemProps) {
+
+    /**
+     * Clear breadcrumbs back to one with the specified href,
+     * and return the href to link to.
+     */
+    function onSelect(item: BreadcrumbUtils.BreadcrumbItem): string {
+        const href = item.href;
+        BreadcrumbUtils.trim(href);
+        return href;
+    }
+
     return (
-        <>
+        <span key={props.item.href}>
             <Icon item={props.item}/>
-            <Link className="text-info ps-1 hover:underline" href={props.item.href}>
+            <Link className="text-info ps-1 hover:underline" href={onSelect(props.item)}>
                 {props.item.label}
             </Link>
-        </>
+        </span>
     )
 }
 
