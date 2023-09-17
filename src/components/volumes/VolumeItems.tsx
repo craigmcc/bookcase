@@ -20,6 +20,7 @@ import * as AuthorActions from "@/actions/AuthorActionsShim";
 import * as StoryActions from "@/actions/StoryActionsShim";
 import * as VolumeActions from "@/actions/VolumeActionsShim";
 import {CheckBox} from "@/components/shared/CheckBox";
+import {EditButton} from "@/components/shared/EditButton";
 import {Pagination} from "@/components/shared/Pagination";
 import {SearchBar} from "@/components/shared/SearchBar";
 import {
@@ -181,6 +182,13 @@ export default function VolumeItems(props: VolumeItemsProps) {
                                         >
                                             {volume.name}
                                         </span>
+                                    </TableCell>
+                                    <TableCell className="p-0">
+                                        <EditButton
+                                            href={`/volumes/${volume.libraryId}/${volume.id}`}
+                                            size="xs"
+                                            showLabel={false}
+                                        />
                                     </TableCell>
                                 </TableRow>
                             ))}
