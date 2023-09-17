@@ -32,9 +32,21 @@ import {
     FormMessage,
 } from "@/components/ui/form";
 import {Input} from "@/components/ui/input";
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select";
 import {VolumePlus} from "@/types/models/Volume";
-import {Parent} from "@/types/types";
-import {validateVolumeLocation, validateVolumeType} from "@/util/ApplicationValidators";
+import {Parent, SelectOption} from "@/types/types";
+import {
+    VALID_VOLUME_LOCATIONS,
+    VALID_VOLUME_TYPES,
+    validateVolumeLocation,
+    validateVolumeType
+} from "@/util/ApplicationValidators";
 
 // Public Objects ------------------------------------------------------------
 
@@ -148,8 +160,66 @@ export default function VolumeForm(props: VolumeFormProps) {
                     </div>
 
                     <div className="grid grid-cols-2 space-x-2">
-                        <div>TODO: Select Field for type</div>
-                        <div>TODO: Select field for location</div>
+                        <FormField
+                            control={form.control}
+                            name="location"
+                            render={({field}) => (
+                                <FormItem>
+                                    <FormLabel>Volume Location:</FormLabel>
+                                    <Select
+                                        defaultValue={field.value}
+                                        onValueChange={field.onChange}
+                                    >
+                                        <FormControl>
+                                            <SelectTrigger>
+                                                <SelectValue placeholder="Select Volume location"/>
+                                            </SelectTrigger>
+                                        </FormControl>
+                                        <SelectContent>
+                                            {VALID_VOLUME_LOCATIONS.map((option, index) => (
+                                                <SelectItem key={option.value} value={option.value}>
+                                                    {option.label}
+                                                </SelectItem>
+                                            ))}
+                                        </SelectContent>
+                                    </Select>
+                                    <FormDescription>
+                                        Physical location of this Volume
+                                    </FormDescription>
+                                    <FormMessage/>
+                                </FormItem>
+                            )}
+                        />
+                        <FormField
+                            control={form.control}
+                            name="type"
+                            render={({field}) => (
+                                <FormItem>
+                                    <FormLabel>Volume Type:</FormLabel>
+                                    <Select
+                                        defaultValue={field.value}
+                                        onValueChange={field.onChange}
+                                    >
+                                    <FormControl>
+                                        <SelectTrigger>
+                                            <SelectValue placeholder="Select Volume type"/>
+                                        </SelectTrigger>
+                                    </FormControl>
+                                    <SelectContent>
+                                        {VALID_VOLUME_TYPES.map((option, index) => (
+                                            <SelectItem key={option.value} value={option.value}>
+                                                {option.label}
+                                            </SelectItem>
+                                        ))}
+                                    </SelectContent>
+                                    </Select>
+                                    <FormDescription>
+                                        Type of content in this Volume
+                                    </FormDescription>
+                                    <FormMessage/>
+                                </FormItem>
+                            )}
+                        />
                     </div>
 
                     <div className="grid grid-cols-1">

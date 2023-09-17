@@ -9,6 +9,10 @@
  * @packageDocumentation
  */
 
+// Internal Modules ---------------------------------------------------------
+
+import {SelectOption} from "@/types/types";
+
 // Public Objects -----------------------------------------------------------
 
 export const validateLibraryScope = (scope: string | undefined): boolean => {
@@ -18,35 +22,47 @@ export const validateLibraryScope = (scope: string | undefined): boolean => {
     return scope.match(LIBRARY_SCOPE_PATTERN) !== null;
 }
 
+export const LIBRARY_SCOPE_PATTERN: RegExp = /^[a-zA-Z0-9]+$/;
+
 export const validateVolumeLocation = (location: string | null | undefined): boolean => {
     if (!location) {
         return true;
     } else {
-        return VALID_VOLUME_LOCATIONS.has(location);
+        for (const validVolumeLocation of VALID_VOLUME_LOCATIONS) {
+            if (validVolumeLocation.value === location) {
+                return true;
+            }
+        }
+        return false;
     }
 }
 
-export const LIBRARY_SCOPE_PATTERN: RegExp = /^[a-zA-Z0-9]+$/;
-
-export const VALID_VOLUME_LOCATIONS: Map<string, string> = new Map();
-VALID_VOLUME_LOCATIONS.set("Box",           "Book in a Box (see Notes)");
-VALID_VOLUME_LOCATIONS.set("Computer",      "Computer Downloads (PDF)");
-VALID_VOLUME_LOCATIONS.set("Kindle",        "Kindle Download (Purchased)");
-VALID_VOLUME_LOCATIONS.set("Kobo",          "Kobo Download (Purchased)");
-VALID_VOLUME_LOCATIONS.set("Other",         "Other Location (See Notes");
-VALID_VOLUME_LOCATIONS.set("Returned",      "Kindle Unlimited (Returned)");
-VALID_VOLUME_LOCATIONS.set("Unlimited",     "Kindle Unlimited (Checked Out)");
-VALID_VOLUME_LOCATIONS.set("Watch",         "Not Yet Purchased or Downloaded");
+export const VALID_VOLUME_LOCATIONS: SelectOption[] = [
+    { value: "Box",          label: "Book in a Box (see Notes)"},
+    { value: "Computer",     label: "Computer Download (PDF etc.)"},
+    { value: "Kindle",       label: "Kindle Download"},
+    { value: "Kobo",         label: "Kobo Download"},
+    { value: "Other",        label: "Other Location (see Notes)"},
+    { value: "Returned",     label: "Kindle Unlimited (Returned)"},
+    { value: "Unlimited",    label: "Kindle Unlimited (Checked Out)"},
+    { value: "Watch",        label: "Not yet purchased or downloaded"},
+];
 
 export const validateVolumeType = (type: string | null | undefined): boolean => {
     if (!type) {
         return true;
     } else {
-        return VALID_VOLUME_TYPES.has(type);
+        for (const validVolumeType of VALID_VOLUME_TYPES) {
+            if (validVolumeType.value === type) {
+                return true;
+            }
+        }
+        return false;
     }
 }
 
-export const VALID_VOLUME_TYPES: Map<string, string> = new Map();
-VALID_VOLUME_TYPES.set("Single",            "Single Story by Volume Author(s)");
-VALID_VOLUME_TYPES.set("Collection",        "Collection by Volume Authors(s)");
-VALID_VOLUME_TYPES.set("Anthology",         "Anthology by different Author(s)");
+export const VALID_VOLUME_TYPES: SelectOption[] = [
+    { value: "Single",     label: "Single Story by Volume Author(s)"},
+    { value: "Collection", label: "Collection by Volume Author(s)"},
+    { value: "Anthology",  label: "Anthology by Different Author(s)"},
+];
