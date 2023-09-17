@@ -18,8 +18,8 @@ import {Prisma, Volume} from "@prisma/client";
 
 // Internal Modules ----------------------------------------------------------
 
+import VolumeHeader from "./VolumeHeader";
 import * as VolumeActions from "@/actions/VolumeActionsShim";
-import {BackButton} from "@/components/shared/BackButton";
 import {SaveButton} from "@/components/shared/SaveButton";
 import {Checkbox} from "@/components/ui/checkbox";
 import {
@@ -34,11 +34,14 @@ import {
 import {Input} from "@/components/ui/input";
 import {VolumePlus} from "@/types/models/Volume";
 import {Parent} from "@/types/types";
+import {validateVolumeLocation, validateVolumeType} from "@/util/ApplicationValidators";
 
 // Public Objects ------------------------------------------------------------
 
 type VolumeFormProps = {
-    // Navigation destination after successful save operation [TODO]
+    // Navigation destination after back button [Not rendered]
+    back?: string;
+    // Navigation destination after successful save operation
     destination?: string;
     // Parent object for this Volume
     parent: Parent;
@@ -70,6 +73,7 @@ export default function VolumeForm(props: VolumeFormProps) {
     });
     const router = useRouter();
 
+
     /**
      * Handle a validated form submit.
      */
@@ -81,8 +85,7 @@ export default function VolumeForm(props: VolumeFormProps) {
             }
             try {
                 await VolumeActions.insert(props.volume.libraryId, input);
-                // TODO - maybe in a modal?
-                router.push(props.destination ? props.destination : `/base/${values.libraryId}`);
+                router.push(destination);
             } catch (error) {
                 // TODO: something more graceful would be better
                 alert("ERROR ON INSERT: " + JSON.stringify(error));
@@ -94,8 +97,7 @@ export default function VolumeForm(props: VolumeFormProps) {
             }
             try {
                 await VolumeActions.update(props.volume.libraryId, values.id, input);
-                // TODO - maybe in a modal?
-                router.push(props.destination ? props.destination : `/base/${values.libraryId}`);
+                router.push(destination);
             } catch (error) {
                 // TODO: something more graceful would be better
                 alert("ERROR ON UPDATE: " + JSON.stringify(error));
@@ -104,46 +106,25 @@ export default function VolumeForm(props: VolumeFormProps) {
     }
 
     const adding = (props.volume.id < 0);
-    // @ts-ignore
-    const parentModel = props.parent["_model"];
-    let parentName: string;
-    if (parentModel === "Author") {
-        // @ts-ignore
-        parentName = `${props.parent.lastName}, ${props.parent.firstName}`
-    } else {
-        // @ts-ignore
-        parentName = props.parent.name;
-    }
+    const destination = props.destination
+        ? props.destination
+        : `/base/${props.volume.libraryId}/volumes/${props.volume.id}`;
     const showHeader = (props.showHeader !== undefined) ? props.showHeader : true;
 
     return (
         <>
 
             {(showHeader) ? (
-                <div className="grid grid-cols-3">
-                    <div>
-                        <BackButton href="/libraries"/>
-                    </div>
-                    <div className="text-center">
-                        <strong>
-                            {(adding)? (
-                                <span>Add New</span>
-                            ) : (
-                                <span>Edit Existing</span>
-                            )}
-                            &nbsp;Volume for {parentModel}:&nbsp;
-                            <span className="text-info">
-                                {parentName}
-                            </span>
-                        </strong>
-                    </div>
-                    <div/>
-                </div>
+                <VolumeHeader
+                    adding={adding}
+                    back={props.back}
+                    parent={props.parent}
+                />
             ) : null }
 
             <Form {...form}>
                 <form
-                    className="container mx-auto space-y-2"
+                    className="container mx-auto space-y-4"
                     onSubmit={form.handleSubmit(onSubmit)}
                 >
 
@@ -158,7 +139,7 @@ export default function VolumeForm(props: VolumeFormProps) {
                                         <Input autoFocus {...field}/>
                                     </FormControl>
                                     <FormDescription>
-                                        Name of this Volume (must be unique with a Library)
+                                        Name of this Volume (must be unique within a Library)
                                     </FormDescription>
                                     <FormMessage/>
                                 </FormItem>
@@ -182,7 +163,7 @@ export default function VolumeForm(props: VolumeFormProps) {
                                         <Input {...field}/>
                                     </FormControl>
                                     <FormDescription>
-                                        Miscellaneous notes about this Volume.
+                                        Miscellaneous notes about this Volume
                                     </FormDescription>
                                     <FormMessage/>
                                 </FormItem>
@@ -190,7 +171,7 @@ export default function VolumeForm(props: VolumeFormProps) {
                         />
                     </div>
 
-                    <div className="grid grid-cols-3 space-x-2">
+                    <div className="grid grid-cols-3 space-x-4">
                         <FormField
                             control={form.control}
                             name="copyright"
@@ -201,7 +182,7 @@ export default function VolumeForm(props: VolumeFormProps) {
                                         <Input {...field}/>
                                     </FormControl>
                                     <FormDescription>
-                                        Copyright Year (YYYY) of this Volume.
+                                        Copyright Year (YYYY) of this Volume
                                     </FormDescription>
                                     <FormMessage/>
                                 </FormItem>
@@ -217,7 +198,7 @@ export default function VolumeForm(props: VolumeFormProps) {
                                         <Input {...field}/>
                                     </FormControl>
                                     <FormDescription>
-                                        Google Books identifier of this Volume.
+                                        Google Books identifier of this Volume
                                     </FormDescription>
                                     <FormMessage/>
                                 </FormItem>
@@ -233,7 +214,7 @@ export default function VolumeForm(props: VolumeFormProps) {
                                         <Input {...field}/>
                                     </FormControl>
                                     <FormDescription>
-                                        International Standard Book Number of this Volume.
+                                        ISBN identifier of this Volume
                                     </FormDescription>
                                     <FormMessage/>
                                 </FormItem>
@@ -304,7 +285,11 @@ const formSchema = Yup.object().shape({
     libraryId: Yup.number()
         .required("Library ID is required"),
     location: Yup.string()
-        .defined(),
+        .required("Location is required")
+        .test("valid-location",
+            "Invalid location value",
+            (value) => validateVolumeLocation(value)
+            ),
     name: Yup.string()
         .required("Name is required")
         .test("unique-name",
@@ -323,5 +308,9 @@ const formSchema = Yup.object().shape({
     read: Yup.boolean()
         .defined(),
     type: Yup.string()
-        .required("Type is required"),
+        .required("Type is required")
+        .test("valid-type",
+            "Invalid type value",
+            (value) => validateVolumeType(value)
+        ),
 });

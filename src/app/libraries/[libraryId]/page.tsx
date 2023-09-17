@@ -5,7 +5,7 @@
 /**
  * Route for the editing page for Library objects.  Performs authorization
  * checks for the route, and retrieves the Library specified as a path
- * parameter, and delegates to
+ * parameter, and delegates to LibraryCard for rendering.
  *
  * @packageDocumentation
  */
@@ -29,7 +29,7 @@ import {authorizedSuperuser} from "@/util/Authorizations";
 
 export default async function LibraryRoute({params}: {params: {libraryId: string}}) {
 
-    // Validate access to this page
+    // Validate access to this route
     const session = await getServerSession(authOptions);
     if (!session || !session.user) {
         return <NotSignedIn/>;

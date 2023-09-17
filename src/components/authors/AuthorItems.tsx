@@ -169,7 +169,7 @@ export default function AuthorItems(props: AuthorItemsProps) {
                     <div className="w-auto py-1">
                         <SearchBar
                             handleChange={(newSearch) => setSearch(newSearch)}
-                            placeholder="Series name"
+                            placeholder="Author name"
                             value={search}
                         />
                     </div>
