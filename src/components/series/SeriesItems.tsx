@@ -17,6 +17,7 @@ import {useEffect, useState} from "react";
 // Internal Modules ----------------------------------------------------------
 
 import * as AuthorActions from "@/actions/AuthorActionsShim";
+import {EditButton} from "@/components/shared/EditButton";
 import * as SeriesActions from "@/actions/SeriesActionsShim";
 import * as StoryActions from "@/actions/StoryActionsShim";
 import {CheckBox} from "@/components/shared/CheckBox";
@@ -180,6 +181,13 @@ export default function SeriesItems(props: SeriesItemsProps) {
                                         >
                                             {series.name}
                                         </span>
+                                    </TableCell>
+                                    <TableCell className="p-1">
+                                        <EditButton
+                                            href={`/series/${series.libraryId}/${series.id}`}
+                                            size="xs"
+                                            showLabel={false}
+                                        />
                                     </TableCell>
                                 </TableRow>
                             ))}

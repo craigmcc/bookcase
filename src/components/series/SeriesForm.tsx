@@ -1,9 +1,9 @@
 "use client"
 
-// components/stories/StoryForm.tsx
+// components/series/SeriesForm.tsx
 
 /**
- * Input form for adding or editing a Story.
+ * Input form for adding or editing a Series.
  *
  * @packageDocumentation
  */
@@ -14,12 +14,12 @@ import {useRouter} from "next/navigation";
 import {useForm} from "react-hook-form";
 import * as Yup from "yup";
 import {yupResolver} from "@hookform/resolvers/yup";
-import {Prisma, Story} from "@prisma/client";
+import {Prisma, Series} from "@prisma/client";
 
 // Internal Modules ----------------------------------------------------------
 
-import StoryHeader from "./StoryHeader";
-import * as StoryActions from "@/actions/StoryActionsShim";
+import SeriesHeader from "./SeriesHeader";
+import * as SeriesActions from "@/actions/SeriesActionsShim";
 import {SaveButton} from "@/components/shared/SaveButton";
 import {Checkbox} from "@/components/ui/checkbox";
 import {
@@ -32,36 +32,35 @@ import {
     FormMessage,
 } from "@/components/ui/form";
 import {Input} from "@/components/ui/input";
-import {StoryPlus} from "@/types/models/Story";
+import {SeriesPlus} from "@/types/models/Series";
 import {Parent} from "@/types/types";
 
 // Public Objects ------------------------------------------------------------
 
-type StoryFormProps = {
+type SeriesFormProps = {
     // Navigation destination after back button [Not rendered]
     back?: string;
     // Navigation destination after successful save operation
     destination?: string;
-    // Parent object for this Story
+    // Parent object for this Series
     parent: Parent;
     // Show the back button and header title? [true]
     showHeader?: boolean;
-    // Story to be edited (id < 0 means adding)
-    story: StoryPlus;
+    // Series to be edited (id < 0 means adding)
+    series: SeriesPlus;
 }
 
-export default function StoryForm(props: StoryFormProps) {
+export default function SeriesForm(props: SeriesFormProps) {
 
-    console.log("StoryForm.entry", JSON.stringify(props.story));
+    console.log("SeriesForm.entry", JSON.stringify(props.series));
     const form = useForm<Yup.InferType<typeof formSchema>>({
         defaultValues: {
-            id: props.story.id,
-            active: (typeof props.story.active === "boolean" ? props.story.active : true),
-            copyright: props.story.copyright ? props.story.copyright : "",
-            libraryId: props.story.libraryId,
-            name: props.story.name ? props.story.name : "",
-            notes: props.story.notes ? props.story.notes : "",
-            // TODO: _ordinal?
+            id: props.series.id,
+            active: (typeof props.series.active === "boolean" ? props.series.active : true),
+            copyright: props.series.copyright ? props.series.copyright : "",
+            libraryId: props.series.libraryId,
+            name: props.series.name ? props.series.name : "",
+            notes: props.series.notes ? props.series.notes : "",
         },
         mode: "onBlur",
         resolver: yupResolver(formSchema),
@@ -74,24 +73,24 @@ export default function StoryForm(props: StoryFormProps) {
      */
     async function onSubmit(values: Yup.InferType<typeof formSchema>) {
         if (values.id && (values.id < 0)) {
-            const input: Prisma.StoryUncheckedCreateInput = {
+            const input: Prisma.SeriesUncheckedCreateInput = {
                 ...values,
                 // TODO - "" -> null for optional values?
             }
             try {
-                await StoryActions.insert(props.story.libraryId, input);
+                await SeriesActions.insert(props.series.libraryId, input);
                 router.push(destination);
             } catch (error) {
                 // TODO: something more graceful would be better
                 alert("ERROR ON INSERT: " + JSON.stringify(error));
             }
         } else {
-            const input : Prisma.StoryUpdateInput = {
+            const input : Prisma.SeriesUpdateInput = {
                 ...values,
                 // TODO - "" -> null for optional values?
             }
             try {
-                await StoryActions.update(props.story.libraryId, values.id, input);
+                await SeriesActions.update(props.series.libraryId, values.id, input);
                 router.push(destination);
             } catch (error) {
                 // TODO: something more graceful would be better
@@ -100,17 +99,17 @@ export default function StoryForm(props: StoryFormProps) {
         }
     }
 
-    const adding = (props.story.id < 0);
+    const adding = (props.series.id < 0);
     const destination = props.destination
         ? props.destination
-        : `/base/${props.story.libraryId}/stories/${props.story.id}`;
+        : `/base/${props.series.libraryId}/series/${props.series.id}`;
     const showHeader = (props.showHeader !== undefined) ? props.showHeader : true;
 
     return (
         <>
 
             {(showHeader) ? (
-                <StoryHeader
+                <SeriesHeader
                     adding={adding}
                     back={props.back}
                     parent={props.parent}
@@ -134,13 +133,12 @@ export default function StoryForm(props: StoryFormProps) {
                                         <Input autoFocus {...field}/>
                                     </FormControl>
                                     <FormDescription>
-                                        Name of this Story (must be unique within a Library)
+                                        Name of this Series (must be unique within a Library)
                                     </FormDescription>
                                     <FormMessage/>
                                 </FormItem>
                             )}
                         />
-                        {/*TODO: ordinal?*/}
                     </div>
 
                     <div className="grid grid-cols-3 space-x-2">
@@ -154,7 +152,7 @@ export default function StoryForm(props: StoryFormProps) {
                                         <Input {...field}/>
                                     </FormControl>
                                     <FormDescription>
-                                        Miscellaneous notes about this Story
+                                        Miscellaneous notes about this Series
                                     </FormDescription>
                                     <FormMessage/>
                                 </FormItem>
@@ -170,7 +168,7 @@ export default function StoryForm(props: StoryFormProps) {
                                         <Input {...field}/>
                                     </FormControl>
                                     <FormDescription>
-                                        Copyright Year (YYYY) of this Story
+                                        Copyright Year (YYYY) of this Series
                                     </FormDescription>
                                     <FormMessage/>
                                 </FormItem>
@@ -191,7 +189,7 @@ export default function StoryForm(props: StoryFormProps) {
                                             onCheckedChange={() => field.onChange(!field.value)}
                                         />
                                     </FormControl>
-                                    <FormLabel>Active Story?</FormLabel>
+                                    <FormLabel>Active Series?</FormLabel>
                                     <FormMessage />
                                 </FormItem>
                             )}
@@ -224,10 +222,10 @@ const formSchema = Yup.object().shape({
         .test("unique-name",
             "That name is already in use",
             async function (this) {
-                const story = this.parent as Story;
+                const series = this.parent as Series;
                 try {
-                    const result = await StoryActions.exact(story.libraryId, story.name);
-                    return (result.id === story.id);
+                    const result = await SeriesActions.exact(series.libraryId, series.name);
+                    return (result.id === series.id);
                 } catch (error) {
                     return true;        // Definitely unique
                 }
