@@ -16,6 +16,7 @@
 import Breadcrumbs from "@/components/layout/Breadcrumbs";
 import {Icons} from "@/components/layout/Icons";
 import SeriesItems from "@/components/series/SeriesItems";
+import {EditButton} from "@/components/shared/EditButton";
 import StoryItems from "@/components/stories/StoryItems";
 import VolumeItems from "@/components/volumes/VolumeItems";
 import {AuthorPlus} from "@/types/models/Author";
@@ -38,10 +39,15 @@ export default function AuthorBase(props: AuthorBaseProps) {
             <div className="container pt-4">
                 <Breadcrumbs/>
             </div>
-            <div className="container flex space-x-2 py-4">
-                <Icons.Author/>
-                <span>Base page for Author <strong>{props.author.lastName}, {props.author.firstName}</strong>&nbsp;
-                    in Library <strong>{props.library.name}</strong></span>
+            <div className="container flex flex-row py-4">
+                <div className="flex items-center space-x-2">
+                    <Icons.Author/>
+                    <span>Base page for Author <strong>{props.author.lastName}, {props.author.firstName}</strong>&nbsp;
+                        in Library <strong>{props.library.name}</strong></span>
+                </div>
+                <div className="flex flex-1 justify-end">
+                    <EditButton href={`/authors/${props.library.id}/${props.author.id}`}/>
+                </div>
             </div>
             <div className="container grid grid-cols-3 gap-4">
                 <div>

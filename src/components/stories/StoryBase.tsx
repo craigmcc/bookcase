@@ -17,6 +17,7 @@ import AuthorItems from "@/components/authors/AuthorItems";
 import Breadcrumbs from "@/components/layout/Breadcrumbs";
 import {Icons} from "@/components/layout/Icons";
 import SeriesItems from "@/components/series/SeriesItems";
+import {EditButton} from "@/components/shared/EditButton";
 import VolumeItems from "@/components/volumes/VolumeItems";
 import {LibraryPlus} from "@/types/models/Library";
 import {StoryPlus} from "@/types/models/Story";
@@ -38,10 +39,15 @@ export default function StoryBase(props: StoryBaseProps) {
             <div className="container pt-4">
                 <Breadcrumbs/>
             </div>
-            <div className="container flex space-x-2 py-4">
-                <Icons.Story/>
-                <span>Base page for Story <strong>{props.story.name}</strong>&nbsp;
-                    in Library <strong>{props.library.name}</strong></span>
+            <div className="container flex flex-row py-4">
+                <div className="flex items-center space-x-2">
+                    <Icons.Story/>
+                    <span>Base page for Story <strong>{props.story.name}</strong>&nbsp;
+                        in Library <strong>{props.library.name}</strong></span>
+                </div>
+                <div className="flex flex-1 justify-end">
+                    <EditButton href={`/stories/${props.library.id}/${props.story.id}`}/>
+                </div>
             </div>
             <div className="container grid grid-cols-3 gap-4">
                 <div>
