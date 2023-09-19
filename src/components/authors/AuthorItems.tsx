@@ -21,6 +21,7 @@ import * as SeriesActions from "@/actions/SeriesActionsShim";
 import * as StoryActions from "@/actions/StoryActionsShim";
 import * as VolumeActions from "@/actions/VolumeActionsShim";
 import {CheckBox} from "@/components/shared/CheckBox";
+import {EditButton} from "@/components/shared/EditButton";
 import {Pagination} from "@/components/shared/Pagination";
 import {SearchBar} from "@/components/shared/SearchBar";
 import {
@@ -214,6 +215,13 @@ export default function AuthorItems(props: AuthorItemsProps) {
                                                 <span className="text-blue-500"> *</span>
                                             ) : null }
                                         </span>
+                                    </TableCell>
+                                    <TableCell className="p-0">
+                                        <EditButton
+                                            href={`/authors/${author.libraryId}/${author.id}`}
+                                            size="xs"
+                                            showLabel={false}
+                                        />
                                     </TableCell>
                                 </TableRow>
                             ))}
