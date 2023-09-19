@@ -21,6 +21,7 @@ import * as SeriesActions from "@/actions/SeriesActionsShim";
 import * as StoryActions from "@/actions/StoryActionsShim";
 import * as VolumeActions from "@/actions/VolumeActionsShim";
 import {CheckBox} from "@/components/shared/CheckBox";
+import {EditButton} from "@/components/shared/EditButton";
 import {Pagination} from "@/components/shared/Pagination";
 import {SearchBar} from "@/components/shared/SearchBar";
 import {
@@ -199,7 +200,7 @@ export default function StoryItems(props: StoryItemsProps) {
 */}
                         <TableBody>
                             {stories.map((story, index: number) => (
-                                <TableRow key={story.id}>
+                                <TableRow key={`Story.${story.id}`}>
                                     <TableCell className="p-1">
                                         <span
                                             className="hover:underline"
@@ -210,6 +211,13 @@ export default function StoryItems(props: StoryItemsProps) {
                                             ) : null }
                                             {story.name}
                                         </span>
+                                    </TableCell>
+                                    <TableCell className="p-0">
+                                        <EditButton
+                                            href={`/stories/${story.libraryId}/${story.id}`}
+                                            size="xs"
+                                            showLabel={false}
+                                        />
                                     </TableCell>
                                 </TableRow>
                             ))}

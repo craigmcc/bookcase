@@ -1,11 +1,11 @@
 "use server"
 
-// app/volumes/[libraryId]/[volumeId]/page.tsx
+// app/stories/[libraryId]/[storyId]/page.tsx
 
 /**
- * Route for the editing page for Volume objects.  Performs authorization
- * checks for the route, and retrieves the Library and Volume specified as
- * path parameters, and delegates to VolumeCard for rendering.
+ * Route for the editing page for Story objects.  Performs authorization
+ * checks for the route, and retrieves the Library and Story specified as
+ * path parameters, and delegates to StoryCard for rendering.
  *
  * @packageDocumentation
  */
@@ -17,20 +17,20 @@ import {getServerSession} from "next-auth/next";
 // Internal Modules ----------------------------------------------------------
 
 import * as LibraryActions from "@/actions/LibraryActionsShim";
-import * as VolumeActions from "@/actions/VolumeActionsShim";
+import * as StoryActions from "@/actions/StoryActionsShim";
 import {authOptions} from "@/app/api/auth/[...nextauth]/route";
 import NotAuthorized from "@/components/shared/NotAuthorized";
 import NotFound from"@/components/shared/NotFound";
 import NotSignedIn from "@/components/shared/NotSignedIn";
-import VolumeCard from "@/components/volumes/VolumeCard";
+import StoryCard from "@/components/stories/StoryCard";
 import {LibraryPlus} from "@/types/models/Library";
-import {VolumePlus} from "@/types/models/Volume";
+import {StoryPlus} from "@/types/models/Story";
 import {authorizedRegular} from "@/util/Authorizations";
 
 // Public Objects ------------------------------------------------------------
 
-export default async function VolumeEditRoute
-    ({params}: {params: {libraryId: string, volumeId: string}}) {
+export default async function StoryEditRoute
+({params}: {params: {libraryId: string, storyId: string}}) {
 
     // Validate access to this route
     const session = await getServerSession(authOptions);
@@ -50,25 +50,20 @@ export default async function VolumeEditRoute
     if (!authorizedRegular(session.user, library)) {
         return <NotAuthorized/>
     }
-    let volume: VolumePlus;
-    if (Number(params.volumeId) < 0) {
+    let story: StoryPlus;
+    if (Number(params.storyId) < 0) {
         // @ts-ignore (for relations)
-        volume = {
+        story = {
             id: -1,
             active: true,
             copyright: null,
-            googleId: null,
-            isbn: null,
             libraryId: library.id,
-            location: "Kindle",
             name: "",
             notes: null,
-            read: false,
-            type: "Single",
         }
     } else {
         try {
-            volume = await VolumeActions.find(library.id, Number(params.volumeId));
+            story = await StoryActions.find(library.id, Number(params.storyId));
         } catch (error) {
             if (error instanceof Error) {
                 return <NotFound message={error.message}/>
@@ -80,11 +75,11 @@ export default async function VolumeEditRoute
 
     return (
         <div className="container mx-auto py-6" suppressHydrationWarning>
-            <VolumeCard
+            <StoryCard
                 // TODO: back?
                 // TODO: destination?
                 parent={library}
-                volume={volume}
+                story={story}
             />
         </div>
     )
