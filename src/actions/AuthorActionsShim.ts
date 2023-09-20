@@ -74,8 +74,8 @@ export const stories = async (libraryId: number, authorId: number, options?: Sto
     return await AuthorActions.stories(libraryId, authorId, options);
 }
 
-export const update = async (libraryId: number, volumeId: number, volume: Prisma.AuthorUpdateInput): Promise<AuthorPlus> => {
-    return await AuthorActions.update(libraryId, volumeId, volume);
+export const update = async (libraryId: number, authorId: number, author: Prisma.AuthorUpdateInput): Promise<AuthorPlus> => {
+    return await AuthorActions.update(libraryId, authorId, author);
 }
 
 export const volumeConnect = async (libraryId: number, authorId: number, volumeId: number, principal?: boolean): Promise<AuthorPlus> =>{
