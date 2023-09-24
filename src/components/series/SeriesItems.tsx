@@ -42,7 +42,6 @@ import {LibraryPlus} from "@/types/models/Library";
 import {StoryPlus} from "@/types/models/Story";
 import {SeriesPlus} from "@/types/models/Series";
 //import {HandleBoolean, HandleString} from "@/types/types";
-import * as BreadcrumbUtils from "@/util/BreadcrumbUtils";
 
 // Public Objects ------------------------------------------------------------
 
@@ -117,17 +116,12 @@ export default function SeriesItems(props: SeriesItemsProps) {
     // No access validation needed, since this is not a page
 
     /**
-     * Add a breadcrumb for this selection, and route to the
-     * corresponding href.
+     * Route to the Series base page.
      *
      * @param series                    The selected Series
      */
     function onSelect(series: SeriesPlus): void {
         const href = `/base/${series.libraryId}/series/${series.id}`;
-        BreadcrumbUtils.add({
-            href: href,
-            label: series.name,
-        });
         router.push(href);
     }
 

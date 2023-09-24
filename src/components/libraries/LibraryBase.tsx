@@ -11,6 +11,8 @@
 
 // External Modules ----------------------------------------------------------
 
+import {usePathname} from "next/navigation";
+
 // Internal Modules ----------------------------------------------------------
 
 import AuthorItems from "@/components/authors/AuthorItems";
@@ -20,6 +22,7 @@ import SeriesItems from "@/components/series/SeriesItems";
 import StoryItems from "@/components/stories/StoryItems";
 import VolumeItems from "@/components/volumes/VolumeItems";
 import {LibraryPlus} from "@/types/models/Library";
+import * as BreadcrumbUtils from "@/util/BreadcrumbUtils";
 
 // Public Objects ------------------------------------------------------------
 
@@ -29,6 +32,14 @@ type LibraryBaseProps = {
 }
 
 export default function LibraryBase(props: LibraryBaseProps) {
+
+    // Update breadcrumbs to include *only* this destination
+    const pathname = usePathname();
+    BreadcrumbUtils.clear();
+    BreadcrumbUtils.add({
+        href: pathname,
+        label: props.library.name,
+    });
 
     // Render the requested content
     return (

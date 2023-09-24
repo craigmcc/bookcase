@@ -11,6 +11,8 @@
 
 // External Modules ----------------------------------------------------------
 
+import {usePathname} from "next/navigation";
+
 // Internal Modules ----------------------------------------------------------
 
 import AuthorItems from "@/components/authors/AuthorItems";
@@ -20,6 +22,7 @@ import {EditButton} from "@/components/shared/EditButton";
 import StoryItems from "@/components/stories/StoryItems";
 import {LibraryPlus} from "@/types/models/Library";
 import {SeriesPlus} from "@/types/models/Series";
+import * as BreadcrumbUtils from "@/util/BreadcrumbUtils";
 
 // Public Objects ------------------------------------------------------------
 
@@ -31,6 +34,13 @@ type SeriesBaseProps = {
 }
 
 export default function SeriesBase(props: SeriesBaseProps) {
+
+    // Update breadcrumbs to include this destination
+    const pathname = usePathname();
+    BreadcrumbUtils.add({
+        href: pathname,
+        label: props.series.name,
+    });
 
     // Render the requested content
     return (

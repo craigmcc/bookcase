@@ -11,6 +11,8 @@
 
 // External Modules ----------------------------------------------------------
 
+import {usePathname} from "next/navigation";
+
 // Internal Modules ----------------------------------------------------------
 
 import AuthorItems from "@/components/authors/AuthorItems";
@@ -21,6 +23,7 @@ import {EditButton} from "@/components/shared/EditButton";
 import VolumeItems from "@/components/volumes/VolumeItems";
 import {LibraryPlus} from "@/types/models/Library";
 import {StoryPlus} from "@/types/models/Story";
+import * as BreadcrumbUtils from "@/util/BreadcrumbUtils";
 
 // Public Objects ------------------------------------------------------------
 
@@ -32,6 +35,13 @@ type StoryBaseProps = {
 }
 
 export default function StoryBase(props: StoryBaseProps) {
+
+    // Update breadcrumbs to include this destination
+    const pathname = usePathname();
+    BreadcrumbUtils.add({
+        href: pathname,
+        label: props.story.name,
+    });
 
     // Render the requested content
     return (

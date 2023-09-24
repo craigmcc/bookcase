@@ -59,18 +59,12 @@ export default function SelectLibraryForm(props: SelectLibraryFormProps) {
     }
 
     /**
-     * Add a breadcrumb for this selection, and route to the
-     * corresponding href.
+     * Route to the library base page.
      */
     function onSelect() {
         //console.log("onSelect " + libraryId + " " + JSON.stringify(library));
         if (library) {
             const href = `/base/${library.id}`;
-            BreadcrumbUtils.clear();
-            BreadcrumbUtils.add({
-                href: href,
-                label: library.name,
-            });
             router.push(href);
         }
     }

@@ -44,7 +44,6 @@ import {SeriesPlus} from "@/types/models/Series";
 import {StoryPlus} from "@/types/models/Story";
 import {VolumePlus} from "@/types/models/Volume";
 //import {HandleBoolean, HandleString} from "@/types/types";
-import * as BreadcrumbUtils from "@/util/BreadcrumbUtils";
 
 // Public Objects ------------------------------------------------------------
 
@@ -144,17 +143,12 @@ export default function StoryItems(props: StoryItemsProps) {
     // No access validation needed, since this is not a page
 
     /**
-     * Add a breadcrumb for this selection, and route to the
-     * corresponding href.
+     * Route to the Story base page.
      *
      * @param story                     The selected Story
      */
     function onSelect(story: StoryPlus): void {
         const href = `/base/${story.libraryId}/stories/${story.id}`;
-        BreadcrumbUtils.add({
-            href: href,
-            label: story.name,
-        });
         router.push(href);
     }
 

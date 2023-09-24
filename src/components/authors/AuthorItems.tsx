@@ -147,17 +147,12 @@ export default function AuthorItems(props: AuthorItemsProps) {
     // No access validation needed, since this is not a page
 
     /**
-     * Add a breadcrumb for this selection, and route to the
-     * corresponding href.
+     * Route to the Author base page.
      *
      * @param author                    The selected Author
      */
     function onSelect(author: AuthorPlus): void {
         const href = `/base/${author.libraryId}/authors/${author.id}`;
-        BreadcrumbUtils.add({
-            href: href,
-            label: `${author.lastName}, ${author.firstName}`,
-        });
         router.push(href);
     }
 

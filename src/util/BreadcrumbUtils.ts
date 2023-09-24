@@ -42,17 +42,23 @@ export const BreadcrumbLocalStorage =
     new LocalStorage<BreadcrumbItem[]>(BREADCRUMBS_KEY);
 
 /**
- * Append the specified BreadcrumbItem to our local storage.
+ * Append the specified BreadcrumbItem to our local storage, but only
+ * if a BreadcrumbItem with the same href is not already present.
  *
  * @param item                          BreadcrumbItem to be appended
  *
  * @returns                             The updated BreadcrumbItem array
  */
-export function add(item: BreadcrumbItem): BreadcrumbItem[] {
+export function add(newItem: BreadcrumbItem): BreadcrumbItem[] {
     //console.log("add.item", JSON.stringify(item));
     const items = BreadcrumbLocalStorage.value;
+    for (const item of items) {
+        if (item.href === newItem.href) {
+            return items;
+        }
+    }
     //console.log("add.before", JSON.stringify(items));
-    items.push(item);
+    items.push(newItem);
     //console.log("add.after", JSON.stringify(items));
     BreadcrumbLocalStorage.value = items;
     return items;

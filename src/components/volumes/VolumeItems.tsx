@@ -42,7 +42,6 @@ import {LibraryPlus} from "@/types/models/Library";
 import {StoryPlus} from "@/types/models/Story";
 import {VolumePlus} from "@/types/models/Volume";
 //import {HandleBoolean, HandleString} from "@/types/types";
-import * as BreadcrumbUtils from "@/util/BreadcrumbUtils";
 
 // Public Objects ------------------------------------------------------------
 
@@ -117,17 +116,12 @@ export default function VolumeItems(props: VolumeItemsProps) {
     // No access validation needed, since this is not a page
 
     /**
-     * Add a breadcrumb for this selection, and route to the
-     * corresponding href.
+     * Route to the Volume base page.
      *
      * @param volume                    The selected Volume
      */
     function onSelect(volume: VolumePlus): void {
         const href = `/base/${volume.libraryId}/volumes/${volume.id}`;
-        BreadcrumbUtils.add({
-            href: href,
-            label: volume.name,
-        });
         router.push(href);
     }
 
