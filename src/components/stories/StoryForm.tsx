@@ -38,10 +38,10 @@ import {Parent} from "@/types/types";
 // Public Objects ------------------------------------------------------------
 
 type StoryFormProps = {
-    // Navigation destination after back button [Not rendered]
+    // Navigation route after back button [Not rendered]
     back?: string;
-    // Navigation destination after successful save operation
-    destination?: string;
+    // Navigation route after successful save operation
+    dest: string;
     // Parent object for this Story
     parent: Parent;
     // Show the back button and header title? [true]
@@ -80,7 +80,7 @@ export default function StoryForm(props: StoryFormProps) {
             }
             try {
                 await StoryActions.insert(props.story.libraryId, input);
-                router.push(destination);
+                router.push(props.dest);
             } catch (error) {
                 // TODO: something more graceful would be better
                 alert("ERROR ON INSERT: " + JSON.stringify(error));
@@ -92,7 +92,7 @@ export default function StoryForm(props: StoryFormProps) {
             }
             try {
                 await StoryActions.update(props.story.libraryId, values.id, input);
-                router.push(destination);
+                router.push(props.dest);
             } catch (error) {
                 // TODO: something more graceful would be better
                 alert("ERROR ON UPDATE: " + JSON.stringify(error));
@@ -101,9 +101,6 @@ export default function StoryForm(props: StoryFormProps) {
     }
 
     const adding = (props.story.id < 0);
-    const destination = props.destination
-        ? props.destination
-        : `/base/${props.story.libraryId}/stories/${props.story.id}`;
     const showHeader = (props.showHeader !== undefined) ? props.showHeader : true;
 
     return (

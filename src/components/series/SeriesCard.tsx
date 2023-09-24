@@ -26,10 +26,10 @@ import {Parent} from "@/types/types";
 // Public Objects ------------------------------------------------------------
 
 type SeriesCardProps = {
-    // Navigation destination for Back button [/base/:libraryId/series/:seriesId]
+    // Navigation route for Back button [/base/:libraryId/series/:seriesId]
     back?: string,
-    // Navigation destination after successful save [/base/:libraryId/series/:seriesId]
-    destination?: string,
+    // Navigation route after successful save [/base/:libraryId/series/:seriesId]
+    dest?: string,
     // Parent object for this Series
     parent: Parent;
     // Series to be edited (id < 0 means adding)
@@ -41,7 +41,7 @@ export default function SeriesCard(props: SeriesCardProps) {
     const adding = (props.series.id < 0);
     const back = props.back ? props.back
         : `/base/${props.series.libraryId}/series/${props.series.id}`;
-    const destination = props.destination ? props.destination
+    const dest = props.dest ? props.dest
         : `/base/${props.series.libraryId}/series/${props.series.id}`;
 
     return (
@@ -57,7 +57,7 @@ export default function SeriesCard(props: SeriesCardProps) {
             </CardHeader>
             <CardContent>
                 <SeriesForm
-                    destination={destination}
+                    dest={dest}
                     parent={props.parent}
                     showHeader={false}
                     series={props.series}

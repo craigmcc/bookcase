@@ -26,10 +26,10 @@ import {Parent} from "@/types/types";
 // Public Objects ------------------------------------------------------------
 
 type StoryCardProps = {
-    // Navigation destination for Back button [/base/:libraryId/stories/:storyId]
+    // Navigation route for Back button [/base/:libraryId/stories/:storyId]
     back?: string,
-    // Navigation destination after successful save [/base/:libraryId/stories/:storyId]
-    destination?: string,
+    // Navigation route after successful save [/base/:libraryId/stories/:storyId]
+    dest?: string,
     // Parent object for this Story
     parent: Parent;
     // Story to be edited (id < 0 means adding)
@@ -41,7 +41,7 @@ export default function StoryCard(props: StoryCardProps) {
     const adding = (props.story.id < 0);
     const back = props.back ? props.back
         : `/base/${props.story.libraryId}/stories/${props.story.id}`;
-    const destination = props.destination ? props.destination
+    const dest = props.dest ? props.dest
         : `/base/${props.story.libraryId}/stories/${props.story.id}`;
 
     return (
@@ -57,7 +57,7 @@ export default function StoryCard(props: StoryCardProps) {
             </CardHeader>
             <CardContent>
                 <StoryForm
-                    destination={destination}
+                    dest={dest}
                     parent={props.parent}
                     showHeader={false}
                     story={props.story}

@@ -26,10 +26,10 @@ import {Parent} from "@/types/types";
 // Public Objects ------------------------------------------------------------
 
 type VolumeCardProps = {
-    // Navigation destination for Back button [/base/:libraryId/volumes/:volumeId]
+    // Navigation route for Back button [/base/:libraryId/volumes/:volumeId]
     back?: string,
-    // Navigation destination after successful save [/base/:libraryId/volumes/:volumeId]
-    destination?: string,
+    // Navigation route after successful save [/base/:libraryId/volumes/:volumeId]
+    dest?: string,
     // Parent object for this Volume
     parent: Parent;
     // Volume to be edited (id < 0 means adding)
@@ -41,7 +41,7 @@ export default function VolumeCard(props: VolumeCardProps) {
     const adding = (props.volume.id < 0);
     const back = props.back ? props.back
         : `/base/${props.volume.libraryId}/volumes/${props.volume.id}`;
-    const destination = props.destination ? props.destination
+    const dest = props.dest ? props.dest
         : `/base/${props.volume.libraryId}/volumes/${props.volume.id}`;
 
     return (
@@ -57,7 +57,7 @@ export default function VolumeCard(props: VolumeCardProps) {
             </CardHeader>
             <CardContent>
                 <VolumeForm
-                    destination={destination}
+                    dest={dest}
                     parent={props.parent}
                     showHeader={false}
                     volume={props.volume}

@@ -18,7 +18,7 @@ import {Parent} from "@/types/types";
 type StoryHeaderProps = {
     // Are we adding a new Story?
     adding: boolean;
-    // Navigation destination for the back button [Not rendered]
+    // Navigation route for the back button [Not rendered]
     back?: string;
     // Parent object for this Story
     parent: Parent;

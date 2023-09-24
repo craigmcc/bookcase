@@ -38,10 +38,10 @@ import {Parent} from "@/types/types";
 // Public Objects ------------------------------------------------------------
 
 type AuthorFormProps = {
-    // Navigation destination after back button [Not rendered]
+    // Navigation route after back button [Not rendered]
     back?: string;
-    // Navigation destination after successful save operation
-    destination?: string;
+    // Navigation route after successful save operation
+    dest: string;
     // Parent object for this Author
     parent: Parent;
     // Show the back button and header title? [true]
@@ -79,7 +79,7 @@ export default function AuthorForm(props: AuthorFormProps) {
             }
             try {
                 await AuthorActions.insert(props.author.libraryId, input);
-                router.push(destination);
+                router.push(props.dest);
             } catch (error) {
                 // TODO: something more graceful would be better
                 alert("ERROR ON INSERT: " + JSON.stringify(error));
@@ -91,7 +91,7 @@ export default function AuthorForm(props: AuthorFormProps) {
             }
             try {
                 await AuthorActions.update(props.author.libraryId, values.id, input);
-                router.push(destination);
+                router.push(props.dest);
             } catch (error) {
                 // TODO: something more graceful would be better
                 alert("ERROR ON UPDATE: " + JSON.stringify(error));
@@ -100,9 +100,6 @@ export default function AuthorForm(props: AuthorFormProps) {
     }
 
     const adding = (props.author.id < 0);
-    const destination = props.destination
-        ? props.destination
-        : `/base/${props.author.libraryId}/authors/${props.author.id}`;
     const showHeader = (props.showHeader !== undefined) ? props.showHeader : true;
 
     return (

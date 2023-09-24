@@ -40,7 +40,7 @@ import {
     SelectValue,
 } from "@/components/ui/select";
 import {VolumePlus} from "@/types/models/Volume";
-import {Parent, SelectOption} from "@/types/types";
+import {Parent} from "@/types/types";
 import {
     VALID_VOLUME_LOCATIONS,
     VALID_VOLUME_TYPES,
@@ -51,10 +51,10 @@ import {
 // Public Objects ------------------------------------------------------------
 
 type VolumeFormProps = {
-    // Navigation destination after back button [Not rendered]
+    // Navigation route after back button [Not rendered]
     back?: string;
-    // Navigation destination after successful save operation
-    destination?: string;
+    // Navigation route after successful save operation
+    dest: string;
     // Parent object for this Volume
     parent: Parent;
     // Show the back button and header title? [true]
@@ -97,7 +97,7 @@ export default function VolumeForm(props: VolumeFormProps) {
             }
             try {
                 await VolumeActions.insert(props.volume.libraryId, input);
-                router.push(destination);
+                router.push(props.dest);
             } catch (error) {
                 // TODO: something more graceful would be better
                 alert("ERROR ON INSERT: " + JSON.stringify(error));
@@ -109,7 +109,7 @@ export default function VolumeForm(props: VolumeFormProps) {
             }
             try {
                 await VolumeActions.update(props.volume.libraryId, values.id, input);
-                router.push(destination);
+                router.push(props.dest);
             } catch (error) {
                 // TODO: something more graceful would be better
                 alert("ERROR ON UPDATE: " + JSON.stringify(error));
@@ -118,9 +118,6 @@ export default function VolumeForm(props: VolumeFormProps) {
     }
 
     const adding = (props.volume.id < 0);
-    const destination = props.destination
-        ? props.destination
-        : `/base/${props.volume.libraryId}/volumes/${props.volume.id}`;
     const showHeader = (props.showHeader !== undefined) ? props.showHeader : true;
 
     return (
@@ -176,7 +173,7 @@ export default function VolumeForm(props: VolumeFormProps) {
                                             </SelectTrigger>
                                         </FormControl>
                                         <SelectContent>
-                                            {VALID_VOLUME_LOCATIONS.map((option, index) => (
+                                            {VALID_VOLUME_LOCATIONS.map((option) => (
                                                 <SelectItem key={option.value} value={option.value}>
                                                     {option.label}
                                                 </SelectItem>
@@ -206,7 +203,7 @@ export default function VolumeForm(props: VolumeFormProps) {
                                         </SelectTrigger>
                                     </FormControl>
                                     <SelectContent>
-                                        {VALID_VOLUME_TYPES.map((option, index) => (
+                                        {VALID_VOLUME_TYPES.map((option) => (
                                             <SelectItem key={option.value} value={option.value}>
                                                 {option.label}
                                             </SelectItem>

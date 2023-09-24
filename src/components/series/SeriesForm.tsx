@@ -38,10 +38,10 @@ import {Parent} from "@/types/types";
 // Public Objects ------------------------------------------------------------
 
 type SeriesFormProps = {
-    // Navigation destination after back button [Not rendered]
+    // Navigation route after back button [Not rendered]
     back?: string;
-    // Navigation destination after successful save operation
-    destination?: string;
+    // Navigation route after successful save operation
+    dest: string;
     // Parent object for this Series
     parent: Parent;
     // Show the back button and header title? [true]
@@ -79,7 +79,7 @@ export default function SeriesForm(props: SeriesFormProps) {
             }
             try {
                 await SeriesActions.insert(props.series.libraryId, input);
-                router.push(destination);
+                router.push(props.dest);
             } catch (error) {
                 // TODO: something more graceful would be better
                 alert("ERROR ON INSERT: " + JSON.stringify(error));
@@ -91,7 +91,7 @@ export default function SeriesForm(props: SeriesFormProps) {
             }
             try {
                 await SeriesActions.update(props.series.libraryId, values.id, input);
-                router.push(destination);
+                router.push(props.dest);
             } catch (error) {
                 // TODO: something more graceful would be better
                 alert("ERROR ON UPDATE: " + JSON.stringify(error));
@@ -100,9 +100,6 @@ export default function SeriesForm(props: SeriesFormProps) {
     }
 
     const adding = (props.series.id < 0);
-    const destination = props.destination
-        ? props.destination
-        : `/base/${props.series.libraryId}/series/${props.series.id}`;
     const showHeader = (props.showHeader !== undefined) ? props.showHeader : true;
 
     return (

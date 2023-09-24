@@ -29,7 +29,7 @@ type AuthorCardProps = {
     // Navigation destination for Back button [/base/:libraryId/authors/:authorId]
     back?: string,
     // Navigation destination after successful save [/base/:libraryId/authors/:authorId]
-    destination?: string,
+    dest?: string,
     // Parent object for this Author
     parent: Parent;
     // Author to be edited (id < 0 means adding)
@@ -41,7 +41,7 @@ export default function AuthorCard(props: AuthorCardProps) {
     const adding = (props.author.id < 0);
     const back = props.back ? props.back
         : `/base/${props.author.libraryId}/authors/${props.author.id}`;
-    const destination = props.destination ? props.destination
+    const dest = props.dest ? props.dest
         : `/base/${props.author.libraryId}/authors/${props.author.id}`;
 
     return (
@@ -57,7 +57,7 @@ export default function AuthorCard(props: AuthorCardProps) {
             </CardHeader>
             <CardContent>
                 <AuthorForm
-                    destination={destination}
+                    dest={dest}
                     parent={props.parent}
                     showHeader={false}
                     author={props.author}
