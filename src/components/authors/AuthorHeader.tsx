@@ -45,17 +45,15 @@ export default function AuthorHeader(props: AuthorHeaderProps) {
                 ) : null }
             </div>
             <div className="col-span-2 flex items-center">
-                <h1>
-                    {(props.adding)? (
-                        <span>Add New</span>
-                    ) : (
-                        <span>Edit Existing</span>
-                    )}
-                    &nbsp;Author for {parentModel}&nbsp;
-                    <span className="text-info">
+                {(props.adding)? (
+                    <span>Add New</span>
+                ) : (
+                    <span>Edit Existing</span>
+                )}
+                &nbsp;Author for {parentModel}&nbsp;
+                <span className="text-info">
                         {parentName}
                     </span>
-                </h1>
             </div>
         </div>
     )
