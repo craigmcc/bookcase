@@ -105,14 +105,14 @@ export default function UserForm(props: UserFormProps) {
                         <BackButton href="/users"/>
                     </div>
                     <div className="text-center">
-                        <strong>
+                        <h1>
                             {(adding)? (
                                 <span>Add New</span>
                             ) : (
                                 <span>Edit Existing</span>
                             )}
                             &nbsp;User
-                        </strong>
+                        </h1>
                     </div>
                     <div/>
                 </div>

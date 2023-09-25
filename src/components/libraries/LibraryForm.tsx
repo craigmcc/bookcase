@@ -105,14 +105,14 @@ export default function LibraryForm(props: LibraryFormProps) {
                         <BackButton href="/libraries"/>
                     </div>
                     <div className="text-center">
-                        <strong>
+                        <h1>
                             {(adding)? (
                                 <span>Add New</span>
                             ) : (
                                 <span>Edit Existing</span>
                             )}
                             &nbsp;Library
-                        </strong>
+                        </h1>
                     </div>
                     <div/>
                 </div>

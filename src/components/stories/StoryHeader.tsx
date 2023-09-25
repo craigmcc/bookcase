@@ -45,7 +45,7 @@ export default function StoryHeader(props: StoryHeaderProps) {
                 ) : null }
             </div>
             <div className="col-span-2 flex items-center">
-                <strong>
+                <h1>
                     {(props.adding)? (
                         <span>Add New</span>
                     ) : (
@@ -55,7 +55,7 @@ export default function StoryHeader(props: StoryHeaderProps) {
                     <span className="text-info">
                         {parentName}
                     </span>
-                </strong>
+                </h1>
             </div>
         </div>
     )
