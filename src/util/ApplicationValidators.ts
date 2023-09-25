@@ -15,6 +15,32 @@ import {SelectOption} from "@/types/types";
 
 // Public Objects -----------------------------------------------------------
 
+export const validateHref = (href: string): boolean => {
+    for (const pattern of VALID_HREF_PATTERNS) {
+        if (pattern.test(href)) {
+            return true;
+        }
+    }
+    return false;
+}
+
+/**
+ * These patterns should cover ALL cases where an HREF might be included
+ * in a URL (such as a "back" or "dest" search parameter) that could be
+ * transmitted by a user, rather than programmatically calculated by this
+ * application.
+ */
+const VALID_HREF_PATTERNS = [
+    /^\/authors\/\d+\/\d+$/,
+    /^\/base\/\d+\/authors\/\d+$/,
+    /^\/base\/\d+\/series\/\d+$/,
+    /^\/base\/\d+\/stories\/\d+$/,
+    /^\/base\/\d+\/volumes\/\d+$/,
+    /^\/series\/\d+\/\d+$/,
+    /^\/stories\/\d+\/\d+$/,
+    /^\/volumes\/\d+\/\d+$/,
+];
+
 export const validateLibraryScope = (scope: string | undefined): boolean => {
     if (!scope || (scope.length === 0)) {
         return true;
