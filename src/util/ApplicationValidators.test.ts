@@ -58,6 +58,7 @@ describe("ApplicationValidators Unit Tests", () => {
         it("should pass on valid hrefs", () => {
             expect(validateHref("/authors/1/2")).to.be.true;
             expect(validateHref("/authors/123/456")).to.be.true;
+            expect(validateHref("/base/123")).to.be.true;
             expect(validateHref("/base/1/authors/4")).to.be.true;
             expect(validateHref("/base/1/series/4")).to.be.true;
             expect(validateHref("/base/1/stories/4")).to.be.true;

@@ -81,8 +81,6 @@ export default async function VolumeEditRoute
     return (
         <div className="container mx-auto py-6" suppressHydrationWarning>
             <VolumeCard
-                // TODO: back?
-                // TODO: destination?
                 parent={library}
                 volume={volume}
             />

@@ -36,12 +36,24 @@ type AuthorBaseProps = {
 
 export default function AuthorBase(props: AuthorBaseProps) {
 
-    // Update breadcrumbs to include this destination
+    // Update breadcrumbs to include this destination (if necessary)
     const pathname = usePathname();
-    BreadcrumbUtils.add({
-        href: pathname,
-        label: `${props.author.lastName}, ${props.author.firstName}`,
-    });
+    if (BreadcrumbUtils.has(pathname)) {
+        BreadcrumbUtils.trim(pathname);
+    } else {
+        BreadcrumbUtils.add({
+            href: pathname,
+            label: props.author.lastName + ", " + props.author.firstName,
+        });
+    }
+    console.log("AuthorBase.pathname", pathname);
+
+    // Calculate relevant navigation hrefs
+    const back = pathname;
+    const dest = pathname;
+    const edit =
+        `/authors/${props.library.id}/${props.author.id}?back=${back}&dest=${dest}`;
+    console.log("AuthorBase.edit", edit);
 
     // Render the requested content
     return (
@@ -56,7 +68,7 @@ export default function AuthorBase(props: AuthorBaseProps) {
                         in Library <strong>{props.library.name}</strong></span>
                 </div>
                 <div className="flex flex-1 justify-end">
-                    <EditButton href={`/authors/${props.library.id}/${props.author.id}`}/>
+                    <EditButton href={edit}/>
                 </div>
             </div>
             <div className="container grid grid-cols-3 gap-4">

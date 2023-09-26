@@ -11,7 +11,7 @@
 
 // External Modules ----------------------------------------------------------
 
-import {useRouter} from "next/navigation";
+import {usePathname, useRouter} from "next/navigation";
 import {useEffect, useState} from "react";
 
 // Internal Modules ----------------------------------------------------------
@@ -59,6 +59,10 @@ export default function SeriesItems(props: SeriesItemsProps) {
     const router = useRouter();
     const [search, setSearch] = useState<string>("");
     const [serieses, setSerieses] = useState<SeriesPlus[]>([]);
+
+    // Calculate the relevant navigation hrefs
+    const pathname = usePathname();
+    console.log("SeriesItems.pathname", pathname);
 
     // Select the Series that match the specified filter criteria
     useEffect(() => {
@@ -178,7 +182,7 @@ export default function SeriesItems(props: SeriesItemsProps) {
                                     </TableCell>
                                     <TableCell className="p-1">
                                         <EditButton
-                                            href={`/series/${series.libraryId}/${series.id}`}
+                                            href={`/series/${series.libraryId}/${series.id}?back=${pathname}&dest=${pathname}`}
                                             size="xs"
                                             showLabel={false}
                                         />

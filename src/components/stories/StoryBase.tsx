@@ -36,12 +36,24 @@ type StoryBaseProps = {
 
 export default function StoryBase(props: StoryBaseProps) {
 
-    // Update breadcrumbs to include this destination
+    // Update breadcrumbs to include this destination (if necessary)
     const pathname = usePathname();
-    BreadcrumbUtils.add({
-        href: pathname,
-        label: props.story.name,
-    });
+    if (BreadcrumbUtils.has(pathname)) {
+        BreadcrumbUtils.trim(pathname);
+    } else {
+        BreadcrumbUtils.add({
+            href: pathname,
+            label: props.story.name,
+        });
+    }
+    console.log("StoryBase.pathname", pathname);
+
+    // Calculate relevant navigation hrefs
+    const back = pathname;
+    const dest = pathname;
+    const edit =
+        `/stories/${props.library.id}/${props.story.id}?back=${back}&dest=${dest}`;
+    console.log("StoryBase.edit", edit);
 
     // Render the requested content
     return (
@@ -56,7 +68,7 @@ export default function StoryBase(props: StoryBaseProps) {
                         in Library <strong>{props.library.name}</strong></span>
                 </div>
                 <div className="flex flex-1 justify-end">
-                    <EditButton href={`/stories/${props.library.id}/${props.story.id}`}/>
+                    <EditButton href={edit}/>
                 </div>
             </div>
             <div className="container grid grid-cols-3 gap-4">

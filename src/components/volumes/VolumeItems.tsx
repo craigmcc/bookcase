@@ -11,7 +11,7 @@
 
 // External Modules ----------------------------------------------------------
 
-import {useRouter} from "next/navigation";
+import {usePathname, useRouter} from "next/navigation";
 import {useEffect, useState} from "react";
 
 // Internal Modules ----------------------------------------------------------
@@ -59,6 +59,10 @@ export default function VolumeItems(props: VolumeItemsProps) {
     const router = useRouter();
     const [search, setSearch] = useState<string>("");
     const [volumes, setVolumes] = useState<VolumePlus[]>([]);
+
+    // Calculate the relevant navigation hrefs
+    const pathname = usePathname();
+    console.log("VolumeItems.pathname", pathname);
 
     // Select the Volumes that match the specified filter criteria
     useEffect(() => {
@@ -125,6 +129,7 @@ export default function VolumeItems(props: VolumeItemsProps) {
         router.push(href);
     }
 
+    // Render the requested content
     return (
         <Card className="border-solid">
             <CardHeader>
@@ -179,7 +184,7 @@ export default function VolumeItems(props: VolumeItemsProps) {
                                     </TableCell>
                                     <TableCell className="p-0">
                                         <EditButton
-                                            href={`/volumes/${volume.libraryId}/${volume.id}`}
+                                            href={`/volumes/${volume.libraryId}/${volume.id}?back=${pathname}&dest=${pathname}`}
                                             size="xs"
                                             showLabel={false}
                                         />

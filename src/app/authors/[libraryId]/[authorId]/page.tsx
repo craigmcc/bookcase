@@ -77,8 +77,6 @@ export default async function AuthorEditRoute
         <div className="container mx-auto py-6" suppressHydrationWarning>
             <AuthorCard
                 author={author}
-                // TODO: back?
-                // TODO: destination?
                 parent={library}
             />
         </div>

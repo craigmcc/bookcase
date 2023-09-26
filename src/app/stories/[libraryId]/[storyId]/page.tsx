@@ -76,8 +76,6 @@ export default async function StoryEditRoute
     return (
         <div className="container mx-auto py-6" suppressHydrationWarning>
             <StoryCard
-                // TODO: back?
-                // TODO: destination?
                 parent={library}
                 story={story}
             />

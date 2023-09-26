@@ -32,6 +32,7 @@ export const validateHref = (href: string): boolean => {
  */
 const VALID_HREF_PATTERNS = [
     /^\/authors\/\d+\/\d+$/,
+    /^\/base\/\d+$/,
     /^\/base\/\d+\/authors\/\d+$/,
     /^\/base\/\d+\/series\/\d+$/,
     /^\/base\/\d+\/stories\/\d+$/,

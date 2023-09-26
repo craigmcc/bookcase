@@ -35,12 +35,24 @@ type VolumeBaseProps = {
 
 export default function VolumeBase(props: VolumeBaseProps) {
 
-    // Update breadcrumbs to include this destination
+    // Update breadcrumbs to include this destination (if necessary)
     const pathname = usePathname();
-    BreadcrumbUtils.add({
-        href: pathname,
-        label: props.volume.name,
-    });
+    if (BreadcrumbUtils.has(pathname)) {
+        BreadcrumbUtils.trim(pathname);
+    } else {
+        BreadcrumbUtils.add({
+            href: pathname,
+            label: props.volume.name,
+        });
+    }
+    console.log("VolumeBase.pathname", pathname);
+
+    // Calculate relevant navigation hrefs
+    const back = pathname;
+    const dest = pathname;
+    const edit =
+        `/volumes/${props.library.id}/${props.volume.id}?back=${back}&dest=${dest}`;
+    console.log("VolumeBase.edit", edit);
 
     // Render the requested content
     return (
@@ -55,7 +67,7 @@ export default function VolumeBase(props: VolumeBaseProps) {
                         in Library <strong>{props.library.name}</strong></span>
                 </div>
                 <div className="flex flex-1 justify-end">
-                    <EditButton href={`/volumes/${props.library.id}/${props.volume.id}`}/>
+                    <EditButton href={edit}/>
                 </div>
             </div>
             <div className="container grid grid-cols-2 gap-4">

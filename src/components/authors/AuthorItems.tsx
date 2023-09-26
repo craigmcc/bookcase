@@ -11,7 +11,7 @@
 
 // External Modules ----------------------------------------------------------
 
-import {useRouter} from "next/navigation";
+import {usePathname, useRouter} from "next/navigation";
 import {useEffect, useState} from "react";
 
 // Internal Modules ----------------------------------------------------------
@@ -65,6 +65,10 @@ export default function AuthorItems(props: AuthorItemsProps) {
     const router = useRouter();
     const [principals, setPrincipals] = useState<boolean[]>([]);
     const [search, setSearch] = useState<string>("");
+
+    // Calculate the relevant navigation hrefs
+    const pathname = usePathname();
+    console.log("AuthorItems.pathname", pathname);
 
     // Select the Authors that match the specified filter criteria
     useEffect(() => {
@@ -213,7 +217,7 @@ export default function AuthorItems(props: AuthorItemsProps) {
                                     </TableCell>
                                     <TableCell className="p-0">
                                         <EditButton
-                                            href={`/authors/${author.libraryId}/${author.id}`}
+                                            href={`/authors/${author.libraryId}/${author.id}?back=${pathname}&dest=${pathname}`}
                                             size="xs"
                                             showLabel={false}
                                         />

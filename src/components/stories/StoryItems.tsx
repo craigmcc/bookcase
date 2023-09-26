@@ -11,7 +11,7 @@
 
 // External Modules ----------------------------------------------------------
 
-import {useRouter} from "next/navigation";
+import {usePathname, useRouter} from "next/navigation";
 import {useEffect, useState} from "react";
 
 // Internal Modules ----------------------------------------------------------
@@ -64,6 +64,10 @@ export default function StoryItems(props: StoryItemsProps) {
     const router = useRouter();
     const [search, setSearch] = useState<string>("");
     const [stories, setStories] = useState<StoryPlus[]>([]);
+
+    // Calculate the relevant navigation hrefs
+    const pathname = usePathname();
+    console.log("StoryItems.pathname", pathname);
 
     // Select the Stories that match the specified filter criteria
     useEffect(() => {
@@ -152,6 +156,7 @@ export default function StoryItems(props: StoryItemsProps) {
         router.push(href);
     }
 
+    // Render the requested content
     return (
         <Card className="border-solid">
             <CardHeader>
@@ -208,7 +213,7 @@ export default function StoryItems(props: StoryItemsProps) {
                                     </TableCell>
                                     <TableCell className="p-0">
                                         <EditButton
-                                            href={`/stories/${story.libraryId}/${story.id}`}
+                                            href={`/stories/${story.libraryId}/${story.id}?back=${pathname}&dest=${pathname}`}
                                             size="xs"
                                             showLabel={false}
                                         />

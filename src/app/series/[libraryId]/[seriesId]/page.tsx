@@ -76,8 +76,6 @@ export default async function SeriesEditRoute
     return (
         <div className="container mx-auto py-6" suppressHydrationWarning>
             <SeriesCard
-                // TODO: back?
-                // TODO: destination?
                 parent={library}
                 series={series}
             />

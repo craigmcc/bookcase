@@ -10,6 +10,8 @@
 
 // External Modules ----------------------------------------------------------
 
+import {usePathname, useSearchParams} from "next/navigation";
+
 // Internal Modules ----------------------------------------------------------
 
 import AuthorForm from "./AuthorForm";
@@ -22,6 +24,8 @@ import {
 } from "@/components/ui/card";
 import {AuthorPlus} from "@/types/models/Author";
 import {Parent} from "@/types/types";
+import {validateHref} from "@/util/ApplicationValidators";
+import * as BreadcrumbUtils from "@/util/BreadcrumbUtils";
 
 // Public Objects ------------------------------------------------------------
 
@@ -39,11 +43,31 @@ type AuthorCardProps = {
 export default function AuthorCard(props: AuthorCardProps) {
 
     const adding = (props.author.id < 0);
-    const back = props.back ? props.back
-        : `/base/${props.author.libraryId}/authors/${props.author.id}`;
-    const dest = props.dest ? props.dest
-        : `/base/${props.author.libraryId}/authors/${props.author.id}`;
 
+    // Update breadcrumbs to include this destination (if necessary)
+    const pathname = usePathname();
+    if (BreadcrumbUtils.has(pathname)) {
+        BreadcrumbUtils.trim(pathname);
+    } else {
+        BreadcrumbUtils.add({
+            href: pathname,
+            label: props.author.lastName + ", " + props.author.firstName,
+        });
+    }
+    console.log("AuthorCard.pathname", pathname);
+
+    // Calculate relevant navigation hrefs
+    const searchParams = useSearchParams();
+    const back = searchParams.has("back") && validateHref(searchParams.get("back")!)
+        ? searchParams.get("back")!
+        : `/base/${props.author.libraryId}/authors/${props.author.id}`;
+    const dest = searchParams.has("dest") && validateHref(searchParams.get("dest")!)
+        ? searchParams.get("dest")!
+        : `/base/${props.author.libraryId}/authors/${props.author.id}`;
+    console.log("AuthorCard.back", back);
+    console.log("AuthorCard.dest", dest);
+
+    // Render the requested content
     return (
         <Card className="border-solid">
             <CardHeader>

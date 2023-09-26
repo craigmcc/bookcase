@@ -90,6 +90,21 @@ export function current(): BreadcrumbItem[] {
 }
 
 /**
+ * Return true if the breadcrumbs include the specified href already.
+ *
+ * @param href                          The href to test for
+ */
+export function has(href: string): boolean {
+    const items = BreadcrumbLocalStorage.value;
+    for (const item of items) {
+        if (href === item.href) {
+            return true;
+        }
+    }
+    return false;
+}
+
+/**
  * Trim trailing BreadcrumbItem items down to, but NOT including, the item
  * with the specified href value.
  *

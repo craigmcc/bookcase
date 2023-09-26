@@ -35,12 +35,24 @@ type SeriesBaseProps = {
 
 export default function SeriesBase(props: SeriesBaseProps) {
 
-    // Update breadcrumbs to include this destination
+    // Update breadcrumbs to include this destination (if necessary)
     const pathname = usePathname();
-    BreadcrumbUtils.add({
-        href: pathname,
-        label: props.series.name,
-    });
+    if (BreadcrumbUtils.has(pathname)) {
+        BreadcrumbUtils.trim(pathname);
+    } else {
+        BreadcrumbUtils.add({
+            href: pathname,
+            label: props.series.name,
+        });
+    }
+    console.log("SeriesBase.pathname", pathname);
+
+    // Calculate relevant navigation hrefs
+    const back = pathname;
+    const dest = pathname;
+    const edit =
+        `/series/${props.library.id}/${props.series.id}?back=${back}&dest=${dest}`;
+    console.log("SeriesBase.edit", edit);
 
     // Render the requested content
     return (
@@ -55,7 +67,7 @@ export default function SeriesBase(props: SeriesBaseProps) {
                         in Library <strong>{props.library.name}</strong></span>
                 </div>
                 <div className="flex flex-1 justify-end">
-                    <EditButton href={`/series/${props.library.id}/${props.series.id}`}/>
+                    <EditButton href={edit}/>
                 </div>
             </div>
             <div className="container grid grid-cols-2 gap-4">
