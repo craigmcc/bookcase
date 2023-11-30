@@ -18,7 +18,7 @@ import {getServerSession} from "next-auth/next";
 
 import * as LibraryActions from "@/actions/LibraryActionsShim";
 import * as AuthorActions from "@/actions/AuthorActionsShim";
-import {authOptions} from "@/app/api/auth/[...nextauth]/route";
+import {authOptions} from "@/app/api/auth/[...nextauth]/authOptions";
 import AuthorCard from "@/components/authors/AuthorCard";
 import NotAuthorized from "@/components/shared/NotAuthorized";
 import NotFound from"@/components/shared/NotFound";

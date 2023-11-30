@@ -17,7 +17,7 @@ import {getServerSession} from "next-auth/next";
 // Internal Modules ----------------------------------------------------------
 
 import * as LibraryActions from "@/actions/LibraryActionsShim";
-import {authOptions} from "@/app/api/auth/[...nextauth]/route";
+import {authOptions} from "@/app/api/auth/[...nextauth]/authOptions";
 import LibraryCard from "@/components/libraries/LibraryCard";
 import NotAuthorized from "@/components/shared/NotAuthorized";
 import NotFound from"@/components/shared/NotFound";
