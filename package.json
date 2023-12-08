@@ -75,7 +75,6 @@
     "@storybook/addon-essentials": "^7.6.4",
     "@storybook/addon-interactions": "^7.6.4",
     "@storybook/addon-links": "^7.6.4",
-    "@storybook/addon-mdx-gfm": "^7.6.4",
     "@storybook/addon-onboarding": "^1.0.9",
     "@storybook/blocks": "^7.6.4",
     "@storybook/nextjs": "^7.6.4",
@@ -90,6 +89,7 @@
     "jest": "^29.7.0",
     "jest-environment-jsdom": "^29.7.0",
     "prisma": "^5.6.0",
+    "remark-gfm": "^4.0.0",
     "storybook": "^7.6.4",
     "ts-node": "^10.9.1"
   }
