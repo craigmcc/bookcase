@@ -16,6 +16,7 @@ const config: StorybookConfig = {
         },
       },
     },
+    "@storybook/addon-mdx-gfm"
   ],
   docs: {
     autodocs: "tag",
