@@ -78,7 +78,7 @@
     "@storybook/addon-mdx-gfm": "^7.6.6",
     "@storybook/addon-onboarding": "^1.0.10",
     "@storybook/blocks": "^7.6.6",
-    "@storybook/nextjs": "^7.6.6",
+    "@storybook/nextjs": "^7.6.8",
     "@storybook/react": "^7.6.6",
     "@storybook/testing-library": "^0.2.2",
     "@testing-library/jest-dom": "^6.0.1",
